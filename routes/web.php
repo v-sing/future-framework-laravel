@@ -11,5 +11,8 @@
 |
 */
 
-Route::get('/',  'TableController@index');
+Route::get('/',  function (){
+
+    return view('welcome');
+});
 Route::get('array','TableController@getTableArray');

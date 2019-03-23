@@ -22,6 +22,5 @@ class AdminTablesSeeder extends Seeder
             $model::truncate();
             $model::insert($data);
         }
-        exit;
     }
 }

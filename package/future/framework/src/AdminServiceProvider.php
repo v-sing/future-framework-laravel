@@ -33,9 +33,12 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
         //
         $this->loadAdminAuthConfig();
+
         $this->commands($this->commands);
+
     }
 
     /**
@@ -47,12 +50,14 @@ class AdminServiceProvider extends ServiceProvider
             \URL::forceScheme('https');
             $this->app['request']->server->set('HTTPS', true);
         }
+
         //
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'admin');
 
         if (file_exists($routes = admin_path('routes.php'))) {
             $this->loadRoutesFrom($routes);
         }
+
         if ($this->app->runningInConsole()) {
             $this->publishes([__DIR__.'/../config' => config_path()], 'future-admin-config');
             $this->publishes([__DIR__.'/../resources/lang' => resource_path('lang')], 'future-admin-lang');
@@ -60,11 +65,14 @@ class AdminServiceProvider extends ServiceProvider
             $this->publishes([__DIR__.'/../database/migrations' => database_path('migrations')], 'future-admin-migrations');
             $this->publishes([__DIR__.'/../resources/assets' => public_path('assets')], 'future-admin-assets');
         }
+
         //remove default feature of double encoding enable in laravel 5.6 or later.
         $bladeReflectionClass = new \ReflectionClass('\Illuminate\View\Compilers\BladeCompiler');
         if ($bladeReflectionClass->hasMethod('withoutDoubleEncoding')) {
+
             Blade::withoutDoubleEncoding();
         }
+
     }
 
     /**

@@ -1007,6 +1007,7 @@ class ComposerStaticInit50bd59069c1e2d2c18dad6ca723e8257
         'Future\\Admin\\Auth\\Database\\Category' => __DIR__ . '/../..' . '/package/future/framework/src/Auth/Database/Category.php',
         'Future\\Admin\\Auth\\Database\\Config' => __DIR__ . '/../..' . '/package/future/framework/src/Auth/Database/Config.php',
         'Future\\Admin\\Auth\\Database\\Ems' => __DIR__ . '/../..' . '/package/future/framework/src/Auth/Database/Ems.php',
+        'Future\\Admin\\Auth\\Database\\HasAuth' => __DIR__ . '/../..' . '/package/future/framework/src/Auth/Database/HasAuth.php',
         'Future\\Admin\\Auth\\Database\\Sms' => __DIR__ . '/../..' . '/package/future/framework/src/Auth/Database/Sms.php',
         'Future\\Admin\\Auth\\Database\\Test' => __DIR__ . '/../..' . '/package/future/framework/src/Auth/Database/Test.php',
         'Future\\Admin\\Auth\\Database\\User' => __DIR__ . '/../..' . '/package/future/framework/src/Auth/Database/User.php',

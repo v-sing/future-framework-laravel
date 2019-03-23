@@ -647,6 +647,7 @@ return array(
     'Future\\Admin\\Auth\\Database\\Category' => $baseDir . '/package/future/framework/src/Auth/Database/Category.php',
     'Future\\Admin\\Auth\\Database\\Config' => $baseDir . '/package/future/framework/src/Auth/Database/Config.php',
     'Future\\Admin\\Auth\\Database\\Ems' => $baseDir . '/package/future/framework/src/Auth/Database/Ems.php',
+    'Future\\Admin\\Auth\\Database\\HasAuth' => $baseDir . '/package/future/framework/src/Auth/Database/HasAuth.php',
     'Future\\Admin\\Auth\\Database\\Sms' => $baseDir . '/package/future/framework/src/Auth/Database/Sms.php',
     'Future\\Admin\\Auth\\Database\\Test' => $baseDir . '/package/future/framework/src/Auth/Database/Test.php',
     'Future\\Admin\\Auth\\Database\\User' => $baseDir . '/package/future/framework/src/Auth/Database/User.php',

@@ -32,7 +32,9 @@ class CreateAdminTables extends Migration
             $table->integer('logintime', false, false)->comment('登录时间');
             $table->string('token', 59)->comment('Session标识');
             $table->string('status', 30)->default('normal')->comment('状态');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
+            
         });
         Schema::connection($connection)->create(config('admin.database.admin_log_table'), function (Blueprint $table) {
             $table->increments('id')->comment('ID');
@@ -43,7 +45,7 @@ class CreateAdminTables extends Migration
             $table->text('content')->comment('内容');
             $table->string('ip', 50)->comment('IP');
             $table->string('useragent', 255)->comment('User-Agent');
-            $table->timestamps();
+            $table->integer('created_at',false,false)->comment('添加时间');
 
 
         });
@@ -62,7 +64,8 @@ class CreateAdminTables extends Migration
             $table->integer('uploadtime', false, false)->comment('上传时间');
             $table->string('storage', 100)->comment('存储位置');
             $table->string('sha1', 40)->comment('文件 sha1编码');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
         Schema::connection($connection)->create(config('admin.database.auth_group_table'), function (Blueprint $table) {
@@ -71,13 +74,13 @@ class CreateAdminTables extends Migration
             $table->string('name', 100)->comment('组名');
             $table->text('rules')->comment('规则ID');
             $table->string('status', 30)->comment('状态');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
         Schema::connection($connection)->create(config('admin.database.auth_group_access_table'), function (Blueprint $table) {
             $table->integer('uid', false, false)->comment('会员ID');
             $table->integer('group_id', false, false)->comment('级别ID');
-            $table->timestamps();
 
         });
         Schema::connection($connection)->create(config('admin.database.auth_rule_table'), function (Blueprint $table) {
@@ -92,7 +95,8 @@ class CreateAdminTables extends Migration
             $table->integer('ismenu', false, false)->comment('是否为菜单');
             $table->integer('weigh', false, false)->comment('权重');
             $table->string('status', 30)->comment('状态');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
         Schema::connection($connection)->create(config('admin.database.category_table'), function (Blueprint $table) {
@@ -108,7 +112,8 @@ class CreateAdminTables extends Migration
             $table->string('diyname', 30)->comment('自定义名称');
             $table->integer('weigh', false, false)->comment('权重');
             $table->string('status', 30)->comment('状态');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
         Schema::connection($connection)->create(config('admin.database.config_table'), function (Blueprint $table) {
@@ -122,7 +127,6 @@ class CreateAdminTables extends Migration
             $table->text('content')->comment('变量字典数据');
             $table->string('rule', 100)->comment('验证规则');
             $table->string('extend', 255)->comment('扩展属性');
-            $table->timestamps();
 
         });
         Schema::connection($connection)->create(config('admin.database.ems_table'), function (Blueprint $table) {
@@ -132,7 +136,8 @@ class CreateAdminTables extends Migration
             $table->string('code', 10)->comment('验证码');
             $table->integer('times', false, false)->comment('验证次数');
             $table->string('ip', 30)->comment('IP');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
         Schema::connection($connection)->create(config('admin.database.sms_table'), function (Blueprint $table) {
@@ -142,7 +147,8 @@ class CreateAdminTables extends Migration
             $table->string('code', 10)->comment('验证码');
             $table->integer('times', false, false)->comment('验证次数');
             $table->string('ip', 30)->comment('IP');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
         Schema::connection($connection)->create(config('admin.database.test_table'), function (Blueprint $table) {
@@ -173,7 +179,8 @@ class CreateAdminTables extends Migration
             $table->integer('switch', false, false)->comment('开关');
             $table->string('status', 20)->comment('状态');
             $table->string('state', 0)->comment('状态值:0=禁用,1=正常,2=推荐');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
         Schema::connection($connection)->create(config('admin.database.user_table'), function (Blueprint $table) {
@@ -203,7 +210,8 @@ class CreateAdminTables extends Migration
             $table->string('token', 50)->comment('Token');
             $table->string('status', 30)->comment('状态');
             $table->string('verification', 255)->comment('验证');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
         Schema::connection($connection)->create(config('admin.database.user_group_table'), function (Blueprint $table) {
@@ -211,7 +219,8 @@ class CreateAdminTables extends Migration
             $table->string('name', 50)->comment('组名');
             $table->text('rules')->comment('权限节点');
             $table->string('status', 20)->comment('状态');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
         Schema::connection($connection)->create(config('admin.database.user_money_log_table'), function (Blueprint $table) {
@@ -221,7 +230,8 @@ class CreateAdminTables extends Migration
             $table->decimal('before', 10, 2)->comment('变更前余额');
             $table->decimal('after', 10, 2)->comment('变更后余额');
             $table->string('memo', 255)->comment('备注');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
         Schema::connection($connection)->create(config('admin.database.user_rule_table'), function (Blueprint $table) {
@@ -233,7 +243,8 @@ class CreateAdminTables extends Migration
             $table->integer('ismenu', false, false)->comment('是否菜单');
             $table->integer('weigh', false, false)->comment('权重');
             $table->string('status', 20)->comment('状态');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
         Schema::connection($connection)->create(config('admin.database.user_score_log_table'), function (Blueprint $table) {
@@ -243,13 +254,15 @@ class CreateAdminTables extends Migration
             $table->integer('before', false, false)->comment('变更前积分');
             $table->integer('after', false, false)->comment('变更后积分');
             $table->string('memo', 255)->comment('备注');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
         Schema::connection($connection)->create(config('admin.database.user_token_table'), function (Blueprint $table) {
             $table->string('token', 50)->comment('Token');
             $table->integer('user_id', false, false)->comment('会员ID');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
         Schema::connection($connection)->create(config('admin.database.version_table'), function (Blueprint $table) {
@@ -262,7 +275,8 @@ class CreateAdminTables extends Migration
             $table->integer('enforce', false, false)->comment('强制更新');
             $table->integer('weigh', false, false)->comment('权重');
             $table->string('status', 30)->comment('状态');
-            $table->timestamps();
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
 

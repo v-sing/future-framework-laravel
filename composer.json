@@ -41,7 +41,7 @@
             "database/factories"
         ],
 		"files":[
-		    "package/future/framework/src/helpers.php"
+		   "package/future/framework/src/helpers.php"
 		]
     },
     "autoload-dev": {
