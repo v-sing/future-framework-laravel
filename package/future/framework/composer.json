@@ -1,0 +1,13 @@
+{
+    "name": "future/framework",
+    "description": "future-framework",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "v-sing",
+            "email": "email1946367301@163.com"
+        }
+    ],
+    "require": {}
+}
