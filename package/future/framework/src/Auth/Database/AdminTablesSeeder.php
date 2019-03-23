@@ -8,6 +8,7 @@
  */
 
 namespace Future\Admin\Auth\Database;
+
 use Illuminate\Database\Seeder;
 
 
@@ -15,6 +16,12 @@ class AdminTablesSeeder extends Seeder
 {
     public function run()
     {
-
+        $dataArray = require dirname(dirname(dirname(__DIR__))) . '/database/tableData/data.php';
+        foreach ($dataArray as $table=>$data){
+            $model=config('admin.database.'.$table.'_model');
+            $model::truncate();
+            $model::insert($data);
+        }
+        exit;
     }
 }

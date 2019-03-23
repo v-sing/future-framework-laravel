@@ -32,7 +32,7 @@ class User extends Model
 
         $this->setConnection($connection);
         $class = class_basename(get_class());
-        $this->setTable(snake_case($class));
+        $this->setTable(parse_underline($class));
         parent::__construct($attributes);
     }
 

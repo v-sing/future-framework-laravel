@@ -13,10 +13,9 @@ use Future\Admin\Traits\AdminBuilder;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
-
 class Admin extends Model implements AuthenticatableContract
 {
-    use Authenticatable, AdminBuilder, HasPermissions;
+    use Authenticatable, AdminBuilder, HasAuth;
 
     /**
      * 白名单
@@ -33,7 +32,7 @@ class Admin extends Model implements AuthenticatableContract
         $connection = config('admin.database.connection') ?: config('database.default');
         $this->setConnection($connection);
         $class = class_basename(get_class());
-        $this->setTable(snake_case($class));
+        $this->setTable(parse_underline($class));
         parent::__construct($attributes);
     }
 }

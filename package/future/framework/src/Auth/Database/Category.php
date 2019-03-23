@@ -10,7 +10,8 @@
 namespace Future\Admin\Auth\Database;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Future\Admin\Traits\AdminBuilder;
+use Future\Admin\Traits\ModelTree;
 class Category extends Model
 {
     use AdminBuilder, ModelTree {
@@ -34,7 +35,7 @@ class Category extends Model
 
         $this->setConnection($connection);
         $class = class_basename(get_class());
-        $this->setTable(snake_case($class));
+        $this->setTable(parse_underline($class));
         parent::__construct($attributes);
     }
 

@@ -6,6 +6,7 @@
  * Date: 2019/3/22 0022
  * Time: 10:47
  */
+
 use Illuminate\Support\MessageBag;
 
 if (!function_exists('admin_path')) {
@@ -19,7 +20,7 @@ if (!function_exists('admin_path')) {
      */
     function admin_path($path = '')
     {
-        return ucfirst(config('admin.directory')).($path ? DIRECTORY_SEPARATOR.$path : $path);
+        return ucfirst(config('admin.directory')) . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 }
 
@@ -28,8 +29,8 @@ if (!function_exists('admin_url')) {
      * Get admin url.
      *
      * @param string $path
-     * @param mixed  $parameters
-     * @param bool   $secure
+     * @param mixed $parameters
+     * @param bool $secure
      *
      * @return string
      */
@@ -55,7 +56,7 @@ if (!function_exists('admin_base_path')) {
      */
     function admin_base_path($path = '')
     {
-        $prefix = '/'.trim(config('admin.route.prefix'), '/');
+        $prefix = '/' . trim(config('admin.route.prefix'), '/');
 
         $prefix = ($prefix == '/') ? '' : $prefix;
 
@@ -65,6 +66,33 @@ if (!function_exists('admin_base_path')) {
             return $prefix ?: '/';
         }
 
-        return $prefix.'/'.$path;
+        return $prefix . '/' . $path;
+    }
+}
+if (!function_exists('parse_hump')) {
+    /**
+     * 下划线转驼峰
+     * @param $underline
+     * @return mixed
+     */
+    function parse_hump($underline)
+    {
+        $underline=camel_case($underline);
+        $underline = ucfirst($underline);
+        return $underline;
+    }
+}
+
+if (!function_exists('parse_underline')) {
+    /**
+     * 驼峰转下划线
+     * @param $hump
+     * @return mixed
+     */
+    function parse_underline($hump)
+    {
+        $hump= snake_case($hump);
+        $hump=strtolower($hump);
+        return $hump;
     }
 }
