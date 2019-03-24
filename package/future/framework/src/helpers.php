@@ -7,7 +7,144 @@
  * Time: 10:47
  */
 
-use Illuminate\Support\MessageBag;
+use Illuminate\Support\Facades\Request;
+
+if (!function_exists('lang')) {
+    function lang($name)
+    {
+
+        $controller = request()->input('controller');
+        $lang = dirname(__DIR__) . '/Modules/' . ucfirst($controller['module']) . '/Resources/Lang/' . config('app.locale') . '.php';
+        $langNext = dirname(__DIR__) . '/Modules/' . ucfirst($controller['module']) . '/Resources/Lang/' . config('app.locale') . '/' . $controller['controller'] . '.php';
+        $trans = $controller['module'] . '::' . $controller['controller'] . '.' . $name;
+        $result = trans($trans);
+        if ($result == $trans && file_exists($lang)) {
+            $data = include $lang;
+            $name = isset($data[$name]) ? $data[$name] : $name;
+//            if ($name1 == $name) {
+//                $data = include $langNext;
+//                $name = isset($data[$name]) ? $data[$name] : $name;
+//            }
+        } else {
+            $name = $result;
+        }
+        return $name;
+    }
+}
+
+if (!function_exists('toArray')) {
+    /**
+     * 对象转数组
+     * @param $data
+     * @return mixed
+     */
+    function toArray($data)
+    {
+        return json_decode(json_encode($data, true), true);
+    }
+}
+
+if (!function_exists('error')) {
+    /**
+     * @param string $msg
+     * @param array $data
+     * @param string $url
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\think\response\Redirect
+     */
+
+    function error($msg = 'operation failed!', $data = [], $url = '')
+    {
+        $data = [
+            'code' => 0,
+            'msg'  => lang($msg),
+            'data' => $data,
+            'url'  => $url
+        ];
+        if (isPost() || isAjax()) {
+            return response()->json($data);
+        } else {
+            if ($url == '') {
+                $data['url'] = Request::url();
+            } else {
+                $data['url'] = url($data['url']);
+            }
+            return redirect('admin/message')->with('msg', $data);
+        }
+    }
+}
+
+if (!function_exists('success')) {
+    /**
+     * @param string $msg
+     * @param array $data
+     * @param string $url
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\think\response\Redirect
+     */
+    function success($msg = 'Successful operation!', $data = [], $url = '')
+    {
+        $data = [
+            'code' => 1,
+            'msg'  => lang($msg),
+            'data' => $data,
+            'url'  => $url
+        ];
+        if (isPost() || isAjax()) {
+            return response()->json($data);
+        } else {
+            if ($url == '') {
+                $data['url'] = Request::url();
+            } else {
+                $data['url'] = url($data['url']);
+            }
+            return redirect('admin/message')->with('msg', $data);
+        }
+    }
+}
+if (!function_exists('isAjax')) {
+    /**
+     * @return bool
+     */
+    function isAjax()
+    {
+        return request()->isMethod('ajax');
+    }
+}
+
+if (!function_exists('isPost')) {
+    /**
+     * @return bool
+     */
+    function isPost()
+    {
+        return request()->isMethod('post');
+    }
+}
+
+if (!function_exists('isGet')) {
+    /**
+     * @return bool
+     */
+    function isGet()
+    {
+        return request()->isMethod('GET');
+    }
+}
+
+if (!function_exists('jsonp')) {
+    /**
+     *
+     * @param $callback
+     * @param array $data
+     * @param int $status
+     * @param array $headers
+     * @param int $options
+     * @return \Illuminate\Http\JsonResponse
+     */
+    function jsonp($callback, $data = [], $status = 200, array $headers = [], $options = 0)
+    {
+        return response()->jsonp($callback, $data, $status, $headers, $options);
+    }
+}
 
 if (!function_exists('admin_path')) {
 
@@ -77,7 +214,7 @@ if (!function_exists('parse_hump')) {
      */
     function parse_hump($underline)
     {
-        $underline=camel_case($underline);
+        $underline = camel_case($underline);
         $underline = ucfirst($underline);
         return $underline;
     }
@@ -91,8 +228,8 @@ if (!function_exists('parse_underline')) {
      */
     function parse_underline($hump)
     {
-        $hump= snake_case($hump);
-        $hump=strtolower($hump);
+        $hump = snake_case($hump);
+        $hump = strtolower($hump);
         return $hump;
     }
 }

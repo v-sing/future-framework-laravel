@@ -366,6 +366,9 @@ class ComposerStaticInit50bd59069c1e2d2c18dad6ca723e8257
     );
 
     public static $classMap = array (
+        'App\\Admin\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Admin/Controllers/AuthController.php',
+        'App\\Admin\\Controllers\\ExampleController' => __DIR__ . '/../..' . '/app/Admin/Controllers/ExampleController.php',
+        'App\\Admin\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Admin/Controllers/HomeController.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
@@ -1030,8 +1033,14 @@ class ComposerStaticInit50bd59069c1e2d2c18dad6ca723e8257
         'Future\\Admin\\Console\\ResetPasswordCommand' => __DIR__ . '/../..' . '/package/future/framework/src/Console/ResetPasswordCommand.php',
         'Future\\Admin\\Console\\ResourceGenerator' => __DIR__ . '/../..' . '/package/future/framework/src/Console/ResourceGenerator.php',
         'Future\\Admin\\Console\\UninstallCommand' => __DIR__ . '/../..' . '/package/future/framework/src/Console/UninstallCommand.php',
+        'Future\\Admin\\Controllers\\AuthController' => __DIR__ . '/../..' . '/package/future/framework/src/Controllers/AuthController.php',
+        'Future\\Admin\\Controllers\\BackendController' => __DIR__ . '/../..' . '/package/future/framework/src/Controllers/BackendController.php',
+        'Future\\Admin\\Controllers\\IndexController' => __DIR__ . '/../..' . '/package/future/framework/src/Controllers/IndexController.php',
         'Future\\Admin\\Facades\\Admin' => __DIR__ . '/../..' . '/package/future/framework/src/Facades/Admin.php',
+        'Future\\Admin\\Middleware\\Initialization' => __DIR__ . '/../..' . '/package/future/framework/src/Middleware/Initialization.php',
+        'Future\\Admin\\Middleware\\Session' => __DIR__ . '/../..' . '/package/future/framework/src/Middleware/Session.php',
         'Future\\Admin\\Traits\\AdminBuilder' => __DIR__ . '/../..' . '/package/future/framework/src/Traits/AdminBuilder.php',
+        'Future\\Admin\\Traits\\Backend' => __DIR__ . '/../..' . '/package/future/framework/src/Traits/Backend.php',
         'Future\\Admin\\Traits\\ModelTree' => __DIR__ . '/../..' . '/package/future/framework/src/Traits/ModelTree.php',
         'Hamcrest\\Arrays\\IsArray' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArray.php',
         'Hamcrest\\Arrays\\IsArrayContaining' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContaining.php',

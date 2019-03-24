@@ -3,9 +3,9 @@
 namespace Future\Admin;
 
 
-
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
+
 class AdminServiceProvider extends ServiceProvider
 {
     /**
@@ -25,6 +25,17 @@ class AdminServiceProvider extends ServiceProvider
         Console\ExportSeedCommand::class,
     ];
 
+    protected $routeMiddleware = [
+        'admin.init'    => Middleware\Initialization::class,
+        'admin.session' => Middleware\Session::class
+    ];
+
+    protected $middlewareGroups = [
+        'admin' => [
+            'admin.init',
+            'admin.session'
+        ]
+    ];
 
     /**
      * Register services.
@@ -37,6 +48,7 @@ class AdminServiceProvider extends ServiceProvider
         //
         $this->loadAdminAuthConfig();
 
+        $this->registerRouteMiddleware();
         $this->commands($this->commands);
 
     }
@@ -52,24 +64,23 @@ class AdminServiceProvider extends ServiceProvider
         }
 
         //
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'admin');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'admin');
 
         if (file_exists($routes = admin_path('routes.php'))) {
             $this->loadRoutesFrom($routes);
         }
 
         if ($this->app->runningInConsole()) {
-            $this->publishes([__DIR__.'/../config' => config_path()], 'future-admin-config');
-            $this->publishes([__DIR__.'/../resources/lang' => resource_path('lang')], 'future-admin-lang');
+            $this->publishes([__DIR__ . '/../config' => config_path()], 'future-admin-config');
+            $this->publishes([__DIR__ . '/../resources/lang' => resource_path('lang')], 'future-admin-lang');
 //            $this->publishes([__DIR__.'/../resources/views' => resource_path('views/vendor/admin')],           'future-admin-views');
-            $this->publishes([__DIR__.'/../database/migrations' => database_path('migrations')], 'future-admin-migrations');
-            $this->publishes([__DIR__.'/../resources/assets' => public_path('assets')], 'future-admin-assets');
+            $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'future-admin-migrations');
+            $this->publishes([__DIR__ . '/../resources/assets' => public_path('assets')], 'future-admin-assets');
         }
 
         //remove default feature of double encoding enable in laravel 5.6 or later.
         $bladeReflectionClass = new \ReflectionClass('\Illuminate\View\Compilers\BladeCompiler');
         if ($bladeReflectionClass->hasMethod('withoutDoubleEncoding')) {
-
             Blade::withoutDoubleEncoding();
         }
 
@@ -85,4 +96,21 @@ class AdminServiceProvider extends ServiceProvider
         config(array_dot(config('admin.auth', []), 'auth.'));
     }
 
+    /**
+     * Register the route middleware.
+     *
+     * @return void
+     */
+    protected function registerRouteMiddleware()
+    {
+        // register route middleware.
+        foreach ($this->routeMiddleware as $key => $middleware) {
+            app('router')->aliasMiddleware($key, $middleware);
+        }
+
+        // register middleware group.
+        foreach ($this->middlewareGroups as $key => $middleware) {
+            app('router')->middlewareGroup($key, $middleware);
+        }
+    }
 }

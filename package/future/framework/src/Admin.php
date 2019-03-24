@@ -40,5 +40,26 @@ class Admin
         $config_arr = $this->config->get('admin.options');
         return $msg.' <strong>from your custom develop package!</strong>>';
     }
+    /**
+     * Register the auth routes.
+     *
+     * @return void
+     */
+    public function registerAuthRoutes()
+    {
+        $attributes = [
+            'prefix'     => config('admin.route.prefix'),
+            'middleware' => config('admin.route.middleware'),
+        ];
+        app('router')->group($attributes, function ($router) {
+            /* @var \Illuminate\Routing\Router $router */
+            $router->namespace('Future\Admin\Controllers')->group(function ($router) {
+                $router->get('/', 'IndexController@index');
+            });
+            $authController = config('admin.auth.controller', AuthController::class);
+
+
+        });
+    }
 
 }

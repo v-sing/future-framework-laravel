@@ -83,6 +83,7 @@ abstract class ServiceProvider
         if (! $this->app->routesAreCached()) {
             require $path;
         }
+
     }
 
     /**

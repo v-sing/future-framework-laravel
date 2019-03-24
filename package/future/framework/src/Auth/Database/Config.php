@@ -9,11 +9,12 @@
 
 namespace Future\Admin\Auth\Database;
 
+use Future\Admin\Traits\AdminBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 class Config extends Model
 {
-
+use AdminBuilder;
     /**
      * The attributes that are mass assignable.
      *

@@ -34,7 +34,7 @@ class TableController extends Controller
 
     public function getTableArray()
     {
-      exit;
+
         $data  = config('admin.database');
         $array = [];
         foreach ($data as $v) {

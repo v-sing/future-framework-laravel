@@ -6,6 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Admin\\Controllers\\AuthController' => $baseDir . '/app/Admin/Controllers/AuthController.php',
+    'App\\Admin\\Controllers\\ExampleController' => $baseDir . '/app/Admin/Controllers/ExampleController.php',
+    'App\\Admin\\Controllers\\HomeController' => $baseDir . '/app/Admin/Controllers/HomeController.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
@@ -670,8 +673,14 @@ return array(
     'Future\\Admin\\Console\\ResetPasswordCommand' => $baseDir . '/package/future/framework/src/Console/ResetPasswordCommand.php',
     'Future\\Admin\\Console\\ResourceGenerator' => $baseDir . '/package/future/framework/src/Console/ResourceGenerator.php',
     'Future\\Admin\\Console\\UninstallCommand' => $baseDir . '/package/future/framework/src/Console/UninstallCommand.php',
+    'Future\\Admin\\Controllers\\AuthController' => $baseDir . '/package/future/framework/src/Controllers/AuthController.php',
+    'Future\\Admin\\Controllers\\BackendController' => $baseDir . '/package/future/framework/src/Controllers/BackendController.php',
+    'Future\\Admin\\Controllers\\IndexController' => $baseDir . '/package/future/framework/src/Controllers/IndexController.php',
     'Future\\Admin\\Facades\\Admin' => $baseDir . '/package/future/framework/src/Facades/Admin.php',
+    'Future\\Admin\\Middleware\\Initialization' => $baseDir . '/package/future/framework/src/Middleware/Initialization.php',
+    'Future\\Admin\\Middleware\\Session' => $baseDir . '/package/future/framework/src/Middleware/Session.php',
     'Future\\Admin\\Traits\\AdminBuilder' => $baseDir . '/package/future/framework/src/Traits/AdminBuilder.php',
+    'Future\\Admin\\Traits\\Backend' => $baseDir . '/package/future/framework/src/Traits/Backend.php',
     'Future\\Admin\\Traits\\ModelTree' => $baseDir . '/package/future/framework/src/Traits/ModelTree.php',
     'Hamcrest\\Arrays\\IsArray' => $vendorDir . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArray.php',
     'Hamcrest\\Arrays\\IsArrayContaining' => $vendorDir . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContaining.php',

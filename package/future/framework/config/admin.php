@@ -7,22 +7,49 @@
  * Time: 10:41
  */
 return [
-    /**
-     * 路由规则
-     */
-    'route'     => [
-        'prefix'     => env('ADMIN_ROUTE_PREFIX', 'admin'),
-        'namespace'  => 'App\\Admin\\Controllers',
+
+    'name' => 'future-framework',
+
+    'logo' => '<b>future</b>framework',
+
+    'logo-mini' => '<b>fu</b>',
+
+    'title' => 'Admin',
+
+    'route' => [
+        'prefix' => env('ADMIN_ROUTE_PREFIX', 'admin'),
+
+        'namespace' => 'App\\Admin\\Controllers',
+
         'middleware' => ['web', 'admin'],
     ],
-    /**
-     * 安装路径
-     */
+
+    'auth'      => [
+
+        'controller' => App\Admin\Controllers\AuthController::class,
+
+        'guards' => [
+            'admin' => [
+                'driver'   => 'session',
+                'provider' => 'admin',
+            ],
+        ],
+
+        'providers' => [
+            'admin' => [
+                'driver' => 'eloquent',
+                'model'  => \Future\Admin\Auth\Database\Admin::class,
+            ],
+        ],
+
+        // Add "remember me" to login form
+        'remember'  => true,
+    ],
     'directory' => app_path('Admin'),
-    /**
-     * 数据库表
-     */
-    'database'  => [
+
+    'https' => env('ADMIN_HTTPS', false),
+
+    'database' => [
         'connection'              => '',
         'admin_table'             => 'admin',
         'admin_log_table'         => 'admin_log',
@@ -58,15 +85,13 @@ return [
         'user_group_model'        => \Future\Admin\Auth\Database\UserGroup::class,
         'user_money_log_model'    => \Future\Admin\Auth\Database\UserMoneyLog::class,
         'user_rule_model'         => \Future\Admin\Auth\Database\UserRule::class,
-        'user_score_log_model'    =>\Future\Admin\Auth\Database\UserScoreLog::class,
+        'user_score_log_model'    => \Future\Admin\Auth\Database\UserScoreLog::class,
         'user_token_model'        => \Future\Admin\Auth\Database\UserToken::class,
         'version_model'           => \Future\Admin\Auth\Database\Version::class,
 
     ],
-    /**
-     * 上传设置
-     */
-    'upload'    => [
+
+    'upload' => [
 
         // Disk in `config/filesystem.php`.
         'disk'      => 'admin',

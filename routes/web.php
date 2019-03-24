@@ -13,6 +13,6 @@
 
 Route::get('/',  function (){
 
-    return view('welcome');
+    return view('admin::test');
 });
 Route::get('array','TableController@getTableArray');
