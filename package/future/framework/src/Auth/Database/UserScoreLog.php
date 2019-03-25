@@ -11,7 +11,7 @@ namespace Future\Admin\Auth\Database;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserScoreLog extends Model
+class UserScoreLog extends BaseModel
 {
 
     /**

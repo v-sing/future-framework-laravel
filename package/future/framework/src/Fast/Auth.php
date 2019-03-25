@@ -78,6 +78,7 @@ class Auth
      */
     public function check($name, $uid, $relation = 'or', $mode = 'url')
     {
+
         if (!$this->config['auth_on']) {
             return true;
         }
@@ -153,7 +154,7 @@ class Auth
         ];
 
         //读取用户组所有权限规则
-        $this->rules = DB::table($this->config['auth_rule'])->where($where)->whereIn('id', $ids)->select('id', 'pid', 'condition', 'icon', 'name', 'title', 'ismenu')->get()->toArrays();
+        $this->rules = toArray(DB::table($this->config['auth_rule'])->where($where)->whereIn('id', $ids)->select('id', 'pid', 'condition', 'icon', 'name', 'title', 'ismenu')->get()->toArray());
 
         //循环规则，判断结果。
         $rulelist = []; //

@@ -29,7 +29,7 @@ class AdminServiceProvider extends ServiceProvider
     protected $routeMiddleware = [
         'admin.init'    => Middleware\Initialization::class,
         'admin.session' => Middleware\Session::class,
-        'admin.auth'=>Middleware\AuthMiddleware::class
+        'admin.auth'    => Middleware\AuthMiddleware::class
     ];
 
     protected $middlewareGroups = [
@@ -64,21 +64,21 @@ class AdminServiceProvider extends ServiceProvider
             $this->app['request']->server->set('HTTPS', true);
         }
 
-        //
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'admin');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'admin_vendor');
+        $this->loadTranslationsFrom(admin_base_path('resources/lang'), 'admin');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'admin');
+        $this->loadViewsFrom(admin_base_path('resources/views'), 'admin');
         if (file_exists($routes = admin_path('routes.php'))) {
             $this->registerAuthRoutes();
             $this->loadRoutesFrom($routes);
         }
         if ($this->app->runningInConsole()) {
             $this->publishes([__DIR__ . '/../config' => config_path()], 'future-admin-config');
-            $this->publishes([__DIR__ . '/../resources/lang' => resource_path('lang')], 'future-admin-lang');
+            //      $this->publishes([__DIR__ . '/../resources/lang' => resource_path('lang')], 'future-admin-lang');
 //            $this->publishes([__DIR__.'/../resources/views' => resource_path('views/vendor/admin')],           'future-admin-views');
             $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'future-admin-migrations');
             $this->publishes([__DIR__ . '/../resources/assets' => public_path('assets')], 'future-admin-assets');
         }
-
         //remove default feature of double encoding enable in laravel 5.6 or later.
         $bladeReflectionClass = new \ReflectionClass('\Illuminate\View\Compilers\BladeCompiler');
         if ($bladeReflectionClass->hasMethod('withoutDoubleEncoding')) {
@@ -130,6 +130,9 @@ class AdminServiceProvider extends ServiceProvider
             /* @var \Illuminate\Routing\Router $router */
             $router->namespace($this->namespace)->group(function ($router) {
                 $router->get('/', 'IndexController@index');
+                $router->get('message', 'MessageController@index');
+                $router->any('login','IndexController@login');
+                $router->any('ajax/lang', 'AjaxController@lang');
             });
             $router->namespace(config('admin.route.namespace'))->group(function ($router) {
                 require_once app_path(admin_base_path('/routes.php'));
@@ -140,7 +143,6 @@ class AdminServiceProvider extends ServiceProvider
             });
         });
     }
-
     /**
      * 递归文件
      * @param $path

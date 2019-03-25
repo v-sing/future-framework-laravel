@@ -12,7 +12,7 @@ namespace Future\Admin\Auth\Database;
 use Illuminate\Database\Eloquent\Model;
 use Future\Admin\Traits\AdminBuilder;
 use Future\Admin\Traits\ModelTree;
-class Category extends Model
+class Category extends BaseModel
 {
     use AdminBuilder, ModelTree {
         ModelTree::boot as treeBoot;

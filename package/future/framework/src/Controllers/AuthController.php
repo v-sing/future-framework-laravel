@@ -10,7 +10,6 @@
 namespace Future\Admin\Controllers;
 
 
-class AuthController
+class AuthController extends BackendController
 {
-
 }

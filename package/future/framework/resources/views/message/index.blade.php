@@ -141,14 +141,14 @@
     </div>
     <h1>{{$res['msg']}}</h1>
     <p class="jump">
-        页面将在 <span id="wait">3</span> 秒后自动跳转 </p>
+        {!! lang('Jump seconds',3) !!}</p>
     <p class="clearfix">
-        <a href="javascript:history.go(-1);" class="btn btn-grey">返回首页</a>
-        <a href="{{$res['url']}}" class="btn btn-primary">立即跳转</a>
+        <a href="javascript:history.go(-1);" class="btn btn-grey">{{lang('Go back')}}</a>
+        <a href="{{$res['url']}}" class="btn btn-primary">{{lang('Go back')}}</a>
     </p>
 </div>
 <div class="copyright">
-    <p>Powered by <a href="http://www.chengpai.net.cn/?ref=jump">ChengPai</a></p>
+    <p>Powered by <a href="https://github.com/v-sing/future-framework?ref=jump"></a>v-sing</p>
 </div>
 <script type="text/javascript">
     (function () {

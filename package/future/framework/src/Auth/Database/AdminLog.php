@@ -12,7 +12,7 @@ namespace Future\Admin\Auth\Database;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AdminLog extends Model
+class AdminLog extends BaseModel
 {
 
     /**

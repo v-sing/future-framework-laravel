@@ -10,23 +10,18 @@
 use Illuminate\Support\Facades\Request;
 
 if (!function_exists('lang')) {
-    function lang($name)
+    function lang($name, $vars = [])
     {
-
-        $controller = request()->input('controller');
-        $lang = dirname(__DIR__) . '/Modules/' . ucfirst($controller['module']) . '/Resources/Lang/' . config('app.locale') . '.php';
-        $langNext = dirname(__DIR__) . '/Modules/' . ucfirst($controller['module']) . '/Resources/Lang/' . config('app.locale') . '/' . $controller['controller'] . '.php';
-        $trans = $controller['module'] . '::' . $controller['controller'] . '.' . $name;
-        $result = trans($trans);
-        if ($result == $trans && file_exists($lang)) {
-            $data = include $lang;
-            $name = isset($data[$name]) ? $data[$name] : $name;
-//            if ($name1 == $name) {
-//                $data = include $langNext;
-//                $name = isset($data[$name]) ? $data[$name] : $name;
-//            }
-        } else {
-            $name = $result;
+        $array = config('admin.lang');
+        $name  = isset($array[$name]) ? $array[$name] : $name;
+        if (!is_array($vars)) {
+            $vars = func_get_args();
+            array_shift($vars);
+        }
+        if (!empty($vars)) {
+            foreach ($vars as $var) {
+                $name = sprintf($name, $var);
+            }
         }
         return $name;
     }
@@ -38,9 +33,16 @@ if (!function_exists('toArray')) {
      * @param $data
      * @return mixed
      */
-    function toArray($data)
+    function toArray($array)
     {
-        return json_decode(json_encode($data, true), true);
+        if(is_object($array)) {
+            $array = (array)$array;
+        } if(is_array($array)) {
+        foreach($array as $key=>$value) {
+            $array[$key] = toArray($value);
+        }
+    }
+        return $array;
     }
 }
 

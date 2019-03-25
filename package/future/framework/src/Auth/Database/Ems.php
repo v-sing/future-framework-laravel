@@ -11,7 +11,7 @@ namespace Future\Admin\Auth\Database;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Ems extends Model
+class Ems extends BaseModel
 {
 
     /**

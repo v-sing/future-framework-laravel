@@ -108,7 +108,7 @@
                                 <div class="input-group-addon"><span class="glyphicon glyphicon-option-horizontal"
                                                                      aria-hidden="true"></span></div>
                                 <input type="text" name="captcha" class="form-control" placeholder="{{lang('Captcha')}}"
-                                       data-rule="{:__('Captcha')}:required;length(4)"/>
+                                       data-rule="{:__('Captcha')}:required"/>
                                 <span class="input-group-addon" style="padding:0;border:none;cursor:pointer;">
                                         <img src="{{captcha_src()}}" width="100" height="30"
                                              onclick="this.src='{{captcha_src()}}'+Math.random()"/>
@@ -128,8 +128,8 @@
                     </form>
                 </div>
             </div>
-            <!-- 五分钟设计课是开源程序，建议在您的网站底部保留一个五分钟设计课的链接 -->
-            <p class="copyright"><a href="#">Powered By 五分钟设计课</a></p>
+            <!-- future/framework是开源程序，建议在您的网站底部保留一个future/framework的链接 -->
+            <p class="copyright"><a href="#">Powered By future/framework</a></p>
         </div>
     </div>
 </div>

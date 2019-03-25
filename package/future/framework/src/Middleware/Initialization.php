@@ -8,6 +8,7 @@
  */
 
 namespace Future\Admin\Middleware;
+
 use Closure;
 use Illuminate\Support\Facades\Session;
 use Future\Admin\Auth\Database\Config;
@@ -18,7 +19,6 @@ use Future\Admin\Auth\Database\Config;
  * Class Initialization
  * @package Future\Admin\Middleware
  */
-
 class Initialization
 {
     /**
@@ -29,6 +29,7 @@ class Initialization
      */
     public function handle($request, Closure $next, $guard = null)
     {
+
         $action = [];
 
         $route = $request->route();
@@ -47,6 +48,7 @@ class Initialization
         $AdminInitialize  = ['controller' => $action];
         $request->merge($AdminInitialize);
         $this->config($request);
+        $this->loadLang($action['controller']);
         return $next($request);
     }
 
@@ -57,8 +59,8 @@ class Initialization
     private function config($request)
     {
 
-        $config =Config::get()->toArray();
-        $array = [];
+        $config = Config::get()->toArray();
+        $array  = [];
         foreach ($config as $key => $value) {
             if (in_array($value['type'], ['selects', 'checkbox', 'images'])) {
                 $value['value'] = explode(',', $value['value']);
@@ -73,8 +75,8 @@ class Initialization
             }
 
         }
-        if(config('app.debug')){
-            config(['site.version'=>time()]);
+        if (config('app.debug')) {
+            config(['site.version' => time()]);
         }
         $result         = $request->input('controller');
         $modulename     = $result['module'];
@@ -88,7 +90,7 @@ class Initialization
             'jsname'         => 'backend/' . str_replace('.', '/', $controllername),
             'moduleurl'      => rtrim(url("/{$modulename}", false), '/'),
             'language'       => config('site.languages.backend'),
-            'admin'          => config('app.admin'),
+            'admin'          => config('admin'),
             'referer'        => Session::get("referer"),
             'upload'         => config('upload'),
             'app_debug'      => config('app.debug')
@@ -97,7 +99,25 @@ class Initialization
             'assign' => [
                 'config' => $config,
                 'site'   => config('site'),
-                'admin'  => Session::get('admin') ? array_merge(Session::get('admin'),['cdnurl'=>$config['site']['cdnurl']]) : []
+                'admin'  => Session::get('admin') ? array_merge(Session::get('admin'), ['cdnurl' => $config['site']['cdnurl']]) : []
             ]]);
+    }
+
+    //初始化语言包
+    protected function loadLang($controller)
+    {
+        $add   = trans('admin_vendor' . '::' . $controller);
+        $array = [];
+        if (is_array($add)) {
+            $array = trans('admin_vendor' . '::' . $controller);
+        }
+        if(empty($array)){
+            $add = trans('admin' . '::' . $controller);
+            if (is_array($add)) {
+                $array = trans('admin' . '::' . $controller);
+            }
+        }
+        $array = array_merge(trans('admin_vendor::' . config('app.locale')), $array);
+        config(['admin.lang' => $array]);
     }
 }

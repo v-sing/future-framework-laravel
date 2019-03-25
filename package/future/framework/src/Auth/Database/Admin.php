@@ -13,10 +13,9 @@ use Future\Admin\Traits\AdminBuilder;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
-class Admin extends Model implements AuthenticatableContract
+class Admin extends BaseModel implements AuthenticatableContract
 {
-    use Authenticatable, AdminBuilder, HasAuth;
-
+    use Authenticatable, AdminBuilder;
     /**
      * 白名单
      * @var array

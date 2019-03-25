@@ -27,10 +27,15 @@ class Auth extends BaseAuth
     protected $requestUri = '';
     protected $breadcrumb = [];
     protected $logined = false; //登录状态
-
+    protected $adminModel=null;
+    protected $AuthGroupModel=null;
+    protected $AuthGroupAccessModel=null;
     public function __construct()
     {
         parent::__construct();
+        $this->adminModel=new Admin();
+        $this->AuthGroupModel=new AuthGroup;
+        $this->AuthGroupAccessModel=new AuthGroupAccess;
     }
 
     public function __get($name)
@@ -48,7 +53,7 @@ class Auth extends BaseAuth
      */
     public function login($username, $password, $keeptime = 0)
     {
-        $admin = Admin::getInstance()->getInfo(['username' => $username]);
+        $admin = Admin::where(['username' => $username])->first();;
         if (!$admin) {
             $this->setError('Username is incorrect');
             return false;
@@ -68,6 +73,7 @@ class Auth extends BaseAuth
         $admin->logintime    = time();
         $admin->token        = Random::uuid();
         $admin->save();
+
         Session::put("admin", $admin->toArray());
         $this->keeplogin($keeptime);
         return true;
@@ -230,7 +236,7 @@ class Auth extends BaseAuth
             $groupIds[] = $v['id'];
         }
         // 取出所有分组
-        $groupList = AuthGroup::getInstance()->where(['status' => 'normal'])->get()->toArray();
+        $groupList = $this->AuthGroupModel->where(['status' => 'normal'])->get()->toArray();
         $objList   = [];
         foreach ($groups as $K => $v) {
             if ($v['rules'] === '*') {
@@ -263,7 +269,7 @@ class Auth extends BaseAuth
         $childrenAdminIds = [];
         if (!$this->isSuperAdmin()) {
             $groupIds      = $this->getChildrenGroupIds(false);
-            $authGroupList = AuthGroupAccess::getInstance()->
+            $authGroupList = $this->AuthGroupAccessModel->
             select('uid', 'group_id')
                 ->whereIn('group_id', $groupIds)
                 ->get()->toArray();
@@ -273,7 +279,7 @@ class Auth extends BaseAuth
             }
         } else {
             //超级管理员拥有所有人的权限
-            $childrenAdminIds = Admin::getInstance()->lists('id');
+            $childrenAdminIds = $this->adminModel->lists('id');
         }
         if ($withself) {
             if (!in_array($this->id, $childrenAdminIds)) {
@@ -347,7 +353,7 @@ class Auth extends BaseAuth
         // 必须将结果集转换为数组
         $ruleList = Cache::get("__MENU__");
         if (!$ruleList) {
-            $ruleList = DB::table('auth_rule')->where(['status' => 'normal', 'ismenu' => 1])->orderby('weigh', 'desc')->get()->toArrays();
+            $ruleList = toArray(DB::table('auth_rule')->where(['status' => 'normal', 'ismenu' => 1])->orderby('weigh', 'desc')->get()->toArray());
             Cache::put("__MENU__", $ruleList);
         }
         foreach ($ruleList as $k => &$v) {

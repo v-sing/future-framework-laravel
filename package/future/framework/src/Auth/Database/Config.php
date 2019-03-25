@@ -12,7 +12,7 @@ namespace Future\Admin\Auth\Database;
 use Future\Admin\Traits\AdminBuilder;
 use Illuminate\Database\Eloquent\Model;
 
-class Config extends Model
+class Config extends BaseModel
 {
 use AdminBuilder;
     /**
