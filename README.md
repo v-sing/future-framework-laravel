@@ -36,3 +36,9 @@ php artisan vendor:publish --provider="Future\Admin\AdminServiceProvider"
 php artisan admin:install
 ````
 >启动服务后，在浏览器打开 http://localhost/admin/ ,使用用户名 admin 和密码 admin登陆.
+
+参与者
+---
+这个项目的存在要感谢所有做出贡献的人。[[为](CONTRIBUTING.md)]。
+
+<a href=""  style='border-radius: 50%;border: none;' ><img src="https://avatars3.githubusercontent.com/u/48778191?s=50&button=false" /></a>
