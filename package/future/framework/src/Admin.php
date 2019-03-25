@@ -14,52 +14,5 @@ use Illuminate\Config\Repository;
 
 class Admin
 {
-    /**
-     * @var SessionManager
-     */
-    protected $session;
-    /**
-     * @var Repository
-     */
-    protected $config;
-    /**
-     * Packagetest constructor.
-     * @param SessionManager $session
-     * @param Repository $config
-     */
-    public function __construct(SessionManager $session, Repository $config)
-    {
-        $this->session = $session;
-        $this->config = $config;
-    }
-    /**
-     * @param string $msg
-     * @return string
-     */
-    public function test_rtn($msg = ''){
-        $config_arr = $this->config->get('admin.options');
-        return $msg.' <strong>from your custom develop package!</strong>>';
-    }
-    /**
-     * Register the auth routes.
-     *
-     * @return void
-     */
-    public function registerAuthRoutes()
-    {
-        $attributes = [
-            'prefix'     => config('admin.route.prefix'),
-            'middleware' => config('admin.route.middleware'),
-        ];
-        app('router')->group($attributes, function ($router) {
-            /* @var \Illuminate\Routing\Router $router */
-            $router->namespace('Future\Admin\Controllers')->group(function ($router) {
-                $router->get('/', 'IndexController@index');
-            });
-            $authController = config('admin.auth.controller', AuthController::class);
-
-
-        });
-    }
 
 }

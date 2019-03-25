@@ -12,21 +12,6 @@ namespace Future\Admin\Traits;
 
 trait AdminBuilder
 {
-    static $models = [];
-
-    static public function getInstance()
-    {
-        $name = get_called_class();
-        if (!isset(self::$models[$name])) {
-            self::$models[$name] = new $name();
-        }
-        return self::$models[$name];
-    }
-    public function editData()
-    {
-    }
-
-
 
     /**
      * 获取单条记录

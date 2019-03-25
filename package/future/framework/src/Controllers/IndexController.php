@@ -14,8 +14,8 @@ use Illuminate\Http\Request;
 class IndexController extends BackendController
 {
     public function index(Request $request)
-    {
-//       dd( $request->input());
+        {
+       dd(trans('admin::en'));
         return view('admin::test');
     }
 }

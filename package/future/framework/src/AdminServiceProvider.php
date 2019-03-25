@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Blade;
 
 class AdminServiceProvider extends ServiceProvider
 {
+    protected $namespace = 'Future\Admin\Controllers';
     /**
      * @var array
      */
@@ -27,7 +28,8 @@ class AdminServiceProvider extends ServiceProvider
 
     protected $routeMiddleware = [
         'admin.init'    => Middleware\Initialization::class,
-        'admin.session' => Middleware\Session::class
+        'admin.session' => Middleware\Session::class,
+        'admin.auth'=>Middleware\AuthMiddleware::class
     ];
 
     protected $middlewareGroups = [
@@ -47,7 +49,6 @@ class AdminServiceProvider extends ServiceProvider
 
         //
         $this->loadAdminAuthConfig();
-
         $this->registerRouteMiddleware();
         $this->commands($this->commands);
 
@@ -64,12 +65,12 @@ class AdminServiceProvider extends ServiceProvider
         }
 
         //
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'admin');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'admin');
-
         if (file_exists($routes = admin_path('routes.php'))) {
+            $this->registerAuthRoutes();
             $this->loadRoutesFrom($routes);
         }
-
         if ($this->app->runningInConsole()) {
             $this->publishes([__DIR__ . '/../config' => config_path()], 'future-admin-config');
             $this->publishes([__DIR__ . '/../resources/lang' => resource_path('lang')], 'future-admin-lang');
@@ -112,5 +113,49 @@ class AdminServiceProvider extends ServiceProvider
         foreach ($this->middlewareGroups as $key => $middleware) {
             app('router')->middlewareGroup($key, $middleware);
         }
+    }
+
+    /**
+     * Register the auth routes.
+     *
+     * @return void
+     */
+    public function registerAuthRoutes()
+    {
+        $attributes = [
+            'prefix'     => config('admin.route.prefix'),
+            'middleware' => config('admin.route.middleware'),
+        ];
+        app('router')->group($attributes, function ($router) {
+            /* @var \Illuminate\Routing\Router $router */
+            $router->namespace($this->namespace)->group(function ($router) {
+                $router->get('/', 'IndexController@index');
+            });
+            $router->namespace(config('admin.route.namespace'))->group(function ($router) {
+                require_once app_path(admin_base_path('/routes.php'));
+                $array = $this->loadRoutesFile(app_path(admin_base_path('/routes/')));
+                foreach ($array as $routes) {
+                    require_once $routes;
+                }
+            });
+        });
+    }
+
+    /**
+     * 递归文件
+     * @param $path
+     * @return array
+     */
+    protected function loadRoutesFile($path)
+    {
+        $allRoutesFilePath = array();
+        foreach (glob($path) as $file) {
+            if (is_dir($file)) {
+                $allRoutesFilePath = array_merge($allRoutesFilePath, $this->loadRoutesFile($file . '/*'));
+            } else {
+                $allRoutesFilePath[] = $file;
+            }
+        }
+        return $allRoutesFilePath;
     }
 }
