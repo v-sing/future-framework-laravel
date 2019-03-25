@@ -235,3 +235,51 @@ if (!function_exists('parse_underline')) {
         return $hump;
     }
 }
+
+if (!function_exists('build_heading')) {
+
+    /**
+     * 生成页面Heading
+     *
+     * @param string $path 指定的path
+     * @return string
+     */
+    function build_heading($path = NULL, $container = TRUE)
+    {
+
+        $controller = Request::input('controller');
+        $title      = $content = '';
+        if (is_null($path)) {
+            $action     = $controller['action'];
+            $controller = str_replace('.', '/', $controller['controller']);
+            $path       = strtolower($controller . ($action && $action != 'index' ? '/' . $action : ''));
+        }
+        // 根据当前的URI自动匹配父节点的标题和备注
+        $data = Model('AuthRule')->getInfo(['name' => $path])->toArray();
+        if ($data) {
+            $title   = lang($data['title']);
+            $content = lang($data['remark']);
+        }
+        if (!$content)
+            return '';
+        $result = '<div class="panel-lead"><em>' . $title . '</em>' . $content . '</div>';
+        if ($container) {
+            $result = '<div class="panel-heading">' . $result . '</div>';
+        }
+        return $result;
+    }
+}
+if (!function_exists('Model')) {
+    /**
+     * 数据库层
+     * @param $model
+     * @return mixed
+     */
+    function Model($model)
+    {
+      if(!class_exists($class = '\\App\\Model\\' . $model)){
+          $class='\\Future\\Admin\\Auth\\Database\\'. $model;
+      }
+        return new $class;
+    }
+}

@@ -12,7 +12,7 @@ namespace Future\Admin\Traits;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Factory;
 use Illuminate\Validation\Validator;
-
+use Illuminate\Support\Facades\View;
 trait Backend
 {
 

@@ -32,7 +32,6 @@ class AuthRule extends BaseModel
     public function __construct(array $attributes = [])
     {
         $connection = config('admin.database.connection') ?: config('database.default');
-
         $this->setConnection($connection);
         $class = class_basename(get_class());
         $this->setTable(parse_underline($class));

@@ -78,6 +78,7 @@ class AdminServiceProvider extends ServiceProvider
 //            $this->publishes([__DIR__.'/../resources/views' => resource_path('views/vendor/admin')],           'future-admin-views');
             $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'future-admin-migrations');
             $this->publishes([__DIR__ . '/../resources/assets' => public_path('assets')], 'future-admin-assets');
+
         }
         //remove default feature of double encoding enable in laravel 5.6 or later.
         $bladeReflectionClass = new \ReflectionClass('\Illuminate\View\Compilers\BladeCompiler');
@@ -130,9 +131,12 @@ class AdminServiceProvider extends ServiceProvider
             /* @var \Illuminate\Routing\Router $router */
             $router->namespace($this->namespace)->group(function ($router) {
                 $router->get('/', 'IndexController@index');
+                $router->get('index', 'IndexController@index');
+                $router->get('index/index', 'IndexController@index');
                 $router->get('message', 'MessageController@index');
                 $router->any('login','IndexController@login');
                 $router->any('ajax/lang', 'AjaxController@lang');
+                $router->any('dashboard', 'DashboardController@index');
             });
             $router->namespace(config('admin.route.namespace'))->group(function ($router) {
                 require_once app_path(admin_base_path('/routes.php'));

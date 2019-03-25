@@ -106,6 +106,7 @@ class Initialization
     //初始化语言包
     protected function loadLang($controller)
     {
+
         $add   = trans('admin_vendor' . '::' . $controller);
         $array = [];
         if (is_array($add)) {

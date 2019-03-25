@@ -23,7 +23,7 @@ class BaseModel extends Model
      * @param $condition
      * @return BaseModel|BaseModel[]|\Illuminate\Database\Eloquent\Collection|Model|null
      */
-    public function getInfo($condition = [], $field = null)
+    public function getInfo($condition = [], $field = '*')
     {
         return $this->where($condition)->first($field);
     }
@@ -36,7 +36,7 @@ class BaseModel extends Model
      * @param string $group
      * @return BaseModel[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function getQueryNew($condition, $field = null, $order = '', $group = '')
+    public function getQueryNew($condition, $field = '*', $order = '', $group = '')
     {
         $model = $this->where($condition);
         if ($order != '') {

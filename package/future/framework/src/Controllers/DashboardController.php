@@ -8,7 +8,7 @@
  */
 
 namespace Future\Admin\Controllers;
-
+use Future\Admin\Fast\Date;
 
 use Illuminate\Http\Request;
 
@@ -16,7 +16,7 @@ class DashboardController extends BackendController
 {
     public function index(Request $request)
     {
-        $seventtime = \fast\Date::unixtime('day', -7);
+        $seventtime = Date::unixtime('day', -7);
         $paylist    = $createlist = [];
         for ($i = 0; $i < 7; $i++) {
             $day              = date("Y-m-d", $seventtime + ($i * 86400));
