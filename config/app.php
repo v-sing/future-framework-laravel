@@ -229,7 +229,8 @@ return [
         'View'         => Illuminate\Support\Facades\View::class,
         'Admin'        => \Future\Admin\Facades\Admin::class,
         'Pinyin'       => Overtrue\LaravelPinyin\Facades\Pinyin::class,
-        'Captcha'      => Mews\Captcha\Facades\Captcha::class
+        'Captcha'      => Mews\Captcha\Facades\Captcha::class,
+        'Form'         =>\Future\Admin\Form\FormFacade::class
     ],
 
 ];

@@ -5,7 +5,8 @@ namespace Future\Admin;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
-
+use Future\Admin\Form\FormBuilder;
+use Future\Admin\Form\HtmlBuilder;
 class AdminServiceProvider extends ServiceProvider
 {
     protected $namespace = 'Future\Admin\Controllers';
@@ -29,7 +30,7 @@ class AdminServiceProvider extends ServiceProvider
     protected $routeMiddleware = [
         'admin.init'    => Middleware\Initialization::class,
         'admin.session' => Middleware\Session::class,
-        'admin.auth'    => Middleware\AuthMiddleware::class
+        'admin.auth'    => Middleware\AuthMiddleware::class,
     ];
 
     protected $middlewareGroups = [
@@ -51,7 +52,12 @@ class AdminServiceProvider extends ServiceProvider
         $this->loadAdminAuthConfig();
         $this->registerRouteMiddleware();
         $this->commands($this->commands);
+        $this->registerHtmlBuilder();
 
+        $this->registerFormBuilder();
+
+        $this->app->alias('html', 'Future\Admin\Form\HtmlBuilder');
+        $this->app->alias('form', 'Future\Admin\Form\FormBuilder');
     }
 
     /**
@@ -137,6 +143,10 @@ class AdminServiceProvider extends ServiceProvider
                 $router->any('login','IndexController@login');
                 $router->any('ajax/lang', 'AjaxController@lang');
                 $router->any('dashboard', 'DashboardController@index');
+                $router->any('config', 'ConfigController@index');
+            });
+            $router->namespace("Future\Admin\Test")->group(function ($router) {
+                $router->get('form', 'TestController@form');
             });
             $router->namespace(config('admin.route.namespace'))->group(function ($router) {
                 require_once app_path(admin_base_path('/routes.php'));
@@ -164,4 +174,43 @@ class AdminServiceProvider extends ServiceProvider
         }
         return $allRoutesFilePath;
     }
+
+    /**
+     * Register the HTML builder instance.
+     *
+     * @return void
+     */
+    protected function registerHtmlBuilder()
+    {
+        $this->app->singleton('html', function($app)
+        {
+            return new HtmlBuilder($app['url']);
+        });
+    }
+
+    /**
+     * Register the form builder instance.
+     *
+     * @return void
+     */
+    protected function registerFormBuilder()
+    {
+        $this->app->singleton('form', function($app)
+        {
+            $form = new FormBuilder($app['html'], $app['url'], $app['session.store']->token());
+
+            return $form->setSessionStore($app['session.store']);
+        });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return array('html', 'form');
+    }
+
 }

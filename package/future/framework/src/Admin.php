@@ -9,10 +9,12 @@
 
 namespace Future\Admin;
 
-use Illuminate\Session\SessionManager;
-use Illuminate\Config\Repository;
+use Closure;
 
 class Admin
 {
+    public function Form($table, Closure $callback)
+    {
 
+    }
 }

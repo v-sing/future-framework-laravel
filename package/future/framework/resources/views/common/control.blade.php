@@ -19,9 +19,9 @@
         <!-- Home tab content -->
         <div class="tab-pane active" id="control-sidebar-setting-tab">
             <h4 class="control-sidebar-heading">{{lang(('Layout Options'))}}</h4>
-            <div class="form-group"><label class="control-sidebar-subheading"><input type="checkbox" data-layout="fixed" class="pull-right"> {{('Fixed Layout')}}</label><p>{{("You can't use fixed and boxed layouts together")}}</p></div>
+            <div class="form-group"><label class="control-sidebar-subheading"><input type="checkbox" data-layout="fixed" class="pull-right"> {{lang('Fixed Layout')}}</label><p>{{lang("You can't use fixed and boxed layouts together")}}</p></div>
             <div class="form-group"><label class="control-sidebar-subheading"><input type="checkbox" data-layout="layout-boxed" class="pull-right"> {{lang('Boxed Layout')}}</label><p>{{lang('Activate the boxed layout')}}</p></div>
-            <div class="form-group"><label class="control-sidebar-subheading"><input type="checkbox" data-layout="sidebar-collapse" class="pull-right"> {{('Toggle Sidebar')}}</label><p>{{("Toggle the left sidebar's state (open or collapse)")}}</p></div>
+            <div class="form-group"><label class="control-sidebar-subheading"><input type="checkbox" data-layout="sidebar-collapse" class="pull-right"> {{lang('Toggle Sidebar')}}</label><p>{{lang("Toggle the left sidebar's state (open or collapse)")}}</p></div>
             <div class="form-group"><label class="control-sidebar-subheading"><input type="checkbox" data-enable="expandOnHover" class="pull-right"> {{lang('Sidebar Expand on Hover')}}</label><p>{{lang('Let the sidebar mini expand on hover')}}</p></div>
             <div class="form-group"><label class="control-sidebar-subheading"><input type="checkbox" data-menu="disable-top-badge" class="pull-right"> {{lang('Disable top menu badge')}}</label><p>{{lang('Disable top menu badge without left menu')}}</p></div>
             <div class="form-group"><label class="control-sidebar-subheading"><input type="checkbox" data-controlsidebar="control-sidebar-open" class="pull-right"> {{lang('Toggle Right Sidebar Slide')}}</label><p>{{lang('Toggle between slide over content and push content effects')}}</p></div>

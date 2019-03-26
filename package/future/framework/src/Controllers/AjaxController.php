@@ -10,6 +10,7 @@
 namespace Future\Admin\Controllers;
 
 use Illuminate\Http\Request;
+
 class AjaxController extends BackendController
 {
     protected $noNeedLogin = '*';
@@ -21,9 +22,14 @@ class AjaxController extends BackendController
      */
     public function lang(Request $request)
     {
-        $controller=$request->input('controllername');
+        $controller = $request->input('controllername');
         $this->loadLang($controller);
-        return jsonp('define',config('ajax.lang'));
+        return jsonp('define', config('ajax.lang'));
+    }
+
+    public function upload()
+    {
+
     }
 
     //初始化语言包
@@ -34,7 +40,7 @@ class AjaxController extends BackendController
         if (is_array($add)) {
             $array = trans('admin_vendor' . '::' . $controller);
         }
-        if(empty($array)){
+        if (empty($array)) {
             $add = trans('admin' . '::' . $controller);
             if (is_array($add)) {
                 $array = trans('admin' . '::' . $controller);

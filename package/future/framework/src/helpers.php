@@ -255,7 +255,7 @@ if (!function_exists('build_heading')) {
             $path       = strtolower($controller . ($action && $action != 'index' ? '/' . $action : ''));
         }
         // 根据当前的URI自动匹配父节点的标题和备注
-        $data = Model('AuthRule')->getInfo(['name' => $path])->toArray();
+        $data = Model('AuthRule')->getInfo(['name' => $path]);
         if ($data) {
             $title   = lang($data['title']);
             $content = lang($data['remark']);
@@ -281,5 +281,19 @@ if (!function_exists('Model')) {
           $class='\\Future\\Admin\\Auth\\Database\\'. $model;
       }
         return new $class;
+    }
+}
+
+if (!function_exists('admin_error')) {
+
+    /**
+     * Flash a error message bag to session.
+     *
+     * @param string $title
+     * @param string $message
+     */
+    function admin_error($title, $message = '')
+    {
+        admin_info($title, $message, 'error');
     }
 }
