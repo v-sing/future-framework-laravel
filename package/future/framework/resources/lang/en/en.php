@@ -10,7 +10,7 @@ return [
     'User id'                                               => 'User id',
     'Username'                                              => 'Username',
     'Nickname'                                              => 'Nickname',
-    'Password'                                              => '密码',
+    'Password'                                              => 'Password',
     'Sign up'                                               => 'Sign up',
     'Sign in'                                               => 'Sign in',
     'Sign out'                                              => 'Sign out',

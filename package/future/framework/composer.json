@@ -2,6 +2,7 @@
     "name": "future/framework",
     "description": "future-framework",
     "type": "library",
+	"homepage": "https://github.com/v-sing/future-framework",
     "license": "MIT",
     "authors": [
         {
@@ -9,5 +10,36 @@
             "email": "email1946367301@163.com"
         }
     ],
-    "require": {}
+    "require": {
+		"php": "^7.1.3",
+        "fideloper/proxy": "^4.0",
+        "laravel/framework": "5.8.*",
+        "laravel/tinker": "^1.0",
+        "mews/captcha": "^2.2",
+        "overtrue/laravel-pinyin": "^4.0"
+	},
+	"autoload": {
+        "psr-4": {
+            "Future\\Admin\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Future\\Admin\\AdminServiceProvider",
+				"Overtrue\\LaravelPinyin\\ServiceProvider",
+                "Mews\\Captcha\\CaptchaServiceProvider"
+            ],
+            "aliases": {
+                "Admin": "Future\\Admin\\Facades\\Admin",
+				"Pinyin":"Overtrue\\LaravelPinyin\\Facades\\Pinyin",
+                "Captcha":"Mews\\Captcha\\Facades\\Captcha",
+				"Form":"Future\\Admin\\Form\\FormFacade"
+            }
+
+        }
+    }
 }
