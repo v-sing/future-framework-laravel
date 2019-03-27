@@ -53,9 +53,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->registerRouteMiddleware();
         $this->commands($this->commands);
         $this->registerHtmlBuilder();
-
         $this->registerFormBuilder();
-
         $this->app->alias('html', 'Future\Admin\Form\HtmlBuilder');
         $this->app->alias('form', 'Future\Admin\Form\FormBuilder');
     }
@@ -69,22 +67,19 @@ class AdminServiceProvider extends ServiceProvider
             \URL::forceScheme('https');
             $this->app['request']->server->set('HTTPS', true);
         }
-
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'admin_vendor');
-        $this->loadTranslationsFrom(admin_base_path('resources/lang'), 'admin');
+        $this->loadTranslationsFrom(app_path(admin_base_path('Resources/lang')), 'admin');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'admin');
-        $this->loadViewsFrom(admin_base_path('resources/views'), 'admin');
+
+        $this->loadViewsFrom(app_path(admin_base_path('Resources/views')), 'admin');
         if (file_exists($routes = admin_path('routes.php'))) {
             $this->registerAuthRoutes();
             $this->loadRoutesFrom($routes);
         }
         if ($this->app->runningInConsole()) {
             $this->publishes([__DIR__ . '/../config' => config_path()], 'future-admin-config');
-            //      $this->publishes([__DIR__ . '/../resources/lang' => resource_path('lang')], 'future-admin-lang');
-//            $this->publishes([__DIR__.'/../resources/views' => resource_path('views/vendor/admin')],           'future-admin-views');
             $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'future-admin-migrations');
             $this->publishes([__DIR__ . '/../resources/assets' => public_path('assets')], 'future-admin-assets');
-
         }
         //remove default feature of double encoding enable in laravel 5.6 or later.
         $bladeReflectionClass = new \ReflectionClass('\Illuminate\View\Compilers\BladeCompiler');
@@ -136,14 +131,10 @@ class AdminServiceProvider extends ServiceProvider
         app('router')->group($attributes, function ($router) {
             /* @var \Illuminate\Routing\Router $router */
             $router->namespace($this->namespace)->group(function ($router) {
-                $router->get('/', 'IndexController@index');
-                $router->get('index', 'IndexController@index');
-                $router->get('index/index', 'IndexController@index');
-                $router->get('message', 'MessageController@index');
-                $router->any('login','IndexController@login');
-                $router->any('ajax/lang', 'AjaxController@lang');
-                $router->any('dashboard', 'DashboardController@index');
-                $router->any('config', 'ConfigController@index');
+                $array = $this->loadRoutesFile(__DIR__.'/../routes/admin');
+                foreach ($array as $routes) {
+                    require_once $routes;
+                }
             });
             $router->namespace("Future\Admin\Test")->group(function ($router) {
                 $router->get('form', 'TestController@form');

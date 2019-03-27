@@ -6,10 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'App\\Admin\\Controllers\\AuthController' => $baseDir . '/app/Admin/Controllers/AuthController.php',
-    'App\\Admin\\Controllers\\ExampleController' => $baseDir . '/app/Admin/Controllers/ExampleController.php',
-    'App\\Admin\\Controllers\\HomeController' => $baseDir . '/app/Admin/Controllers/HomeController.php',
-    'App\\Admin\\Controllers\\TestController' => $baseDir . '/app/Admin/Controllers/TestController.php',
+    'App\\Admin\\Controllers\\DemoController' => $baseDir . '/app/Admin/Controllers/DemoController.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
@@ -677,9 +674,11 @@ return array(
     'Future\\Admin\\Controllers\\AjaxController' => $baseDir . '/package/future/framework/src/Controllers/AjaxController.php',
     'Future\\Admin\\Controllers\\AuthController' => $baseDir . '/package/future/framework/src/Controllers/AuthController.php',
     'Future\\Admin\\Controllers\\BackendController' => $baseDir . '/package/future/framework/src/Controllers/BackendController.php',
+    'Future\\Admin\\Controllers\\ConfigController' => $baseDir . '/package/future/framework/src/Controllers/ConfigController.php',
     'Future\\Admin\\Controllers\\DashboardController' => $baseDir . '/package/future/framework/src/Controllers/DashboardController.php',
     'Future\\Admin\\Controllers\\IndexController' => $baseDir . '/package/future/framework/src/Controllers/IndexController.php',
     'Future\\Admin\\Controllers\\MessageController' => $baseDir . '/package/future/framework/src/Controllers/MessageController.php',
+    'Future\\Admin\\Controllers\\TestController' => $baseDir . '/package/future/framework/src/Controllers/TestController.php',
     'Future\\Admin\\Facades\\Admin' => $baseDir . '/package/future/framework/src/Facades/Admin.php',
     'Future\\Admin\\Fast\\Auth' => $baseDir . '/package/future/framework/src/Fast/Auth.php',
     'Future\\Admin\\Fast\\Date' => $baseDir . '/package/future/framework/src/Fast/Date.php',
@@ -689,7 +688,6 @@ return array(
     'Future\\Admin\\Form\\FormFacade' => $baseDir . '/package/future/framework/src/Form/FormFacade.php',
     'Future\\Admin\\Form\\HtmlBuilder' => $baseDir . '/package/future/framework/src/Form/HtmlBuilder.php',
     'Future\\Admin\\HtmlFacade' => $baseDir . '/package/future/framework/src/Form/HtmlFacade.php',
-    'Future\\Admin\\HtmlServiceProvider' => $baseDir . '/package/future/framework/src/HtmlServiceProvider.php',
     'Future\\Admin\\Middleware\\AuthMiddleware' => $baseDir . '/package/future/framework/src/Middleware/AuthMiddleware.php',
     'Future\\Admin\\Middleware\\Initialization' => $baseDir . '/package/future/framework/src/Middleware/Initialization.php',
     'Future\\Admin\\Middleware\\Session' => $baseDir . '/package/future/framework/src/Middleware/Session.php',

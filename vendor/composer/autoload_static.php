@@ -403,10 +403,7 @@ class ComposerStaticInit50bd59069c1e2d2c18dad6ca723e8257
     );
 
     public static $classMap = array (
-        'App\\Admin\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Admin/Controllers/AuthController.php',
-        'App\\Admin\\Controllers\\ExampleController' => __DIR__ . '/../..' . '/app/Admin/Controllers/ExampleController.php',
-        'App\\Admin\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Admin/Controllers/HomeController.php',
-        'App\\Admin\\Controllers\\TestController' => __DIR__ . '/../..' . '/app/Admin/Controllers/TestController.php',
+        'App\\Admin\\Controllers\\DemoController' => __DIR__ . '/../..' . '/app/Admin/Controllers/DemoController.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
@@ -1074,9 +1071,11 @@ class ComposerStaticInit50bd59069c1e2d2c18dad6ca723e8257
         'Future\\Admin\\Controllers\\AjaxController' => __DIR__ . '/../..' . '/package/future/framework/src/Controllers/AjaxController.php',
         'Future\\Admin\\Controllers\\AuthController' => __DIR__ . '/../..' . '/package/future/framework/src/Controllers/AuthController.php',
         'Future\\Admin\\Controllers\\BackendController' => __DIR__ . '/../..' . '/package/future/framework/src/Controllers/BackendController.php',
+        'Future\\Admin\\Controllers\\ConfigController' => __DIR__ . '/../..' . '/package/future/framework/src/Controllers/ConfigController.php',
         'Future\\Admin\\Controllers\\DashboardController' => __DIR__ . '/../..' . '/package/future/framework/src/Controllers/DashboardController.php',
         'Future\\Admin\\Controllers\\IndexController' => __DIR__ . '/../..' . '/package/future/framework/src/Controllers/IndexController.php',
         'Future\\Admin\\Controllers\\MessageController' => __DIR__ . '/../..' . '/package/future/framework/src/Controllers/MessageController.php',
+        'Future\\Admin\\Controllers\\TestController' => __DIR__ . '/../..' . '/package/future/framework/src/Controllers/TestController.php',
         'Future\\Admin\\Facades\\Admin' => __DIR__ . '/../..' . '/package/future/framework/src/Facades/Admin.php',
         'Future\\Admin\\Fast\\Auth' => __DIR__ . '/../..' . '/package/future/framework/src/Fast/Auth.php',
         'Future\\Admin\\Fast\\Date' => __DIR__ . '/../..' . '/package/future/framework/src/Fast/Date.php',
@@ -1086,7 +1085,6 @@ class ComposerStaticInit50bd59069c1e2d2c18dad6ca723e8257
         'Future\\Admin\\Form\\FormFacade' => __DIR__ . '/../..' . '/package/future/framework/src/Form/FormFacade.php',
         'Future\\Admin\\Form\\HtmlBuilder' => __DIR__ . '/../..' . '/package/future/framework/src/Form/HtmlBuilder.php',
         'Future\\Admin\\HtmlFacade' => __DIR__ . '/../..' . '/package/future/framework/src/Form/HtmlFacade.php',
-        'Future\\Admin\\HtmlServiceProvider' => __DIR__ . '/../..' . '/package/future/framework/src/HtmlServiceProvider.php',
         'Future\\Admin\\Middleware\\AuthMiddleware' => __DIR__ . '/../..' . '/package/future/framework/src/Middleware/AuthMiddleware.php',
         'Future\\Admin\\Middleware\\Initialization' => __DIR__ . '/../..' . '/package/future/framework/src/Middleware/Initialization.php',
         'Future\\Admin\\Middleware\\Session' => __DIR__ . '/../..' . '/package/future/framework/src/Middleware/Session.php',

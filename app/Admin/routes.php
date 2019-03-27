@@ -1,3 +1,7 @@
 <?php
 
-Route::get('ccsc', 'TestController@index');
+/**
+ *
+ * 请在routes 内填写路由
+ *
+ */
