@@ -12,6 +12,7 @@ namespace Future\Admin\Middleware;
 use Closure;
 use Future\Admin\Auth\Auth;
 use Illuminate\Support\Facades\Session;
+use Future\Admin\Facades\Admin;
 
 class AuthMiddleware
 {
@@ -26,23 +27,21 @@ class AuthMiddleware
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        $nature     = $request->input('nature');
-        $noNeedRight=$nature['noNeedRight'];
-        $noNeedLogin=$nature['noNeedLogin'];
-        $this->auth = Auth::instance();
+        $nature      = Admin::nature();
+        $noNeedRight = $nature['noNeedRight'];
+        $noNeedLogin = $nature['noNeedLogin'];
+        $this->auth  = Auth::instance();
         // 检测是否需要验证登录
         if (!$this->auth->match($noNeedLogin)) {
             if (!$this->auth->isLogin()) {
                 $url = Session::get('referer');
                 $url = $url ? $url : $request->url();
-                return error('Please login first', [], url('admin/login?url='.urlencode($url)));
+                return error('Please login first', [], url('admin/login?url=' . urlencode($url)));
             }
         }
-        $data           = $request->input();
-        $result         = $data['controller'];
-        $modulename     = $result['module'];
-        $controllername = $result['controller'];
-        $actionname     = $result['action'];
+        $modulename     = Admin::module();
+        $controllername = Admin::controller();
+        $actionname     = Admin::action();
         $path           = $modulename . '/' . $controllername . '/' . $actionname;
         if (!$this->auth->match($noNeedRight)) {
             if (!$this->auth->check($path)) {
@@ -52,10 +51,12 @@ class AuthMiddleware
         // 设置面包屑导航数据
         $breadcrumb = $this->auth->getBreadCrumb($path);
         array_pop($breadcrumb);
-        $data['assign']['auth']       = $this->auth;
-        $data['assign']['breadcrumb'] = $breadcrumb;
-        $request->merge($data);
-
+        Admin::setAssign(
+            [
+                'auth'       => $this->auth,
+                'breadcrumb' =>$breadcrumb
+            ]
+        );
         // 定义是否Addtabs请求
         !defined('IS_ADDTABS') && define('IS_ADDTABS', $request->input("addtabs") ? TRUE : FALSE);
         // 定义是否Dialog请求
@@ -68,7 +69,7 @@ class AuthMiddleware
             $url = preg_replace_callback("/([\?|&]+)ref=addtabs(&?)/i", function ($matches) {
                 return $matches[2] == '&' ? $matches[1] : '';
             }, $request->url());
-            if (config('app.admin.url_domain_deploy')) {
+            if (config('admin.url_domain_deploy')) {
                 if (stripos($url, $request->server('SCRIPT_NAME')) === 0) {
                     $url = substr($url, strlen($request->server('SCRIPT_NAME')));
                 }

@@ -8,7 +8,7 @@
  */
 
 use Illuminate\Support\Facades\Request;
-
+use Future\Admin\Facades\Admin;
 if (!function_exists('lang')) {
     function lang($name, $vars = [])
     {
@@ -35,13 +35,14 @@ if (!function_exists('toArray')) {
      */
     function toArray($array)
     {
-        if(is_object($array)) {
+        if (is_object($array)) {
             $array = (array)$array;
-        } if(is_array($array)) {
-        foreach($array as $key=>$value) {
-            $array[$key] = toArray($value);
         }
-    }
+        if (is_array($array)) {
+            foreach ($array as $key => $value) {
+                $array[$key] = toArray($value);
+            }
+        }
         return $array;
     }
 }
@@ -247,11 +248,11 @@ if (!function_exists('build_heading')) {
     function build_heading($path = NULL, $container = TRUE)
     {
 
-        $controller = Request::input('controller');
+
         $title      = $content = '';
         if (is_null($path)) {
-            $action     = $controller['action'];
-            $controller = str_replace('.', '/', $controller['controller']);
+            $action     = Admin::action();
+            $controller = str_replace('.', '/', Admin::controller());
             $path       = strtolower($controller . ($action && $action != 'index' ? '/' . $action : ''));
         }
         // 根据当前的URI自动匹配父节点的标题和备注
@@ -277,9 +278,9 @@ if (!function_exists('Model')) {
      */
     function Model($model)
     {
-      if(!class_exists($class = '\\App\\Model\\' . $model)){
-          $class='\\Future\\Admin\\Auth\\Database\\'. $model;
-      }
+        if (!class_exists($class = '\\App\\Model\\' . $model)) {
+            $class = '\\Future\\Admin\\Auth\\Database\\' . $model;
+        }
         return new $class;
     }
 }
@@ -295,5 +296,23 @@ if (!function_exists('admin_error')) {
     function admin_error($title, $message = '')
     {
         admin_info($title, $message, 'error');
+    }
+}
+
+if (!function_exists('input')) {
+    /**
+     * 获取输入数据 支持默认值和过滤
+     * @param string    $key 获取的变量名
+     * @param mixed     $default 默认值
+     * @param string    $filter 过滤方法
+     * @return mixed
+     */
+
+    function input($key = '', $default = null, $filter = '')
+    {
+        return Request::input();
+        if(request()->has($key)){
+           return request()->input();
+        }
     }
 }

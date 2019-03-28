@@ -145,6 +145,7 @@ require(['jquery', 'bootstrap'], function ($, undefined) {
     // 避免目录冲突
     paths['backend/'] = 'backend/';
     require.config({paths: paths});
+    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
     // 初始化
     $(function () {
         require(['fast'], function (Fast) {

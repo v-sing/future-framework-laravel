@@ -8,4 +8,7 @@
  */
 
 
-Route::any('config', 'ConfigController@index');
+Route::get('config', 'ConfigController@index');
+Route::post('config/add', 'ConfigController@add');
+Route::post('config/edit', 'ConfigController@edit');
+Route::post('config/check', 'ConfigController@check');

@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Factory;
 use Illuminate\Validation\Validator;
 use Illuminate\Support\Facades\View;
+use Future\Admin\Facades\Admin;
 trait Backend
 {
 
@@ -227,10 +228,9 @@ trait Backend
     protected function view($data = [], $view = null)
     {
         if (!$view) {
-            $path = request()->input('controller');
-            $view = $path['module'] . '::' . $path['controller'] . '.' . $path['action'];
+            $view = Admin::module() . '::' . Admin::controller() . '.' . Admin::action();
         }
-        $data = array_merge($this->assign, $data, request()->input('assign'));
+        $data = array_merge($this->assign, $data, Admin::assign());
         if (is_null($this->layout)) {
             return view($view)->with($data);
         } else {

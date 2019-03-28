@@ -117,7 +117,7 @@ class Auth extends BaseAuth
      */
     public function match($arr = [])
     {
-        $request = Request::input('controller');
+
         $arr     = is_array($arr) ? $arr : explode(',', $arr);
         if (!$arr) {
             return FALSE;
@@ -125,7 +125,7 @@ class Auth extends BaseAuth
 
         $arr = array_map('strtolower', $arr);
         // 是否存在
-        if (in_array(strtolower($request['action']), $arr) || in_array('*', $arr)) {
+        if (in_array(strtolower(\Future\Admin\Facades\Admin::action()), $arr) || in_array('*', $arr)) {
             return TRUE;
         }
 
@@ -326,7 +326,7 @@ class Auth extends BaseAuth
         $colorArr  = ['red', 'green', 'yellow', 'blue', 'teal', 'orange', 'purple'];
         $colorNums = count($colorArr);
         $badgeList = [];
-        $module    = Request::input('controller')['module'];
+        $module    =\Future\Admin\Facades\Admin::module();
         // 生成菜单的badge
         foreach ($params as $k => $v) {
             $url = $k;

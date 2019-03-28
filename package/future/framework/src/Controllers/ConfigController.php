@@ -10,12 +10,14 @@
 namespace Future\Admin\Controllers;
 
 use Future\Admin\Auth\Database\Config;
+use Illuminate\Http\Request;
+
 class ConfigController extends BackendController
 {
     protected $model = null;
     protected $noNeedRight = ['check'];
 
-    public function __construct(\Illuminate\Http\Request $request)
+    public function __construct(Request $request)
     {
         parent::__construct($request);
         $this->model = Model('Config');
@@ -26,23 +28,23 @@ class ConfigController extends BackendController
      */
     public function index()
     {
-        $siteList = [];
+        $siteList  = [];
         $groupList = Config::getGroupList();
         foreach ($groupList as $k => $v) {
-            $siteList[$k]['name'] = $k;
+            $siteList[$k]['name']  = $k;
             $siteList[$k]['title'] = $v;
-            $siteList[$k]['list'] = [];
+            $siteList[$k]['list']  = [];
         }
         foreach ($this->model->get()->toArray() as $k => $v) {
             if (!isset($siteList[$v['group']])) {
                 continue;
             }
-            $value = $v;
+            $value          = $v;
             $value['title'] = __($value['title']);
             if (in_array($value['type'], ['select', 'selects', 'checkbox', 'radio'])) {
                 $value['value'] = explode(',', $value['value']);
             }
-            $value['content'] = json_decode($value['content'], TRUE);
+            $value['content']                = json_decode($value['content'], TRUE);
             $siteList[$v['group']]['list'][] = $value;
         }
         $index = 0;
@@ -51,11 +53,36 @@ class ConfigController extends BackendController
             $index++;
         }
 
-        $assign=[
-            'siteList'=>$siteList,
-            'typeList'=>Config::getTypeList(),
-            'groupList'=>Config::getGroupList()
+        $assign = [
+            'siteList'  => $siteList,
+            'typeList'  => Config::getTypeList(),
+            'groupList' => Config::getGroupList()
         ];
         return $this->view($assign);
+    }
+
+    /**
+     * 添加
+     */
+    public function add()
+    {
+
+    }
+
+    /**
+     * 更新
+     */
+    public function edit()
+    {
+
+    }
+
+    /**
+     * 验证
+     */
+    public function check()
+    {
+     $request=   \Illuminate\Support\Facades\Request::all('data');
+echo  success('ssss',$request);
     }
 }

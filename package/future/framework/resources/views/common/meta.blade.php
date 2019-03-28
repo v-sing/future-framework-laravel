@@ -5,7 +5,7 @@
     <link rel="shortcut icon" href="{{$config['site']['cdnurl']}}/assets/img/favicon.ico" />
     <!-- Loading Bootstrap -->
     <link href="{{$config['site']['cdnurl']}}/assets/css/backend{{$config['app_debug']?'':'.min'}}.css?v={{$config['site']['version']}}" rel="stylesheet">
-
+    <meta name="csrf-token" content="{{csrf_token()}}" />
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
     <!--[if lt IE 9]>
     <script src="{{$config['site']['cdnurl']}}/assets/js/html5shiv.js"></script>

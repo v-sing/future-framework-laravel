@@ -15,6 +15,7 @@ use Future\Admin\Traits\Backend;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Future\Admin\Auth\Auth;
 use Illuminate\Support\Facades\Request;
+use Future\Admin\Facades\Admin;
 
 class BackendController extends BaseController
 {
@@ -114,11 +115,11 @@ class BackendController extends BaseController
 
     public function __construct(\Illuminate\Http\Request $request)
     {
-        $request->merge(['nature' => [
+
+        Admin::setNature([
             'noNeedRight' => $this->noNeedRight,
             'noNeedLogin' => $this->noNeedLogin,
-        ]]);
-
+        ]);
         $this->auth = Auth::instance();
         $this->middleware('admin.auth');
         $this->request = request();
