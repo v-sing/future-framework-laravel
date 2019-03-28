@@ -145,14 +145,12 @@ require(['jquery', 'bootstrap'], function ($, undefined) {
     // 避免目录冲突
     paths['backend/'] = 'backend/';
     require.config({paths: paths});
-
     // 初始化
     $(function () {
         require(['fast'], function (Fast) {
             require(['backend', 'backend-init', 'addons'], function (Backend, undefined, Addons) {
                 //加载相应模块
                 if (Config.jsname) {
-                    console.log(Config);
                     require([Config.jsname], function (Controller) {
                         Controller[Config.actionname] != undefined && Controller[Config.actionname]();
                     }, function (e) {

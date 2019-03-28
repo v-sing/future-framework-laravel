@@ -78,10 +78,15 @@ class Initialization
         if (config('app.debug')) {
             config(['site.version' => time()]);
         }
+
         $result         = $request->input('controller');
         $modulename     = $result['module'];
         $controllername = $result['controller'];
         $actionname     = $result['action'];
+        $lang=config('site.languages.backend');
+        if(!$lang){
+            $lang='zh-cn';
+        }
         $config         = [
             'site'           => array_intersect_key(config('site'), array_flip(['name', 'indexurl', 'cdnurl', 'version', 'timezone', 'languages'])),
             'modulename'     => $modulename,
@@ -89,12 +94,14 @@ class Initialization
             'actionname'     => $actionname,
             'jsname'         => 'backend/' . str_replace('.', '/', $controllername),
             'moduleurl'      => rtrim(url("/{$modulename}", false), '/'),
-            'language'       => config('site.languages.backend'),
+            'language'       =>$lang,
             'admin'          => config('admin'),
             'referer'        => Session::get("referer"),
             'upload'         => config('upload'),
             'app_debug'      => config('app.debug')
         ];
+        date_default_timezone_set($config['site']['timezone']);
+        config(['app.locale'=>$lang]);
         $request->merge([
             'assign' => [
                 'config' => $config,
@@ -112,9 +119,7 @@ class Initialization
             $array = trans('admin_vendor' . '::' . $controller);
         }
         if(empty($array)){
-
             $add = trans('admin' . '::' . $controller);
-
             if (is_array($add)) {
                 $array = trans('admin' . '::' . $controller);
             }

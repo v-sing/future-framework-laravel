@@ -49,4 +49,12 @@ class AjaxController extends BackendController
         $array = array_merge(trans('admin_vendor::' . config('app.locale')), $array);
         config(['ajax.lang' => $array]);
     }
+
+    /**
+     * 发送测试邮件
+     */
+    public function emailtest()
+    {
+
+    }
 }

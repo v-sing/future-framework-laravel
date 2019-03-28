@@ -62,6 +62,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
             //添加向发件人发送测试邮件按钮和方法
+
             $('input[name="row[mail_from]"]').parent().next().append('<a class="btn btn-info testmail">' + __('Send a test message') + '</a>');
             $(document).on("click", ".testmail", function () {
                 var that = this;

@@ -730,7 +730,7 @@
             });
             self.tagValuesSet(self);
             self.inputResize(self);
-            console.log(self.elem.hidden.blur());
+
             self.prop.init_set = false;
         } else {
             var row = data[0];

@@ -86,7 +86,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator'], function ($, undefined, U
             },
             selectpicker: function (form) {
                 //绑定select元素事件
-                console.log($(".selectpicker", form));
+
                 if ($(".selectpicker", form).size() > 0) {
                     require(['bootstrap-select', 'bootstrap-select-lang'], function () {
                         $('.selectpicker', form).selectpicker();

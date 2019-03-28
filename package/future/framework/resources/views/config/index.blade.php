@@ -40,7 +40,7 @@
                 <div class="tab-pane fade {{$vo['active'] ? 'active in' : ''}}" id="{{$vo['name']}}">
                     <div class="widget-body no-padding">
                         <form id="{{$vo['name']}}-form" class="edit-form form-horizontal" role="form"
-                              data-toggle="validator" method="POST" action="{{url('general/edit')}}">
+                              data-toggle="validator" method="POST" action="{{url('config/edit')}}">
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
@@ -53,7 +53,7 @@
                                 <tbody>
                                 @foreach($vo['list'] as $item)
                                     <tr>
-                                        <td>{{$item['title']}}</td>
+                                        <td>{{lang($item['title'])}}</td>
                                         <td>
                                             <div class="row">
                                                 <div class="col-sm-8 col-xs-12">
@@ -97,11 +97,20 @@
                                                         <input {{$item['extend']}} type="text"
                                                                name="row[{{$item['name']}}]"
                                                                value="{{$item['value']}}"
-                                                               class="form-control datetimepicker"
+                                                               class="form-control datetimerange"
                                                                data-tip="{{$item['tip']}}"
                                                                data-rule="{{$item['rule']}}"/>
 
                                                     @endif
+                                                        @if($item['type']=='date'||$item['type']=='time')
+                                                            <input {{$item['extend']}} type="text"
+                                                                   name="row[{{$item['name']}}]"
+                                                                   value="{{$item['value']}}"
+                                                                   class="form-control datetimepicker"
+                                                                   data-tip="{{$item['tip']}}"
+                                                                   data-rule="{{$item['rule']}}"/>
+
+                                                        @endif
                                                     @if($item['type']=='number')
                                                         <input {{$item['extend']}} type="number"
                                                                name="{{$item['name']}}]"
@@ -140,7 +149,7 @@
                                                             @foreach($item['content'] as $key=> $vo1)
                                                                 <option value="{{$key}}"
                                                                         @if($key==$item['value']) selected @endif
-                                                                >{{$vo1}}</option>
+                                                                >{{lang($vo1)}}</option>
                                                             @endforeach
                                                         </select>
                                                     @endif
@@ -216,7 +225,7 @@
                                                 <div class="col-sm-4"></div>
                                             </div>
                                         </td>
-                                        <td><?php echo "{\$site." . $item['name'] . "}";?></td>
+                                        <td><?php echo "{{\$site['" . $item['name'] . "']}}";?></td>
                                         <td><a href="javascript:;" class="btn-delcfg text-muted"
                                                data-name="{{$item['name']}}"><i class="fa fa-times"></i></a></td>
                                     </tr>
@@ -241,7 +250,7 @@
                 </div>
             @endforeach
             <div class="tab-pane fade" id="addcfg">
-                {!! Form::open(['id'=>'add-form','class'=>'form-horizontal','role'=>'form','data-toggle'=>'validator','url'=>url('general/add')]) !!}
+                {!! Form::open(['id'=>'add-form','class'=>'form-horizontal','role'=>'form','data-toggle'=>'validator','url'=>url('config/add')]) !!}
                 <div class="form-group">
                     {!! Form::label('type',lang('Type'),['class'=>'control-label col-xs-12 col-sm-2']) !!}
                     <div class="col-xs-12 col-sm-4">
@@ -257,7 +266,7 @@
                 <div class="form-group">
                     {!! Form::label('name',lang('Name'),['class'=>'control-label col-xs-12 col-sm-2']) !!}
                     <div class="col-xs-12 col-sm-4">
-                        {!! Form::input('text','row[name]',null,['class'=>'form-control','data-rule'=>'required; length(3~30); remote(general/config/check)']) !!}
+                        {!! Form::input('text','row[name]',null,['class'=>'form-control','data-rule'=>'required; length(3~30); remote(config/check)']) !!}
                     </div>
                 </div>
                 <div class="form-group">

@@ -176,5 +176,6 @@ return [
     'Admin log tips'                                        => 'Administrators can view the administrator logs for the permissions they have',
     'Group tips'                                            => 'A role group can have more than one, and a role has a hierarchy of superiors and subordinates. If a subrole has the authority of a role group and an administrator, a subordinate role group or administrator belonging to its own group can be derived',
     'Rule tips'                                             => 'A rule usually corresponds to a controller method, and the data in the left menu bar is also reflected in the rule. It is generally recommended to generate rule nodes through the command line',
-    'Jump seconds'                                          => 'The page will jump automatically after <span id="wait">%d</span> seconds'
+    'Jump seconds'                                          => 'The page will jump automatically after <span id="wait">%d</span> seconds',
+    'Please select'                                         => 'Please select'
 ];
