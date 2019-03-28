@@ -113,9 +113,8 @@ class BackendController extends BaseController
      */
     protected $noNeedLogin = ['login'];
 
-    public function __construct(\Illuminate\Http\Request $request)
+    public function __construct()
     {
-
         Admin::setNature([
             'noNeedRight' => $this->noNeedRight,
             'noNeedLogin' => $this->noNeedLogin,

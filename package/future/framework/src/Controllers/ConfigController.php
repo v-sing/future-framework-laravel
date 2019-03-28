@@ -36,11 +36,12 @@ class ConfigController extends BackendController
             $siteList[$k]['list']  = [];
         }
         foreach ($this->model->get()->toArray() as $k => $v) {
+
             if (!isset($siteList[$v['group']])) {
                 continue;
             }
             $value          = $v;
-            $value['title'] = __($value['title']);
+            $value['title'] = $value['title'];
             if (in_array($value['type'], ['select', 'selects', 'checkbox', 'radio'])) {
                 $value['value'] = explode(',', $value['value']);
             }
@@ -74,7 +75,28 @@ class ConfigController extends BackendController
      */
     public function edit()
     {
-
+        $row = input('row');
+        if ($row) {
+            $configList = [];
+            foreach ($this->model->get() as $v) {
+                if (isset($row[$v->name])) {
+                    $value = $row[$v->name];
+                    if (is_array($value) && isset($value['field'])) {
+                        $value = json_encode(Config::getArrayData($value), JSON_UNESCAPED_UNICODE);
+                    } else {
+                        $value = is_array($value) ? implode(',', $value) : $value;
+                    }
+                    $v->value = $value;
+                    $v->save();
+                }
+            }
+            try {
+                return success();
+            } catch (Exception $e) {
+                return error($e->getMessage());
+            }
+        }
+        return error(lang('Parameter %s can not be empty', ''));
     }
 
     /**
@@ -82,7 +104,16 @@ class ConfigController extends BackendController
      */
     public function check()
     {
-     $request=   \Illuminate\Support\Facades\Request::all('data');
-echo  success('ssss',$request);
+        $params = input('row');
+        if ($params) {
+            $config = $this->model->where($params)->first();
+            if (!$config) {
+                return success();
+            } else {
+                return error('Name already exist');
+            }
+        } else {
+            return error('Invalid parameters');
+        }
     }
 }

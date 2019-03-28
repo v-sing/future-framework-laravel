@@ -40,7 +40,7 @@
                 <div class="tab-pane fade {{$vo['active'] ? 'active in' : ''}}" id="{{$vo['name']}}">
                     <div class="widget-body no-padding">
                         <form id="{{$vo['name']}}-form" class="edit-form form-horizontal" role="form"
-                              data-toggle="validator" method="POST" action="{{url('config/edit')}}">
+                              data-toggle="validator" method="POST" action="{{url('admin/config/edit')}}">
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
@@ -113,7 +113,7 @@
                                                         @endif
                                                     @if($item['type']=='number')
                                                         <input {{$item['extend']}} type="number"
-                                                               name="{{$item['name']}}]"
+                                                               name="row[{{$item['name']}}]"
                                                                value="{{$item['value']}}" class="form-control"
                                                                data-tip="{{$item['tip']}}"
                                                                data-rule="{{$item['rule']}}"/>
@@ -125,9 +125,8 @@
                                                                         id="row[{{$item['name']}}][]-{{$key}}"
                                                                         name="row[{{$item['name']}}][]" type="checkbox"
                                                                         value="{{$key}}" data-tip="{{$item['tip']}}"
-                                                                        @if($key==$item['value']) checked @endif /> {{$vo1}}
+                                                                        @if(in_array($key,$item['value'])) checked @endif /> {{$vo1}}
                                                             </label>
-
                                                         @endforeach
                                                     @endif
                                                     @if($item['type']=='radio')
@@ -136,7 +135,7 @@
                                                                         id="row[{{$item['name']}}][]-{{$key}}"
                                                                         name="row[{{$item['name']}}][]" type="radio"
                                                                         value="{{$key}}" data-tip="{{$item['tip']}}"
-                                                                        @if($key==$item['value']) checked @endif /> {{$vo1}}
+                                                                        @if(in_array($key,$item['value'])) checked @endif /> {{$vo1}}
                                                             </label>
                                                         @endforeach
                                                     @endif
@@ -148,7 +147,7 @@
                                                                 {{$item['type']=='selects'?'multiple':''}}>
                                                             @foreach($item['content'] as $key=> $vo1)
                                                                 <option value="{{$key}}"
-                                                                        @if($key==$item['value']) selected @endif
+                                                                        @if(in_array($key,$item['value'])) selected @endif
                                                                 >{{lang($vo1)}}</option>
                                                             @endforeach
                                                         </select>
@@ -250,7 +249,7 @@
                 </div>
             @endforeach
             <div class="tab-pane fade" id="addcfg">
-                {!! Form::open(['id'=>'add-form','class'=>'form-horizontal','role'=>'form','data-toggle'=>'validator','url'=>url('config/add')]) !!}
+                {!! Form::open(['id'=>'add-form','class'=>'form-horizontal','role'=>'form','data-toggle'=>'validator','url'=>url('admin/config/add')]) !!}
                 <div class="form-group">
                     {!! Form::label('type',lang('Type'),['class'=>'control-label col-xs-12 col-sm-2']) !!}
                     <div class="col-xs-12 col-sm-4">

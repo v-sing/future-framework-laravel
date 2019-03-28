@@ -9,6 +9,7 @@
 
 use Illuminate\Support\Facades\Request;
 use Future\Admin\Facades\Admin;
+
 if (!function_exists('lang')) {
     function lang($name, $vars = [])
     {
@@ -55,7 +56,7 @@ if (!function_exists('error')) {
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\think\response\Redirect
      */
 
-    function error($msg = 'operation failed!', $data = [], $url = '')
+    function error($msg = 'Operation failed', $data = [], $url = '')
     {
         $data = [
             'code' => 0,
@@ -83,7 +84,7 @@ if (!function_exists('success')) {
      * @param string $url
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\think\response\Redirect
      */
-    function success($msg = 'Successful operation!', $data = [], $url = '')
+    function success($msg = 'Operation completed', $data = [], $url = '')
     {
         $data = [
             'code' => 1,
@@ -249,7 +250,7 @@ if (!function_exists('build_heading')) {
     {
 
 
-        $title      = $content = '';
+        $title = $content = '';
         if (is_null($path)) {
             $action     = Admin::action();
             $controller = str_replace('.', '/', Admin::controller());
@@ -302,17 +303,18 @@ if (!function_exists('admin_error')) {
 if (!function_exists('input')) {
     /**
      * 获取输入数据 支持默认值和过滤
-     * @param string    $key 获取的变量名
-     * @param mixed     $default 默认值
-     * @param string    $filter 过滤方法
+     * @param string $key 获取的变量名
+     * @param mixed $default 默认值
+     * @param string $filter 过滤方法
      * @return mixed
      */
 
     function input($key = '', $default = null, $filter = '')
     {
-        return Request::input();
-        if(request()->has($key)){
-           return request()->input();
+        if ($key != '' || $key != null) {
+            return Request::input($key, $default);
+        } else {
+            return Request::all();
         }
     }
 }

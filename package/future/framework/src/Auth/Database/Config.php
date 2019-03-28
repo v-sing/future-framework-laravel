@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 class Config extends BaseModel
 {
 use AdminBuilder;
+
     /**
      * The attributes that are mass assignable.
      *
