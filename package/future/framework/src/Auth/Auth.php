@@ -298,17 +298,20 @@ class Auth extends BaseAuth
      */
     public function getBreadCrumb($path = '')
     {
+
         if ($this->breadcrumb || !$path)
             return $this->breadcrumb;
         $path_rule_id = 0;
+
         foreach ($this->rules as $rule) {
             $path_rule_id = $rule['name'] == $path ? $rule['id'] : $path_rule_id;
         }
+
         if ($path_rule_id) {
             $this->breadcrumb = Tree::instance()->init($this->rules)->getParents($path_rule_id, true);
             foreach ($this->breadcrumb as $k => &$v) {
                 $v['url']   = url($v['name']);
-                $v['title'] = __($v['title']);
+                $v['title'] = lang($v['title']);
             }
         }
         return $this->breadcrumb;

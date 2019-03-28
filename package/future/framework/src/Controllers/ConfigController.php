@@ -28,24 +28,24 @@ class ConfigController extends BackendController
      */
     public function index()
     {
-        $siteList  = [];
+        $siteList = [];
         $groupList = Config::getGroupList();
         foreach ($groupList as $k => $v) {
-            $siteList[$k]['name']  = $k;
+            $siteList[$k]['name'] = $k;
             $siteList[$k]['title'] = $v;
-            $siteList[$k]['list']  = [];
+            $siteList[$k]['list'] = [];
         }
         foreach ($this->model->get()->toArray() as $k => $v) {
 
             if (!isset($siteList[$v['group']])) {
                 continue;
             }
-            $value          = $v;
+            $value = $v;
             $value['title'] = $value['title'];
             if (in_array($value['type'], ['select', 'selects', 'checkbox', 'radio'])) {
                 $value['value'] = explode(',', $value['value']);
             }
-            $value['content']                = json_decode($value['content'], TRUE);
+            $value['content'] = json_decode($value['content'], TRUE);
             $siteList[$v['group']]['list'][] = $value;
         }
         $index = 0;
@@ -67,7 +67,33 @@ class ConfigController extends BackendController
      */
     public function add()
     {
+        $params = input('row');
+        if ($params) {
+            foreach ($params as $k => &$v) {
+                $v = is_array($v) ? implode(',', $v) : $v;
+            }
+            try {
+                if (in_array($params['type'], ['select', 'selects', 'checkbox', 'radio', 'array'])) {
+                    $params['content'] = json_encode(Config::decode($params['content']), JSON_UNESCAPED_UNICODE);
+                } else {
+                    $params['content'] = '';
+                }
+                $result = $this->model->insert($params);
+                if ($result !== false) {
+                    try {
 
+                        return success();
+                    } catch (Exception $e) {
+                        return error($e->getMessage());
+                    }
+                } else {
+                    return error();
+                }
+            } catch (Exception $e) {
+                return error($e->getMessage());
+            }
+        }
+        return error(lang('Parameter %s can not be empty', ''));
     }
 
     /**

@@ -119,10 +119,15 @@ class BackendController extends BaseController
             'noNeedRight' => $this->noNeedRight,
             'noNeedLogin' => $this->noNeedLogin,
         ]);
+        $this->_initialize();
         $this->auth = Auth::instance();
         $this->middleware('admin.auth');
         $this->request = request();
 
     }
 
+    protected function _initialize()
+    {
+
+    }
 }

@@ -42,13 +42,14 @@ class AuthMiddleware
         $modulename     = Admin::module();
         $controllername = Admin::controller();
         $actionname     = Admin::action();
-        $path           = $modulename . '/' . $controllername . '/' . $actionname;
+        $path           = $controllername . '/' . $actionname;
         if (!$this->auth->match($noNeedRight)) {
             if (!$this->auth->check($path)) {
                 return error('You have no permission');
             }
         }
         // 设置面包屑导航数据
+
         $breadcrumb = $this->auth->getBreadCrumb($path);
         array_pop($breadcrumb);
         Admin::setAssign(

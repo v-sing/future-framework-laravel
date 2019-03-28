@@ -72,4 +72,5 @@ return [
     'Please input your email'     => 'Please input your email',
     'Custom'                      => 'Custom',
     'Keep Time'                   => 'Keep Time',
+    'Upload item'                 => 'Upload item'
 ];

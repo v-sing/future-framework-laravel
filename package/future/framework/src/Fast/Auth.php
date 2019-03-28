@@ -104,7 +104,7 @@ class Auth
             if ('url' == $mode && $query != $rule) {
                 parse_str($query, $param); //解析规则中的param
                 $intersect = array_intersect_assoc($REQUEST, $param);
-                $rule      = preg_replace('/\?.*$/U', '', $rule);
+                $rule = preg_replace('/\?.*$/U', '', $rule);
                 if (in_array($rule, $name) && $intersect == $param) {
                     //如果节点相符且url参数满足
                     $list[] = $rule;
@@ -143,6 +143,7 @@ class Auth
 
         // 读取用户规则节点
         $ids = $this->getRuleIds($uid);
+
         if (empty($ids)) {
             $_rulelist[$uid] = [];
             return [];
@@ -152,10 +153,11 @@ class Auth
         $where = [
             'status' => 'normal'
         ];
-
+        if ($ids[0] != "*") {
+            $where['id'] = ['in', $ids];
+        }
         //读取用户组所有权限规则
-        $this->rules = toArray(DB::table($this->config['auth_rule'])->where($where)->whereIn('id', $ids)->select('id', 'pid', 'condition', 'icon', 'name', 'title', 'ismenu')->get()->toArray());
-
+        $this->rules = toArray(DB::table($this->config['auth_rule'])->where($where)->select('id', 'pid', 'condition', 'icon', 'name', 'title', 'ismenu')->get()->toArray());
         //循环规则，判断结果。
         $rulelist = []; //
         if (in_array('*', $ids)) {
@@ -165,7 +167,7 @@ class Auth
             //超级管理员无需验证condition
             if (!empty($rule['condition']) && !in_array('*', $ids)) {
                 //根据condition进行验证
-                $user    = $this->getUserInfo($uid); //获取用户信息,一维数组
+                $user = $this->getUserInfo($uid); //获取用户信息,一维数组
                 $command = preg_replace('/\{(\w*?)\}/', '$user[\'\\1\']', $rule['condition']);
                 @(eval('$condition=(' . $command . ');'));
                 if ($condition) {
@@ -194,7 +196,7 @@ class Auth
     {
         //读取用户所属用户组
         $groups = $this->getGroups($uid);
-        $ids    = []; //保存用户所属用户组设置的所有权限规则id
+        $ids = []; //保存用户所属用户组设置的所有权限规则id
         foreach ($groups as $g) {
             $ids = array_merge($ids, explode(',', trim($g['rules'], ',')));
         }
@@ -215,12 +217,12 @@ class Auth
         if (isset($groups[$uid])) {
             return $groups[$uid];
         }
-        $user_groups  = DB::table($this->config['auth_group_access'] . ' as aga')
+        $user_groups = DB::table($this->config['auth_group_access'] . ' as aga')
             ->leftJoin($this->config['auth_group'] . ' as ag', 'ag.id', '=', 'aga.group_id')
             ->where(['aga.uid' => $uid, 'ag.status' => 'normal'])
             ->select('aga.uid', 'aga.group_id', 'ag.id', 'ag.pid', 'ag.name', 'ag.rules')
             ->first();
-        $user_groups  = toArray($user_groups);
+        $user_groups = toArray($user_groups);
         $groups[$uid] = $user_groups ?: [];
         return $groups;
     }
@@ -234,10 +236,10 @@ class Auth
     {
         static $user_info = [];
         $prefix = config('database.connections.mysql.prefix');
-        $user   = DB::table($this->config['auth_user']);
+        $user = DB::table($this->config['auth_user']);
         // 获取用户表主键
         $PRIMARY = DB::select('SELECT column_name FROM INFORMATION_SCHEMA.`KEY_COLUMN_USAGE` WHERE table_name=\'' . $prefix . $this->config['auth_user'] . '\' AND constraint_name=\'PRIMARY\'');
-        $_pk     = is_string($PRIMARY[0]->column_name) ? $PRIMARY[0]->column_name : 'uid';
+        $_pk = is_string($PRIMARY[0]->column_name) ? $PRIMARY[0]->column_name : 'uid';
         if (!isset($user_info[$uid])) {
             $user_info[$uid] = $user->where($_pk, $uid)->first();
         }

@@ -318,3 +318,43 @@ if (!function_exists('input')) {
         }
     }
 }
+
+if (!function_exists('build_toolbar')) {
+
+    /**
+     * 生成表格操作按钮栏
+     * @param array $btns 按钮组
+     * @param array $attr 按钮属性值
+     * @return string
+     */
+    function build_toolbar($btns = NULL, $attr = [])
+    {
+        $auth = \Future\Admin\Auth\Auth::instance();
+        $controller = str_replace('.', '/', strtolower(Admin::controller()));
+        $btns = $btns ? $btns : ['refresh', 'add', 'edit', 'del', 'import'];
+        $btns = is_array($btns) ? $btns : explode(',', $btns);
+        $index = array_search('delete', $btns);
+        if ($index !== FALSE) {
+            $btns[$index] = 'del';
+        }
+        $btnAttr = [
+            'refresh' => ['javascript:;', 'btn btn-primary btn-refresh', 'fa fa-refresh', '', lang('Refresh')],
+            'add' => ['javascript:;', 'btn btn-success btn-add', 'fa fa-plus', lang('Add'), lang('Add')],
+            'edit' => ['javascript:;', 'btn btn-success btn-edit btn-disabled disabled', 'fa fa-pencil', lang('Edit'), lang('Edit')],
+            'del' => ['javascript:;', 'btn btn-danger btn-del btn-disabled disabled', 'fa fa-trash', lang('Delete'), lang('Delete')],
+            'import' => ['javascript:;', 'btn btn-danger btn-import', 'fa fa-upload', lang('Import'), lang('Import')],
+        ];
+        $btnAttr = array_merge($btnAttr, $attr);
+        $html = [];
+        foreach ($btns as $k => $v) {
+            //如果未定义或没有权限
+            if (!isset($btnAttr[$v]) || ($v !== 'refresh' && !$auth->check("{$controller}/{$v}"))) {
+                continue;
+            }
+            list($href, $class, $icon, $text, $title) = $btnAttr[$v];
+            $extend = $v == 'import' ? 'id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"' : '';
+            $html[] = '<a href="' . $href . '" class="' . $class . '" title="' . $title . '" ' . $extend . '><i class="' . $icon . '"></i> ' . $text . '</a>';
+        }
+        return implode(' ', $html);
+    }
+}

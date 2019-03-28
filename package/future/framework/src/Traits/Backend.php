@@ -230,6 +230,7 @@ trait Backend
         if (!$view) {
             $view = Admin::module() . '::' . Admin::controller() . '.' . Admin::action();
         }
+
         $data = array_merge($this->assign, $data, Admin::assign());
         if (is_null($this->layout)) {
             return view($view)->with($data);
