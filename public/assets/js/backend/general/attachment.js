@@ -5,11 +5,11 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'general/attachment/index',
-                    add_url: 'general/attachment/add',
-                    edit_url: 'general/attachment/edit',
-                    del_url: 'general/attachment/del',
-                    multi_url: 'general/attachment/multi',
+                    index_url: 'attachment/index',
+                    add_url: 'attachment/add',
+                    edit_url: 'attachment/edit',
+                    del_url: 'attachment/del',
+                    multi_url: 'attachment/multi',
                     table: 'attachment'
                 }
             });
@@ -61,7 +61,7 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'general/attachment/select',
+                    index_url: 'attachment/select',
                 }
             });
 

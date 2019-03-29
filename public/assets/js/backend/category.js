@@ -5,11 +5,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'general/config/index',
-                    add_url: 'general/config/add',
-                    edit_url: 'general/config/edit',
-                    del_url: 'general/config/del',
-                    multi_url: 'general/config/multi',
+                    index_url: 'config/index',
+                    add_url: 'config/add',
+                    edit_url: 'config/edit',
+                    del_url: 'config/del',
+                    multi_url: 'config/multi',
                     table: 'config',
                 }
             });
@@ -67,7 +67,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var that = this;
                 Layer.prompt({title: __('Please input your email'), formType: 0}, function (value, index) {
                     Backend.api.ajax({
-                        url: "general/config/emailtest?receiver=" + value,
+                        url: "config/emailtest?receiver=" + value,
                         data: $(that).closest("form").serialize()
                     });
                 });

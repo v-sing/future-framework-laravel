@@ -5,11 +5,11 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'admin/attachment/index',
-                    add_url: 'admin/attachment/add',
-                    edit_url: 'admin/attachment/edit',
-                    del_url: 'admin/attachment/del',
-                    multi_url: 'admin/attachment/multi',
+                    index_url: 'attachment/index?filter={"ss":"222"}',
+                    add_url: 'attachment/add',
+                    edit_url: 'attachment/edit',
+                    del_url: 'attachment/del',
+                    multi_url: 'attachment/multi',
                     table: 'attachment'
                 }
             });
@@ -24,7 +24,7 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
                     [
                         {field: 'state', checkbox: true,},
                         {field: 'id', title: __('Id')},
-                        {field: 'admin_id', title: __('Admin_id'), visible: false, addClass: "selectpage", extend: "data-source='auth/admin/index' data-field='nickname'"},
+                        {field: 'admin_id', title: __('Admin_id'), visible: false, addClass: "selectpage", extend: "data-source='auth/index' data-field='nickname'"},
                         {field: 'user_id', title: __('User_id'), visible: false, addClass: "selectpage", extend: "data-source='user/user/index' data-field='nickname'"},
                         {field: 'url', title: __('Preview'), formatter: Controller.api.formatter.thumb, operate: false},
                         {field: 'url', title: __('Url'), formatter: Controller.api.formatter.url},
@@ -35,8 +35,8 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
                         {field: 'filesize', title: __('Filesize'), operate: 'BETWEEN', sortable: true},
                         {field: 'mimetype', title: __('Mimetype'), formatter: Table.api.formatter.search},
                         {
-                            field: 'createtime',
-                            title: __('Createtime'),
+                            field: 'created_at',
+                            title: __('Created_at'),
                             formatter: Table.api.formatter.datetime,
                             operate: 'RANGE',
                             addclass: 'datetimerange',
@@ -61,7 +61,7 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'admin/attachment/select',
+                    index_url: 'attachment/select',
                 }
             });
 

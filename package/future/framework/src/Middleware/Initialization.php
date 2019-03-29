@@ -92,7 +92,7 @@ class Initialization
             'upload'         => config('upload'),
             'app_debug'      => config('app.debug')
         ];
-        date_default_timezone_set($config['site']['timezone']);
+        config(['app.timezone'=>$config['site']['timezone']]);
         config(['app.locale' => $lang]);
         Admin::setAssign([
             'config' => $config,

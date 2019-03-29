@@ -184,7 +184,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                         btn: [__('Login'), __('Register')],
                         yes: function (index, layero) {
                             Fast.api.ajax({
-                                url: Config.fastadmin.api_url + '/user/login',
+                                url: Config.admin.api_url + '/user/login',
                                 dataType: 'jsonp',
                                 data: {
                                     account: $("#inputAccount", layero).val(),

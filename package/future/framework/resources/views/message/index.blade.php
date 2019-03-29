@@ -144,7 +144,7 @@
         {!! lang('Jump seconds',3) !!}</p>
     <p class="clearfix">
         <a href="javascript:history.go(-1);" class="btn btn-grey">{{lang('Go back')}}</a>
-        <a href="{{$res['url']}}" class="btn btn-primary">{{lang('Go back')}}</a>
+        <a href="{{$res['url']}}" class="btn btn-primary">{{lang('Jump now')}}</a>
     </p>
 </div>
 <div class="copyright">

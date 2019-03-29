@@ -14,6 +14,7 @@ use Illuminate\Validation\Factory;
 use Illuminate\Validation\Validator;
 use Illuminate\Support\Facades\View;
 use Future\Admin\Facades\Admin;
+
 trait Backend
 {
 
@@ -86,13 +87,13 @@ trait Backend
         $model          = is_null($model) ? $this->model : $model;
         $searchfields   = is_null($searchfields) ? $this->searchFields : $searchfields;
         $relationSearch = is_null($relationSearch) ? $this->relationSearch : $relationSearch;
-        $search         = $this->request->get("search", '');
-        $filter         = $this->request->get("filter", '');
-        $op             = $this->request->get("op", '', 'trim');
-        $sort           = $this->request->get("sort", "id");
-        $order          = $this->request->get("order", "DESC");
-        $offset         = $this->request->get("offset", 0);
-        $limit          = $this->request->get("limit", 0);
+        $search         = input("search", '');
+        $filter         = input("filter", '');
+        $op             = input("op", '', 'trim');
+        $sort           = input("sort", "id");
+        $order          = input("order", "DESC");
+        $offset         = input("offset", 0);
+        $limit          = input("limit", 0);
         $filter         = (array)json_decode($filter, TRUE);
         $op             = (array)json_decode($op, TRUE);
         $filter         = $filter ? $filter : [];
@@ -101,7 +102,7 @@ trait Backend
         $tableName = '';
         if ($relationSearch) {
             if (!empty($model)) {
-                $name      = \think\Loader::parseName(basename(str_replace('\\', '/', get_class($model))));
+                $name      = parseName(basename(str_replace('\\', '/', get_class($model))));
                 $tableName = $name . '.';
             }
             $sortArr = explode(',', $sort);
@@ -115,6 +116,7 @@ trait Backend
         if (is_array($adminIds)) {
             $where[] = [$tableName . $this->dataLimitField, 'in', $adminIds];
         }
+
         if ($search) {
             $searcharr = is_array($searchfields) ? $searchfields : explode(',', $searchfields);
             foreach ($searcharr as $k => &$v) {
@@ -207,7 +209,9 @@ trait Backend
                     break;
             }
         }
+
         $where = function ($query) use ($where) {
+
             foreach ($where as $k => $v) {
                 if (is_array($v)) {
                     call_user_func_array([$query, 'where'], $v);
@@ -216,9 +220,29 @@ trait Backend
                 }
             }
         };
+
         return [$where, $sort, $order, $offset, $limit];
     }
 
+    /**
+     * 获取数据限制的管理员ID
+     * 禁用数据限制时返回的是null
+     * @return mixed
+     */
+    protected function getDataLimitAdminIds()
+    {
+        if (!$this->dataLimit) {
+            return null;
+        }
+        if ($this->auth->isSuperAdmin()) {
+            return null;
+        }
+        $adminIds = [];
+        if (in_array($this->dataLimit, ['auth', 'personal'])) {
+            $adminIds = $this->dataLimit == 'auth' ? $this->auth->getChildrenAdminIds(true) : [$this->auth->id];
+        }
+        return $adminIds;
+    }
     /**
      * 加载模板
      * @param string $template

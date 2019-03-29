@@ -110,7 +110,7 @@ if (!function_exists('isAjax')) {
      */
     function isAjax()
     {
-        return request()->isMethod('ajax');
+        return request()->ajax();
     }
 }
 
@@ -120,7 +120,7 @@ if (!function_exists('isPost')) {
      */
     function isPost()
     {
-        return request()->isMethod('post');
+        return request()->post();
     }
 }
 
@@ -130,7 +130,7 @@ if (!function_exists('isGet')) {
      */
     function isGet()
     {
-        return request()->isMethod('GET');
+        return request()->get();
     }
 }
 
@@ -329,23 +329,23 @@ if (!function_exists('build_toolbar')) {
      */
     function build_toolbar($btns = NULL, $attr = [])
     {
-        $auth = \Future\Admin\Auth\Auth::instance();
+        $auth       = \Future\Admin\Auth\Auth::instance();
         $controller = str_replace('.', '/', strtolower(Admin::controller()));
-        $btns = $btns ? $btns : ['refresh', 'add', 'edit', 'del', 'import'];
-        $btns = is_array($btns) ? $btns : explode(',', $btns);
-        $index = array_search('delete', $btns);
+        $btns       = $btns ? $btns : ['refresh', 'add', 'edit', 'del', 'import'];
+        $btns       = is_array($btns) ? $btns : explode(',', $btns);
+        $index      = array_search('delete', $btns);
         if ($index !== FALSE) {
             $btns[$index] = 'del';
         }
         $btnAttr = [
             'refresh' => ['javascript:;', 'btn btn-primary btn-refresh', 'fa fa-refresh', '', lang('Refresh')],
-            'add' => ['javascript:;', 'btn btn-success btn-add', 'fa fa-plus', lang('Add'), lang('Add')],
-            'edit' => ['javascript:;', 'btn btn-success btn-edit btn-disabled disabled', 'fa fa-pencil', lang('Edit'), lang('Edit')],
-            'del' => ['javascript:;', 'btn btn-danger btn-del btn-disabled disabled', 'fa fa-trash', lang('Delete'), lang('Delete')],
-            'import' => ['javascript:;', 'btn btn-danger btn-import', 'fa fa-upload', lang('Import'), lang('Import')],
+            'add'     => ['javascript:;', 'btn btn-success btn-add', 'fa fa-plus', lang('Add'), lang('Add')],
+            'edit'    => ['javascript:;', 'btn btn-success btn-edit btn-disabled disabled', 'fa fa-pencil', lang('Edit'), lang('Edit')],
+            'del'     => ['javascript:;', 'btn btn-danger btn-del btn-disabled disabled', 'fa fa-trash', lang('Delete'), lang('Delete')],
+            'import'  => ['javascript:;', 'btn btn-danger btn-import', 'fa fa-upload', lang('Import'), lang('Import')],
         ];
         $btnAttr = array_merge($btnAttr, $attr);
-        $html = [];
+        $html    = [];
         foreach ($btns as $k => $v) {
             //如果未定义或没有权限
             if (!isset($btnAttr[$v]) || ($v !== 'refresh' && !$auth->check("{$controller}/{$v}"))) {
@@ -356,5 +356,36 @@ if (!function_exists('build_toolbar')) {
             $html[] = '<a href="' . $href . '" class="' . $class . '" title="' . $title . '" ' . $extend . '><i class="' . $icon . '"></i> ' . $text . '</a>';
         }
         return implode(' ', $html);
+    }
+}
+if (!function_exists('parseName')) {
+    /**
+     * 字符串命名风格转换
+     * type 0 将 Java 风格转换为 C 的风格 1 将 C 风格转换为 Java 的风格
+     * @param $name
+     * @param int $type
+     * @param bool $ucfirst
+     * @return string
+     */
+    function parseName($name, $type = 0, $ucfirst = true)
+    {
+        if ($type) {
+            $name = preg_replace_callback('/_([a-zA-Z])/', function ($match) {
+                return strtoupper($match[1]);
+            }, $name);
+
+            return $ucfirst ? ucfirst($name) : lcfirst($name);
+        }
+
+        return strtolower(trim(preg_replace("/[A-Z]/", "_\\0", $name), "_"));
+    }
+
+}
+
+if (!function_exists('json')) {
+    function json($data)
+    {
+
+        return response()->json($data);
     }
 }

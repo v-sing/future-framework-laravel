@@ -8,6 +8,9 @@
  */
 
 namespace Future\Admin\Controllers;
+
+use Illuminate\Support\Facades\DB;
+
 /**
  * 附件管理
  *
@@ -28,7 +31,64 @@ class AttachmentController extends BackendController
 
     public function index()
     {
+        $mimetypeQuery = [];
+        if (isAjax()) {
+            $filter    = input('filter');
+            $filterArr = (array)json_decode($filter, TRUE);
+            if (isset($filterArr['mimetype']) && stripos($filterArr['mimetype'], ',') !== false) {
+                $this->request->merge(['filter' => json_encode(array_merge($filterArr, ['mimetype' => '']))]);
+                $mimetypeQuery = function ($query) use ($filterArr) {
+                    $mimetypeArr = explode(',', $filterArr['mimetype']);
+                    foreach ($mimetypeArr as $index => $item) {
+                        $query->whereOr('mimetype', 'like', '%' . $item . '%');
+                    }
+                };
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $total = $this->model
+                ->where($mimetypeQuery)
+                ->where($where)
+                ->orderby($sort, $order)
+                ->count();
 
+            $list = $this->model
+                ->where($mimetypeQuery)
+                ->where($where)
+                ->orderby($sort, $order)
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
+
+            $cdnurl = preg_replace("/\/(\w+)\.php$/i", '', $this->request->root());
+            foreach ($list as $k => &$v) {
+                $v['fullurl'] = ($v['storage'] == 'local' ? $cdnurl : config('site.upload.cdnurl')) . $v['url'];
+            }
+            unset($v);
+            $result = array("total" => $total, "rows" => $list);
+            return json($result);
+        } else {
+            return $this->view();
+        }
+    }
+
+    /**
+     * 选择图片
+     */
+    public function select()
+    {
+        if (isAjax()) {
+            return $this->index();
+        }
+        return $this->view();
+    }
+
+    public function add()
+    {
+        return $this->view();
+    }
+
+    public function edit()
+    {
         return $this->view();
     }
 }

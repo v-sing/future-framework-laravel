@@ -10,9 +10,9 @@
 namespace Future\Admin\Auth\Database;
 
 
-use Illuminate\Database\Eloquent\Model;
 
-class attachment extends BaseModel
+
+class Attachment extends BaseModel
 {
     /**
      * 白名单

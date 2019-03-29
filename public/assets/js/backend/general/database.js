@@ -6,7 +6,7 @@ define(['jquery', 'bootstrap', 'backend', 'template'], function ($, undefined, B
             //如果有备份权限
             if ($("#backuplist").size() > 0) {
                 Fast.api.ajax({
-                    url: "general/database/backuplist",
+                    url: "database/backuplist",
                     type: 'get'
                 }, function (data) {
                     $("#backuplist").html(Template("backuptpl", {backuplist: data.backuplist}));
@@ -46,7 +46,7 @@ define(['jquery', 'bootstrap', 'backend', 'template'], function ($, undefined, B
 
             $(document).on("click", ".btn-compress", function () {
                 Fast.api.ajax({
-                    url: "general/database/backuplist",
+                    url: "database/backuplist",
                     type: 'get'
                 }, function (data) {
                     Layer.open({
@@ -62,7 +62,7 @@ define(['jquery', 'bootstrap', 'backend', 'template'], function ($, undefined, B
 
             $(document).on("click", ".btn-backup", function () {
                 Fast.api.ajax({
-                    url: "general/database/backup",
+                    url: "database/backup",
                     data: {action: 'backup'}
                 }, function (data) {
                     Layer.closeAll();
@@ -77,7 +77,7 @@ define(['jquery', 'bootstrap', 'backend', 'template'], function ($, undefined, B
                     skin: 'layui-layer-dialog layui-layer-fast'
                 }, function (index) {
                     Fast.api.ajax({
-                        url: "general/database/restore",
+                        url: "database/restore",
                         data: {action: 'restore', file: $(that).data('file')}
                     }, function (data) {
                         Layer.closeAll();
@@ -99,7 +99,7 @@ define(['jquery', 'bootstrap', 'backend', 'template'], function ($, undefined, B
                 var that = this;
                 Layer.confirm("确定删除备份？", {type: 5, skin: 'layui-layer-dialog layui-layer-fast'}, function (index) {
                     Fast.api.ajax({
-                        url: "general/database/restore",
+                        url: "database/restore",
                         data: {action: 'delete', file: $(that).data('file')}
                     }, function (data) {
                         Layer.closeAll();
