@@ -120,6 +120,7 @@ if (!function_exists('isPost')) {
      */
     function isPost()
     {
+
         return request()->post();
     }
 }

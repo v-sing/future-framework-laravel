@@ -46,7 +46,7 @@ class IndexController extends BackendController
     public function login(Request $request)
     {
 
-        if (!isAjax() && !isPost()) {
+        if (!isAjax()) {
 
             return $this->view(['title' => lang('Login')]);
         } else {
