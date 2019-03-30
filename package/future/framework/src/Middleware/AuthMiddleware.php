@@ -66,7 +66,7 @@ class AuthMiddleware
         !defined('IS_AJAX') && define('IS_AJAX', isAjax());
         // 非选项卡时重定向
         // dd(!isPost() && !IS_AJAX && !IS_ADDTABS && !IS_DIALOG && $request->input("ref") == 'addtabs');
-        if (!isPost() && !IS_AJAX && !IS_ADDTABS && !IS_DIALOG && $request->input("ref") == 'addtabs') {
+        if (!IS_AJAX && !IS_ADDTABS && !IS_DIALOG && $request->input("ref") == 'addtabs') {
             $url = preg_replace_callback("/([\?|&]+)ref=addtabs(&?)/i", function ($matches) {
                 return $matches[2] == '&' ? $matches[1] : '';
             }, $request->url());

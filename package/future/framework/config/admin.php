@@ -91,7 +91,7 @@ return [
 
     ],
 
-    'upload' => [
+    'upload'              => [
 
         // Disk in `config/filesystem.php`.
         'disk'      => 'admin',
@@ -121,5 +121,5 @@ return [
     //API接口地址
     'api_url'             => 'https://api.fastadmin.net',
     //
-    'lang_switch_on'      => true
+    'lang_switch_on'      => true,
 ];

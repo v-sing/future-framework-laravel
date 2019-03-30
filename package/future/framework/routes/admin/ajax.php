@@ -9,3 +9,4 @@
 
 
 Route::any('ajax/lang', 'AjaxController@lang');
+Route::any('ajax/upload', 'AjaxController@upload');

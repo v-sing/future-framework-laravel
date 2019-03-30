@@ -64,7 +64,7 @@ if (!function_exists('error')) {
             'data' => $data,
             'url'  => $url
         ];
-        if (isPost() || isAjax()) {
+        if (isAjax()) {
             return response()->json($data);
         } else {
             if ($url == '') {
@@ -92,7 +92,7 @@ if (!function_exists('success')) {
             'data' => $data,
             'url'  => $url
         ];
-        if (isPost() || isAjax()) {
+        if (isAjax()) {
             return response()->json($data);
         } else {
             if ($url == '') {
