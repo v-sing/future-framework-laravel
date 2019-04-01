@@ -10,7 +10,7 @@
 namespace Future\Admin\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
 class AjaxController extends BackendController
 {
     protected $noNeedLogin = '*';
@@ -38,7 +38,13 @@ class AjaxController extends BackendController
 
             //获取文件的绝对路径
             $path = $fileCharater->getRealPath();
-
+            $filename = uniqid().'.'.$ext;
+            $bool = Storage::disk('local')->put($filename,file_get_contents($path));
+            if($bool){
+               return  success();
+            }else{
+                return error();
+            }
         }
     }
 

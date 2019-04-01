@@ -45,6 +45,7 @@ class CreateAdminTables extends Migration
             $table->text('content')->comment('内容');
             $table->string('ip', 50)->comment('IP');
             $table->string('useragent', 255)->comment('User-Agent');
+            $table->integer('updated_at',false,false)->comment('更新时间');
             $table->integer('created_at',false,false)->comment('添加时间');
 
 
@@ -81,7 +82,8 @@ class CreateAdminTables extends Migration
         Schema::connection($connection)->create(config('admin.database.auth_group_access_table'), function (Blueprint $table) {
             $table->integer('uid', false, false)->comment('会员ID');
             $table->integer('group_id', false, false)->comment('级别ID');
-
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
         });
         Schema::connection($connection)->create(config('admin.database.auth_rule_table'), function (Blueprint $table) {
             $table->increments('id')->comment('');
@@ -127,6 +129,8 @@ class CreateAdminTables extends Migration
             $table->text('content')->comment('变量字典数据');
             $table->string('rule', 100)->comment('验证规则');
             $table->string('extend', 255)->comment('扩展属性');
+            $table->integer('updated_at',false,false)->comment('更新时间');
+            $table->integer('created_at',false,false)->comment('添加时间');
 
         });
         Schema::connection($connection)->create(config('admin.database.ems_table'), function (Blueprint $table) {

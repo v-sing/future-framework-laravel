@@ -63,20 +63,7 @@ return [
         'version_model'           => \Future\Admin\Auth\Database\Version::class,
 
     ],
-    /**
-     * 上传设置
-     */
-    'upload'    => [
 
-        // Disk in `config/filesystem.php`.
-        'disk'      => 'admin',
-
-        // Image and file upload path under the disk above.
-        'directory' => [
-            'image' => 'images',
-            'file'  => 'files',
-        ],
-    ],
     //是否开启前台会员中心
     'usercenter'          => true,
     //登录验证码
