@@ -50,4 +50,7 @@ return [
     'Timezone'              => '时区',
     'Language'              => '语言',
     'Security tips'         => '<i class="fa fa-warning"></i> 安全提示：你正在使用默认的后台登录入口，为了你的网站安全，建议你修改后台登录入口，<a href="https://forum.fastadmin.net/thread/7640" target="_blank">点击查看修改方法</a>',
+    'System file size'      => '系统上传限制',
+    'File size'             => '上传限制'
+
 ];

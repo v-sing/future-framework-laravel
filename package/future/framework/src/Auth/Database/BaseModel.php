@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class BaseModel extends Model
 {
-    const UPDATED_AT='updated_at';
-    const CREATED_AT='created_at';
     protected $dateFormat = 'U';
 
     /**
@@ -26,6 +24,14 @@ class BaseModel extends Model
     public function getInfo($condition = [], $field = '*')
     {
         return $this->where($condition)->first($field);
+    }
+
+    public function data($param)
+    {
+        foreach ($param as $key => $value) {
+            $this->$key = $value;
+        }
+        return $this;
     }
 
     /**

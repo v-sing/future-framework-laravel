@@ -50,4 +50,6 @@ return [
     'Timezone'              => 'Timezone',
     'Language'              => 'Language',
     'Security tips'         => '<i class="fa fa-warning"></i> Security tip: you are using the default background login. For the safety of your website, it is recommended that you modify the background login.<a href="https://forum.fastadmin.net/thread/7640" target="_blank"> Click to see the modification method</a>',
-];
+    'System file size'      => 'System upload limit',
+    'File size'             => 'Upload limit'
+    ];

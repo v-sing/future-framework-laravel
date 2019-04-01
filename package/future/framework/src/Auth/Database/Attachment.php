@@ -14,6 +14,7 @@ namespace Future\Admin\Auth\Database;
 
 class Attachment extends BaseModel
 {
+    public $timestamps = true;
     /**
      * 白名单
      * @var array

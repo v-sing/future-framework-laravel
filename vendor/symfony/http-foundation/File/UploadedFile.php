@@ -253,6 +253,8 @@ class UploadedFile extends File
         }
 
         $max = ltrim($iniMax, '+');
+        var_dump(11);
+        var_dump($max);exit;
         if (0 === strpos($max, '0x')) {
             $max = \intval($max, 16);
         } elseif (0 === strpos($max, '0')) {

@@ -9,6 +9,7 @@
 
 use Illuminate\Support\Facades\Request;
 use Future\Admin\Facades\Admin;
+use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('lang')) {
     function lang($name, $vars = [])
@@ -64,7 +65,7 @@ if (!function_exists('error')) {
             'data' => $data,
             'url'  => $url
         ];
-        if (isPost()||isAjax()) {
+        if (isPost() || isAjax()) {
             return response()->json($data);
         } else {
             if ($url == '') {
@@ -92,7 +93,7 @@ if (!function_exists('success')) {
             'data' => $data,
             'url'  => $url
         ];
-        if (isPost()||isAjax()) {
+        if (isPost() || isAjax()) {
             return response()->json($data);
         } else {
             if ($url == '') {
@@ -388,5 +389,45 @@ if (!function_exists('json')) {
     {
 
         return response()->json($data);
+    }
+}
+
+if (!function_exists('get_upload_imgae')) {
+    /**
+     * 获取图片
+     * 配合数据库
+     * @param string $path
+     * @param int $type 0 路径 1 id
+     * @return array
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    function get_upload_image($path = '', $type = 0)
+    {
+
+        if (!$type) {
+            $where = [
+                'url' => ['in', $path]
+            ];
+        } else {
+            $where = [
+                'id' => ['in', $path]
+            ];
+        }
+        $data    = toArray(Model('Attachment')->where($where)->get()->toArray());
+        $array   = [];
+        $default = urlencode(file_get_contents('./assets/img/png.png'));
+        foreach ($data as $image) {
+            $result =urlencode( Storage::disk($image['storage'])->get($image['url']));
+            if ($result) {
+                $array[] = $result;
+            } else {
+                $array[] = $default;
+            }
+        }
+        $lenght = count(explode(',',$path)) - count($array);
+        for ($i = 0; $i < $lenght; $i++) {
+            $array[] = $default;
+        }
+        return $array;
     }
 }

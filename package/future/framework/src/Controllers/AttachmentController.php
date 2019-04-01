@@ -61,7 +61,7 @@ class AttachmentController extends BackendController
 
             $cdnurl = preg_replace("/\/(\w+)\.php$/i", '', $this->request->root());
             foreach ($list as $k => &$v) {
-                $v['fullurl'] = ($v['storage'] == 'local' ? $cdnurl : config('site.upload.cdnurl')) . $v['url'];
+                $v['fullurl'] =$v['url'];
             }
             unset($v);
             $result = array("total" => $total, "rows" => $list);

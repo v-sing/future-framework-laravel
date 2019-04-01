@@ -380,7 +380,8 @@
                             <div class="box-header">
                                 <h3 class="box-title">{{lang('Recent news')}}</h3>
                                 <div class="box-tools pull-right">
-                                    <a href="https://www.fastadmin.net" target="_blank" class="btn btn-box-tool">{{lang('More')}}</a>
+                                    <a href="https://www.fastadmin.net" target="_blank"
+                                       class="btn btn-box-tool">{{lang('More')}}</a>
                                 </div>
                             </div>
                             <div class="box-body" id="news-list">
@@ -409,8 +410,8 @@
                                     <tbody>
                                     <tr>
                                         <td width="140">{{lang('version')}}</td>
-                                        <td>{{$config['admin']['version']}} <a href="javascript:;"
-                                                                                 class="btn btn-xs btn-checkversion">检查最新版</a>
+                                        <td>{{$config['site']['version']}} <a href="javascript:;"
+                                                                              class="btn btn-xs btn-checkversion">检查最新版</a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -426,11 +427,19 @@
                                         <td>{{request()->server('SERVER_SOFTWARE')}}</td>
                                     </tr>
                                     <tr>
+                                        <td>{{lang('PHP version')}}</td>
+                                        <td>{{PHP_VERSION}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{lang('System file size')}}</td>
+                                        <td>{{ini_get('upload_max_filesize')}}</td>
+                                    </tr>
+                                    <tr>
                                         <td>{{lang('Upload url')}}</td>
                                         <td>{{$config['upload']['uploadurl']}}</td>
                                     </tr>
                                     <tr>
-                                        <td>{{lang('Upload Cdn url')}}</td>
+                                        <td>{{lang('Upload cdn url')}}</td>
                                         <td>{{$config['site']['cdnurl']}}</td>
                                     </tr>
                                     <tr>
@@ -445,6 +454,11 @@
                                         <td>{{lang('Language')}}</td>
                                         <td>{{$config['language']}}</td>
                                     </tr>
+                                    <tr>
+                                        <td>{{lang('File size')}}</td>
+                                        <td>{{strtoupper($config['upload']['maxsize'])}}</td>
+                                    </tr>
+
                                     </tbody>
                                 </table>
                             </div>

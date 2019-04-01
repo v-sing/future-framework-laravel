@@ -61,7 +61,7 @@ class CreateAdminTables extends Migration
             $table->integer('imageframes', false, false)->comment('图片帧数');
             $table->integer('filesize', false, false)->comment('文件大小');
             $table->string('mimetype', 100)->comment('mime类型');
-            $table->string('extparam', 255)->comment('透传数据');
+            $table->string('extparam', 255)->nullable()->comment('透传数据');
             $table->integer('uploadtime', false, false)->comment('上传时间');
             $table->string('storage', 100)->comment('存储位置');
             $table->string('sha1', 40)->comment('文件 sha1编码');
