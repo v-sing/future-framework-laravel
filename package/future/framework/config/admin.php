@@ -122,4 +122,6 @@ return [
     'api_url'             => 'https://api.fastadmin.net',
     //
     'lang_switch_on'      => true,
+    //默认图片
+    'default_image'       => './assets/img/png.png'
 ];

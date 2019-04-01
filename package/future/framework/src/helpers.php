@@ -401,33 +401,46 @@ if (!function_exists('get_upload_imgae')) {
      * @return array
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    function get_upload_image($path = '', $type = 0)
+    function get_upload_image($path = '')
     {
-
-        if (!$type) {
-            $where = [
-                'url' => ['in', $path]
-            ];
+        if (pathinfo($path)['dirname'] == '.') {
+            $field = 'id';
         } else {
-            $where = [
-                'id' => ['in', $path]
-            ];
+            $field = 'url';
         }
-        $data    = toArray(Model('Attachment')->where($where)->get()->toArray());
+        $default = base64EncodeImage(file_get_contents(config('admin.default_image')));
+        $data    = toArray(Model('Attachment')->whereIn($field, explode(',', $path))->groupby('url')->get()->toArray());
         $array   = [];
-        $default = urlencode(file_get_contents('./assets/img/png.png'));
         foreach ($data as $image) {
-            $result =urlencode( Storage::disk($image['storage'])->get($image['url']));
+            $exists = Storage::disk($image['storage'])->exists($image['url']);
+            if (!$exists) {
+                $array[] = $default;
+                continue;
+            }
+            $result = Storage::disk($image['storage'])->get($image['url']);
             if ($result) {
-                $array[] = $result;
+                $array[] = base64EncodeImage($result, $image['mimetype']);
             } else {
                 $array[] = $default;
             }
         }
-        $lenght = count(explode(',',$path)) - count($array);
+        $lenght = count(explode(',', $path)) - count($array);
         for ($i = 0; $i < $lenght; $i++) {
             $array[] = $default;
         }
-        return $array;
+        return implode('|', $array);
+    }
+}
+if (!function_exists('base64EncodeImage')) {
+    /**
+     *
+     * @param $image_file
+     * @param string $mine
+     * @return string
+     */
+    function base64EncodeImage($image_file, $mine = 'image/png')
+    {
+        $base64_image = 'data:' . $mine . ';base64,' . chunk_split(base64_encode($image_file));
+        return $base64_image;
     }
 }

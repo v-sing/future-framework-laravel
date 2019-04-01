@@ -92,7 +92,7 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
                                 'click .btn-chooseone': function (e, value, row, index) {
                                     var multiple = Backend.api.query('multiple');
                                     multiple = multiple == 'true' ? true : false;
-                                    Fast.api.close({url: row.url, multiple: false});
+                                    Fast.api.close({url: row.url,fullurl:row.fullurl, multiple: false});
                                 },
                             }, formatter: function () {
                                 return '<a href="javascript:;" class="btn btn-danger btn-chooseone btn-xs"><i class="fa fa-check"></i> ' + __('Choose') + '</a>';
@@ -105,12 +105,14 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
             // 选中多个
             $(document).on("click", ".btn-choose-multi", function () {
                 var urlArr = new Array();
+                var fullUrlArr=new Array();
                 $.each(table.bootstrapTable("getAllSelections"), function (i, j) {
                     urlArr.push(j.url);
+                    fullUrlArr.push(j.fullurl);
                 });
                 var multiple = Backend.api.query('multiple');
                 multiple = multiple == 'true' ? true : false;
-                Fast.api.close({url: urlArr.join(","), multiple: true});
+                Fast.api.close({url: urlArr.join(","), fullurl: fullUrlArr.join('|'),multiple: true});
             });
 
             // 为表格绑定事件
@@ -130,7 +132,7 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
                 thumb: function (value, row, index) {
                     if (row.mimetype.indexOf("image") > -1) {
                         var style = row.storage == 'upyun' ? '!/fwfh/120x90' : '';
-                        return '<a href="' + row.fullurl + '" target="_blank"><img src="' + row.fullurl + style + '" alt="" style="max-height:90px;max-width:120px"></a>';
+                        return '<a href="' + row.fullurl + '" target="_blank"><img src="' + row.fullurl  + '" alt="" style="max-height:90px;max-width:120px"></a>';
                     } else {
                         return '<a href="' + row.fullurl + '" target="_blank">' + __('None') + '</a>';
                     }

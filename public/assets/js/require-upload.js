@@ -4,7 +4,7 @@ define(['jquery', 'bootstrap', 'plupload', 'template'], function ($, undefined, 
         config: {
             container: document.body,
             classname: '.plupload:not([initialized])',
-            previewtpl: '<li class="col-xs-3"><a href="<%=fullurl%>" data-url="<%=url%>" target="_blank" class="thumbnail"><img src="<%=fullurl%>" onerror="this.src=\'https://tool.fastadmin.net/icon/\'+\'<%=fullurl%>\'.split(\'.\').pop()+\'.png\';this.onerror=null;" class="img-responsive"></a><a href="javascript:;" class="btn btn-danger btn-xs btn-trash"><i class="fa fa-trash"></i></a></li>',
+            previewtpl: '<li class="col-xs-3"><a href="<%=fullurl%>" data-url="<%=url%>" data-full-url="<%=fullurl%>" target="_blank" class="thumbnail"><img src="<%=fullurl%>" onerror="this.src=\'<%=fullurl%>\';this.onerror=null;" class="img-responsive"></a><a href="javascript:;" class="btn btn-danger btn-xs btn-trash"><i class="fa fa-trash"></i></a></li>',
         },
         events: {
             //初始化完成
@@ -55,14 +55,19 @@ define(['jquery', 'bootstrap', 'plupload', 'template'], function ($, undefined, 
                 if (button) {
                     //如果有文本框则填充
                     var input_id = $(button).data("input-id") ? $(button).data("input-id") : "";
+
                     if (input_id) {
                         var urlArr = [];
+                        var fullUrlArr=[];
                         var inputObj = $("#" + input_id);
                         if ($(button).data("multiple") && inputObj.val() !== "") {
                             urlArr.push(inputObj.val());
+                            fullUrlArr.push(inputObj.attr('data-base64'))
                         }
                         urlArr.push(data.url);
+                        fullUrlArr.push(data.fullurl);
                         inputObj.val(urlArr.join(",")).trigger("change");
+                        inputObj.attr('data-base64',fullUrlArr.join("|")).trigger("change");
                     }
                     //如果有回调函数
                     var onDomUploadSuccess = $(button).data("upload-success");
@@ -166,7 +171,6 @@ define(['jquery', 'bootstrap', 'plupload', 'template'], function ($, undefined, 
                     var mimetype = $(this).data("mimetype");
                     var multipart = $(this).data("multipart");
                     var multiple = $(this).data("multiple");
-
                     //填充ID
                     var input_id = $(that).data("input-id") ? $(that).data("input-id") : "";
                     //预览ID
@@ -259,15 +263,18 @@ define(['jquery', 'bootstrap', 'plupload', 'template'], function ($, undefined, 
                         $(document.body).on("keyup change", "#" + input_id, function () {
                             var inputStr = $("#" + input_id).val();
                             var inputArr = inputStr.split(/\,/);
+                            var fullArr=$("#" + input_id).attr('data-base64').split('|');
                             $("#" + preview_id).empty();
                             var tpl = $("#" + preview_id).data("template") ? $("#" + preview_id).data("template") : "";
-                            $.each(inputArr, function (i, j) {
+                            var i=0;
+                            $.each(fullArr, function (i, j) {
                                 if (!j) {
                                     return true;
                                 }
-                                var data = {url: j, fullurl: Fast.api.cdnurl(j), data: $(that).data()};
+                                var data = {url: inputArr[i], fullurl: j, data: $(that).data()};
                                 var html = tpl ? Template(tpl, data) : Template.render(Upload.config.previewtpl, data);
                                 $("#" + preview_id).append(html);
+                                i++;
                             });
                         });
                         $("#" + input_id).trigger("change");
@@ -275,13 +282,21 @@ define(['jquery', 'bootstrap', 'plupload', 'template'], function ($, undefined, 
                     if (preview_id) {
                         // 监听事件
                         $(document.body).on("fa.preview.change", "#" + preview_id, function () {
+                            console.log(2322);
                             var urlArr = new Array();
+                            var fullUrlArr=new Array()
                             $("#" + preview_id + " [data-url]").each(function (i, j) {
                                 urlArr.push($(this).data("url"));
                             });
+                            $("#" + preview_id + " [data-full-url]").each(function (i, j) {
+                                fullUrlArr.push($(this).data("fullurl"));
+                            });
                             if (input_id) {
                                 $("#" + input_id).val(urlArr.join(","));
+                                $("#" + input_id).attr('data-base64',fullUrlArr.join(","));
                             }
+
+
                         });
                         // 移除按钮事件
                         $(document.body).on("click", "#" + preview_id + " .btn-trash", function () {

@@ -83,5 +83,6 @@ return [
     //API接口地址
     'api_url'             => 'https://api.fastadmin.net',
     //
-    'lang_switch_on'      => true
+    'lang_switch_on'      => true,
+    'default_image'       => './assets/img/png.png'
 ];

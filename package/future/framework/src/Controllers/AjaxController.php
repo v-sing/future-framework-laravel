@@ -72,7 +72,10 @@ class AjaxController extends BackendController
             ];
             $savekey    = $upload['savekey'];
             $savekey    = str_replace(array_keys($replaceArr), array_values($replaceArr), $savekey);
-            $bool       = Storage::disk(config('upload.disks'))->put($savekey, file_get_contents($path));
+            if (count(Model('Attachment')->where(['url' => $savekey])->first()->toArray())>0) {
+                return success('Upload successful', ['url' => $savekey, 'fullurl' => get_upload_image($savekey)]);
+            }
+            $bool = Storage::disk(config('upload.disks'))->put($savekey, file_get_contents($path));
             if ($bool) {
                 $imagewidth = $imageheight = 0;
                 if (in_array($ext, ['gif', 'jpg', 'jpeg', 'bmp', 'png', 'swf'])) {
@@ -96,9 +99,9 @@ class AjaxController extends BackendController
                 );
                 $attachment = Model("Attachment");
                 $attachment->data($params);
-                $result     = $attachment->save();
+                $result = $attachment->save();
                 if ($result) {
-                    return success('Upload successful', ['url' => $savekey]);
+                    return success('Upload successful', ['url' => $savekey, 'fullurl' => get_upload_image($result)]);
                 } else {
                     return error();
                 }

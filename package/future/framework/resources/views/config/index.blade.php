@@ -157,7 +157,7 @@
                                                             <input id="c-{{$item['name']}}" class="form-control"
                                                                    size="50"
                                                                    name="row[{{$item['name']}}]" type="text"
-                                                                   value="{{$item['value']}}"
+                                                                   value="{{$item['value']}}" data-base64="@if($item['value']){!!get_upload_image($item['value'])!!} @endif"
                                                                    data-tip="{{$item['tip']}}">
                                                             <span><button type="button" id="plupload-{{$item['name']}}"
                                                                           class="btn btn-danger plupload"
