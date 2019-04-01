@@ -123,12 +123,12 @@ class CreateAdminTables extends Migration
             $table->string('name', 30)->comment('变量名');
             $table->string('group', 30)->comment('分组');
             $table->string('title', 100)->comment('变量标题');
-            $table->string('tip', 100)->comment('变量描述');
+            $table->string('tip', 100)->nullable(null)->comment('变量描述');
             $table->string('type', 30)->comment('类型:string,text,int,bool,array,datetime,date,file');
             $table->text('value')->comment('变量值');
             $table->text('content')->comment('变量字典数据');
-            $table->string('rule', 100)->comment('验证规则');
-            $table->string('extend', 255)->comment('扩展属性');
+            $table->string('rule', 100)->nullable()->comment('验证规则');
+            $table->string('extend', 255)->nullable()->comment('扩展属性');
             $table->integer('updated_at',false,false)->comment('更新时间');
             $table->integer('created_at',false,false)->comment('添加时间');
 

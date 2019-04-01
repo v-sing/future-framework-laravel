@@ -72,6 +72,9 @@ return [
     'Please input your email'     => '请输入测试接收者邮箱',
     'Custom'                      => '自定义',
     'Keep Time'                   => '保持登录时间',
-    'Upload item'                 => '上传配置'
-
+    'Upload item'                 => '上传配置',
+    'Local'                       => '本地',
+    'Public'                      => '本地(public)',
+    'S3'                          => '亚马逊云服务',
+    'Disks'                       => '储存方式'
 ];

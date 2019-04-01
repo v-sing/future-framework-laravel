@@ -125,7 +125,7 @@
                                                                         id="row[{{$item['name']}}][]-{{$key}}"
                                                                         name="row[{{$item['name']}}][]" type="checkbox"
                                                                         value="{{$key}}" data-tip="{{$item['tip']}}"
-                                                                        @if(in_array($key,$item['value'])) checked @endif /> {{$vo1}}
+                                                                        @if(in_array($key,$item['value'])) checked @endif /> {{lang($vo1)}}
                                                             </label>
                                                         @endforeach
                                                     @endif
@@ -135,7 +135,7 @@
                                                                         id="row[{{$item['name']}}][]-{{$key}}"
                                                                         name="row[{{$item['name']}}][]" type="radio"
                                                                         value="{{$key}}" data-tip="{{$item['tip']}}"
-                                                                        @if(in_array($key,$item['value'])) checked @endif /> {{$vo1}}
+                                                                        @if(in_array($key,$item['value'])) checked @endif /> {{lang($vo1)}}
                                                             </label>
                                                         @endforeach
                                                     @endif
@@ -301,7 +301,7 @@
                 <div class="form-group">
                     {!! Form::label('extend',lang('Extend'),['class'=>'control-label col-xs-12 col-sm-2']) !!}
                     <div class="col-xs-12 col-sm-4">
-                        {!! Form::textarea('row[extend]','',['id'=>'content','cols'=>'30','rows'=>'5','class'=>'form-control','data-rule'=>'required']) !!}
+                        {!! Form::textarea('row[extend]','',['id'=>'content','cols'=>'30','rows'=>'5','class'=>'form-control']) !!}
                     </div>
                 </div>
                 <div class="form-group">

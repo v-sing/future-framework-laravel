@@ -53,7 +53,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             //不可见的元素不验证
             $("form#add-form").data("validator-options", {ignore: ':hidden'});
             Form.api.bindevent($("form#add-form"), null, function (ret) {
-                location.reload();
+                console.log(ret)
+                // location.reload();
             });
 
             //切换显示隐藏变量字典列表

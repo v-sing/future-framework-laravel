@@ -68,6 +68,7 @@ class ConfigController extends BackendController
     public function add()
     {
         $params = input('row');
+//        var_dump($params);exit;
         if ($params) {
             foreach ($params as $k => &$v) {
                 $v = is_array($v) ? implode(',', $v) : $v;
