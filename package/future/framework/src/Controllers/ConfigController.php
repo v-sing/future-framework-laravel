@@ -68,7 +68,6 @@ class ConfigController extends BackendController
     public function add()
     {
         $params = input('row');
-//        var_dump($params);exit;
         if ($params) {
             foreach ($params as $k => &$v) {
                 $v = is_array($v) ? implode(',', $v) : $v;
@@ -114,6 +113,7 @@ class ConfigController extends BackendController
                         $value = is_array($value) ? implode(',', $value) : $value;
                     }
                     $v->value = $value;
+
                     $v->save();
                 }
             }
@@ -132,6 +132,7 @@ class ConfigController extends BackendController
     public function check()
     {
         $params = input('row');
+
         if ($params) {
             $config = $this->model->where($params)->first();
             if (!$config) {

@@ -131,9 +131,9 @@
                                                     @endif
                                                     @if($item['type']=='radio')
                                                         @foreach($item['content'] as $key=> $vo1)
-                                                            <label for="row[{{$item['name']}}][]-{{$key}}"><input
-                                                                        id="row[{{$item['name']}}][]-{{$key}}"
-                                                                        name="row[{{$item['name']}}][]" type="radio"
+                                                            <label for="row[{{$item['name']}}]-{{$key}}"><input
+                                                                        id="row[{{$item['name']}}]-{{$key}}"
+                                                                        name="row[{{$item['name']}}]" type="radio"
                                                                         value="{{$key}}" data-tip="{{$item['tip']}}"
                                                                         @if(in_array($key,$item['value'])) checked @endif /> {{lang($vo1)}}
                                                             </label>

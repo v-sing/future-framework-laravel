@@ -10,6 +10,7 @@
 use Illuminate\Support\Facades\Request;
 use Future\Admin\Facades\Admin;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 if (!function_exists('lang')) {
     function lang($name, $vars = [])
@@ -311,13 +312,15 @@ if (!function_exists('input')) {
      * @return mixed
      */
 
-    function input($key = '', $default = null, $filter = '')
+    function input($key = '', $default = '', $filter = '')
     {
         if ($key != '' || $key != null) {
-            return Request::input($key, $default);
+            $result = Request::input($key, $default);
         } else {
-            return Request::all();
+            $result = Request::all();
         }
+
+        return replace_null($result);
     }
 }
 
@@ -403,32 +406,68 @@ if (!function_exists('get_upload_imgae')) {
      */
     function get_upload_image($path = '')
     {
-        if (pathinfo($path)['dirname'] == '.') {
-            $field = 'id';
-        } else {
-            $field = 'url';
-        }
-        $default = base64EncodeImage(file_get_contents(config('admin.default_image')));
-        $data    = toArray(Model('Attachment')->whereIn($field, explode(',', $path))->groupby('url')->get()->toArray());
-        $array   = [];
-        foreach ($data as $image) {
-            $exists = Storage::disk($image['storage'])->exists($image['url']);
-            if (!$exists) {
-                $array[] = $default;
-                continue;
-            }
-            $result = Storage::disk($image['storage'])->get($image['url']);
-            if ($result) {
-                $array[] = base64EncodeImage($result, $image['mimetype']);
+        $array = explode(',', $path);
+
+        $base64Array = [];
+        foreach ($array as $param) {
+            $result = get_table_image($param);
+            if (!$result) {
+                $base64Array[] = get_storage_image();
             } else {
-                $array[] = $default;
+                $base64Array[] = get_storage_image($result['url'], $result['storage'], $result['mimetype']);
             }
         }
-        $lenght = count(explode(',', $path)) - count($array);
-        for ($i = 0; $i < $lenght; $i++) {
-            $array[] = $default;
+        return implode('|', $base64Array);
+    }
+}
+if (!function_exists('get_table_image')) {
+    /**
+     *
+     * @param $param
+     * @return bool|mixed
+     */
+    function get_table_image($param)
+    {
+        $result = Cache::get('image-' . $param);
+        if (!$result) {
+            $result = Model('Attachment')->where(function ($query) use ($param) {
+                $query->where(['id' => $param])->orwhere(['url' => $param]);
+            })->first();
+            if ($result) {
+                Cache::put('image-' . $param, $result->toArray(), 60 * 60 * 12);
+            } else {
+                $result = false;
+            }
         }
-        return implode('|', $array);
+        return $result;
+    }
+}
+if (!function_exists('get_storage_image')) {
+    /**
+     *
+     * @param string $url
+     * @param string $storage
+     * @param string $mime_type
+     * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    function get_storage_image($url = '', $storage = 'local', $mime_type = 'image/png')
+    {
+        $default = file_get_contents(config('admin.default_image'));
+        if (!$url) {
+            $mime_type = 'image/png';
+            $base64    = $default;
+        } else {
+            $result = Storage::disk($storage)->get($url);
+            if ($result) {
+                $base64 = $result;
+            } else {
+                $mime_type = 'image/png';
+                $base64    = $default;
+            }
+        }
+
+        return base64EncodeImage($base64, $mime_type);
     }
 }
 if (!function_exists('base64EncodeImage')) {
@@ -442,5 +481,33 @@ if (!function_exists('base64EncodeImage')) {
     {
         $base64_image = 'data:' . $mine . ';base64,' . chunk_split(base64_encode($image_file));
         return $base64_image;
+    }
+}
+
+
+if (!function_exists('replace_null')) {
+    function replace_null(&$array, $replace_string = '')
+    {
+        if (!is_string($array) && isset($array)) {
+            foreach ($array as $key => $value) {
+                if (!is_string($value) && isset($value)) {
+
+                    foreach ($value as $k => $v) {
+                        if (!is_string($value[$k])) {
+                            $array[$key][$k] = replace_null($value[$v], $replace_string);
+                        } else if (!isset($value[$v])) {
+                            $array[$key][$k] = $replace_string;
+                        }
+                    }
+                } else {
+                    if (!isset($value)) {
+                        $array[$key] = $replace_string;
+                    }
+                }
+
+            }
+        }
+
+        return $array;
     }
 }
