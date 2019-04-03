@@ -87,7 +87,7 @@ class AttachmentController extends BackendController
         return $this->view();
     }
 
-    public function edit()
+    public function detail()
     {
         return $this->view();
     }

@@ -11,3 +11,4 @@ Route::any('attachment/index','AttachmentController@index');
 Route::any('attachment/select','AttachmentController@select');
 Route::any('attachment/add','AttachmentController@add');
 Route::any('attachment/edit','AttachmentController@edit');
+Route::get('attachment/detail','AttachmentController@detail');

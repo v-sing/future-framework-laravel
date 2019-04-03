@@ -84,7 +84,7 @@
             <div class="well">
                 <div class="login-form">
                     <img id="profile-img" class="profile-img-card"
-                         src="{{$config['site']['cdnurl']}}/assets/img/avatar.png"/>
+                         src="{{get_storage_image('/assets/img/avatar.png') }}"/>
                     <p id="profile-name" class="profile-name-card"></p>
                     <form action="" method="post" id="login-form">
                         <div id="errtips" class="hide"></div>
@@ -108,7 +108,7 @@
                                 <div class="input-group-addon"><span class="glyphicon glyphicon-option-horizontal"
                                                                      aria-hidden="true"></span></div>
                                 <input type="text" name="captcha" class="form-control" placeholder="{{lang('Captcha')}}"
-                                       data-rule="{:__('Captcha')}:required"/>
+                                       data-rule="{{lang('Captcha')}}:required"/>
                                 <span class="input-group-addon" style="padding:0;border:none;cursor:pointer;">
                                         <img src="{{captcha_src()}}" width="100" height="30"
                                              onclick="this.src='{{captcha_src()}}'+Math.random()"/>

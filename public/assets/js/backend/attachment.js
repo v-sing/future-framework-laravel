@@ -5,21 +5,22 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'attachment/index?filter={"ss":"222"}',
-                    add_url: 'attachment/add',
-                    edit_url: 'attachment/edit',
+                    index_url: 'attachment/index',
+                    // add_url: 'attachment/add',
+                    // edit_url: 'attachment/edit',
                     del_url: 'attachment/del',
-                    multi_url: 'attachment/multi',
+                    // multi_url: 'attachment/multi',
                     table: 'attachment'
                 }
             });
 
             var table = $("#table");
-
             // 初始化表格
+            Template.helper("Moment", Moment);
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
-                sortName: 'id',
+                // sortName: 'id',
+                templateView: true,
                 columns: [
                     [
                         {field: 'state', checkbox: true,},
@@ -55,7 +56,22 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
 
             // 为表格绑定事件
             Table.api.bindevent(table);
+            //指定搜索条件
+            $(document).on("click", ".btn-toggle-view", function () {
+                var options = table.bootstrapTable('getOptions');
+                table.bootstrapTable('refreshOptions', {templateView: !options.templateView});
+            });
 
+            //点击详情
+            $(document).on("click", ".btn-detail[data-id]", function () {
+                Backend.api.open('attachment/detail?ids=' + $(this).data('id'), __('Detail'));
+            });
+
+            //获取选中项
+            $(document).on("click", ".btn-selected", function () {
+                //在templateView的模式下不能调用table.bootstrapTable('getSelections')来获取选中的ID,只能通过下面的Table.api.selectedids来获取
+                Layer.alert(JSON.stringify(Table.api.selectedids(table)));
+            });
         },
         select: function () {
             // 初始化表格参数配置

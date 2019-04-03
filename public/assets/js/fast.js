@@ -120,7 +120,7 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
                 },
                 //获取修复后可访问的cdn链接
                 cdnurl: function (url) {
-                    return /^(?:[a-z]+:)?\/\//i.test(url) ? url : Config.upload.cdnurl + url;
+                    return /^(?:[a-z]+:)?\/\//i.test(url) ? url : Config.site.cdnurl + url;
                 },
                 //查询Url参数
                 query: function (name, url) {

@@ -458,13 +458,21 @@ if (!function_exists('get_storage_image')) {
             $mime_type = 'image/png';
             $base64    = $default;
         } else {
-            $result = Storage::disk($storage)->get($url);
-            if ($result) {
-                $base64 = $result;
+            if (Storage::disk($storage)->exists($url)) {
+                $result = Storage::disk($storage)->get($url);
+                if ($result) {
+                    $base64 = $result;
+                }
             } else {
-                $mime_type = 'image/png';
-                $base64    = $default;
+                $result = @file_get_contents('.'.$url);
+                if ($result) {
+                    $base64 = $result;
+                } else {
+                    $mime_type = 'image/png';
+                    $base64    = $default;
+                }
             }
+
         }
 
         return base64EncodeImage($base64, $mime_type);
