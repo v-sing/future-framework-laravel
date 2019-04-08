@@ -14,5 +14,7 @@ use Future\Admin\Controllers\TestController;
 
 class DemoController extends TestController
 {
-
+public function database(){
+  return  $this->view();
+}
 }

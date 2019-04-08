@@ -8,3 +8,4 @@
  */
 
 Route::get('demo', 'DemoController@index');
+Route::get('database', 'DemoController@database');
