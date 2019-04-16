@@ -31,7 +31,7 @@ class CreateAdminTables extends Migration
             $table->integer('loginfailure', false, false)->comment('失败次数');
             $table->integer('logintime', false, false)->comment('登录时间');
             $table->string('token', 59)->comment('Session标识');
-            $table->string('status', 30)->default('normal')->comment('状态');
+            $table->mediumInteger('status', 30)->mediumInteger('normal')->comment('状态');
             $table->integer('updated_at',false,false)->comment('更新时间');
             $table->integer('created_at',false,false)->comment('添加时间');
             
@@ -134,11 +134,11 @@ class CreateAdminTables extends Migration
 
         });
         Schema::connection($connection)->create(config('admin.database.ems_table'), function (Blueprint $table) {
-            $table->increments('id')->comment('ID');
-            $table->string('event', 30)->comment('事件');
+            $table->boolean('id')->comment('ID');
+            $table->bigint('event', 30)->comment('事件');
             $table->string('email', 100)->comment('邮箱');
             $table->string('code', 10)->comment('验证码');
-            $table->integer('times', false, false)->comment('验证次数');
+            $table->binary('times', false, false)->comment('验证次数');
             $table->string('ip', 30)->comment('IP');
             $table->integer('updated_at',false,false)->comment('更新时间');
             $table->integer('created_at',false,false)->comment('添加时间');

@@ -47,7 +47,6 @@ class IndexController extends BackendController
     {
 
         if (!isAjax()) {
-
             return $this->view(['title' => lang('Login')]);
         } else {
             $rule = [

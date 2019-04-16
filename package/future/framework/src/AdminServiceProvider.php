@@ -25,6 +25,7 @@ class AdminServiceProvider extends ServiceProvider
         Console\ResetPasswordCommand::class,
         Console\ExtendCommand::class,
         Console\ExportSeedCommand::class,
+        Console\DatabaseTableCommand::class
     ];
 
     protected $routeMiddleware = [
@@ -48,7 +49,6 @@ class AdminServiceProvider extends ServiceProvider
     public function register()
     {
 
-        //
         $this->loadAdminAuthConfig();
         $this->registerRouteMiddleware();
         $this->commands($this->commands);

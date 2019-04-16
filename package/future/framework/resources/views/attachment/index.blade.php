@@ -48,8 +48,7 @@
                 <p class="text-muted">{{lang('Mimetype')}}: <%=item.mimetype%> &nbsp;; {{lang('Storage')}} : <%=item.storage%></p>
                 <p class="text-muted">{{lang('Created_at')}}: <%=Moment(item.created_at*1000).format("YYYY-MM-DD HH:mm:ss")%></p>
                 <p>
-                    <!--详情的事件需要在JS中手动绑定-->
-                    <a href="#" class="btn btn-primary btn-success btn-detail" data-id="<%=item.id%>"><i class="fa fa-camera"></i>  {{lang('Detail')}}</a>
+
                     <!--如果需要响应编辑或删除事件，可以给元素添加 btn-edit或btn-del的类和data-id这个属性值-->
                     <a href="#" class="btn btn-danger btn-del" data-id="<%=item.id%>"><i class="fa fa-times"></i> {{lang('Del')}}</a>
                     <span class="pull-right" style="margin-top:10px;">
