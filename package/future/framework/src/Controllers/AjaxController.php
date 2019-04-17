@@ -12,6 +12,7 @@ namespace Future\Admin\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Future\Admin\Fast\Random;
+use Illuminate\Support\Facades\Artisan;
 
 class AjaxController extends BackendController
 {
@@ -72,7 +73,7 @@ class AjaxController extends BackendController
             ];
             $savekey    = $upload['savekey'];
             $savekey    = str_replace(array_keys($replaceArr), array_values($replaceArr), $savekey);
-            if (count(Model('Attachment')->where(['url' => $savekey])->first())>0) {
+            if (count(Model('Attachment')->where(['url' => $savekey])->first()) > 0) {
                 return success('Upload successful', ['url' => $savekey, 'fullurl' => get_upload_image($savekey)]);
             }
             $bool = Storage::disk(config('upload.disks'))->put($savekey, file_get_contents($path));
@@ -101,7 +102,7 @@ class AjaxController extends BackendController
                 $attachment->data($params);
                 $result = $attachment->save();
                 if ($result) {
-                    return success('Upload successful', ['url' => $savekey, 'fullurl' => get_storage_image($savekey,config('upload.disks'),$mimetype)]);
+                    return success('Upload successful', ['url' => $savekey, 'fullurl' => get_storage_image($savekey, config('upload.disks'), $mimetype)]);
                 } else {
                     return error();
                 }
@@ -135,5 +136,34 @@ class AjaxController extends BackendController
     public function emailtest()
     {
 
+    }
+
+    /**
+     * 清除缓存
+     */
+    public function wipecache()
+    {
+        $type = input('type');
+
+        switch ($type) {
+            case 'all':
+                Artisan::call('cache:clear');
+                Artisan::call('view:clear');
+                Artisan::call('config:clear');
+                Artisan::call('route:clear');
+            case 'content':
+                Artisan::call('cache:clear');
+                break;
+            case 'template':
+                Artisan::call('view:clear');
+            case 'config':
+                Artisan::call('config:clear');
+                break;
+            case 'route':
+                Artisan::call('route:clear');
+                break;
+
+        }
+        return success();
     }
 }

@@ -98,7 +98,7 @@ if (!function_exists('success')) {
             return response()->json($data);
         } else {
             if ($url == '') {
-                $data['url'] = Request::url();
+                $data['url'] = isset($data['data']['url']) ? $data['data']['url'] : Request::url();
             } else {
                 $data['url'] = url($data['url']);
             }
@@ -112,7 +112,9 @@ if (!function_exists('isAjax')) {
      */
     function isAjax()
     {
-        return request()->ajax();
+        $HTTP_X_REQUESTED_WITH = request()->server('HTTP_X_REQUESTED_WITH');
+        return isset($HTTP_X_REQUESTED_WITH) && strtoupper($HTTP_X_REQUESTED_WITH) == 'XMLHTTPREQUEST';
+
     }
 }
 
@@ -122,8 +124,8 @@ if (!function_exists('isPost')) {
      */
     function isPost()
     {
-
-        return request()->post();
+        $REQUEST_METHOD = request()->server('REQUEST_METHOD');
+        return isset($REQUEST_METHOD) && strtoupper($REQUEST_METHOD) == 'POST';
     }
 }
 
@@ -133,7 +135,8 @@ if (!function_exists('isGet')) {
      */
     function isGet()
     {
-        return request()->get();
+        $REQUEST_METHOD = request()->server('REQUEST_METHOD');
+        return isset($REQUEST_METHOD) && strtoupper($REQUEST_METHOD) == 'GET';
     }
 }
 
@@ -464,7 +467,7 @@ if (!function_exists('get_storage_image')) {
                     $base64 = $result;
                 }
             } else {
-                $result = @file_get_contents('.'.$url);
+                $result = @file_get_contents('.' . $url);
                 if ($result) {
                     $base64 = $result;
                 } else {

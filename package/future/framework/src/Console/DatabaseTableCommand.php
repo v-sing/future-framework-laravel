@@ -70,7 +70,6 @@ class DatabaseTableCommand extends Command
         }
         $file = database_path('migrations') . '/'.date('Y_m_d_').'100000_create_admin_tables.php';
         $contents = $this->getStub('create_admin_tables');
-        var_dump($contents);
         $this->laravel['files']->put($file, str_replace(['<%up%>','<%down%>'], [$str,$downStr], $contents));
         $this->line($file);
 

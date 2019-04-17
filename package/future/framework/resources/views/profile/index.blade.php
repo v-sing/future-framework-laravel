@@ -45,12 +45,12 @@
             </div>
             <div class="panel-body">
 
-                <form id="update-form" role="form" data-toggle="validator" method="POST" action="{{url('profile/update')}}">
+                <form id="update-form" role="form" data-toggle="validator" method="POST" action="{{url('admin/profile/update')}}">
                     <input type="hidden" id="c-avatar" name="row[avatar]" value="{{$admin['avatar']}}"/>
                     <div class="box-body box-profile">
 
                         <div class="profile-avatar-container">
-                            <img class="profile-user-img img-responsive img-circle plupload" src="{{get_storage_image($admin['avatar'])||get_storage_image($admin['cdnurl'])}}" alt="">
+                            <img class="profile-user-img img-responsive img-circle plupload" src="{{get_storage_image($admin['avatar'])}}" alt="" onerror="{{get_storage_image($admin['cdnurl'])}}">
                             <div class="profile-avatar-text img-circle">{{lang('Click to edit')}}</div>
                             <button id="plupload-avatar" class="plupload" data-input-id="c-avatar"><i class="fa fa-upload"></i> {{lang('Upload')}}</button>
                         </div>

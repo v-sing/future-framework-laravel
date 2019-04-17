@@ -46,7 +46,14 @@ class IndexController extends BackendController
     public function login(Request $request)
     {
 
-        if (!isAjax()) {
+        $url = Session::get('referer') ? Session::get('referer') : url('/admin');
+        if (isGet()) {
+            if ($this->auth->isLogin()) {
+               return success(lang("You've logged in, do not login again"), array_merge(Session::get("admin"), ['url' => $url]));
+            }
+            if ($this->auth->autologin()) {
+                return  success(lang("Auto login"), array_merge(Session::get("admin"), ['url' => $url]));
+            }
             return $this->view(['title' => lang('Login')]);
         } else {
             $rule = [
@@ -66,12 +73,12 @@ class IndexController extends BackendController
             if ($result !== null) {
                 return error($result);
             }
+
             $username = $request->input('username');
             $password = $request->input('password');
             $result   = $this->auth->login($username, $password, config('site.keeptime'));
             if ($result) {
-                $url = Session::get('referer') ? Session::get('referer') : url('/admin');
-                return success('登录成功！', array_merge(Session::get("admin"), ['url' => $url]));
+                return success(lang('Login successful'), array_merge(Session::get("admin"), ['url' => $url]));
             } else {
                 return error(lang($this->auth->getError()));
             }
@@ -79,5 +86,13 @@ class IndexController extends BackendController
         }
     }
 
+    /**
+     * 退出
+     */
+    public function logout()
+    {
+        $this->auth->logout();
+        return success(lang('Logout successful'), [], url('admin/login'));
+    }
 
 }

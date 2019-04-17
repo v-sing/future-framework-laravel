@@ -180,5 +180,6 @@ return [
     'Rule tips'                                             => '规则通常对应一个控制器的方法,同时左侧的菜单栏数据也从规则中体现,通常建议通过命令行进行生成规则节点',
     'Jump seconds'                                          => '页面将在 <span id="wait">%d</span>秒后自动跳转',
     'Please select'                                         => '请选择',
+    'Auto login'                                             => '自动登录成功！'
 
 ];

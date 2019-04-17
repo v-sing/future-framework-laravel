@@ -20,6 +20,7 @@ use Future\Admin\Auth\Database\AuthGroupAccess;
 use Future\Admin\Auth\Database\AuthGroup;
 use Future\Admin\Fast\Tree;
 use Future\Admin\Fast\Random;
+use Illuminate\Support\Facades\Hash;
 
 class Auth extends BaseAuth
 {
@@ -27,15 +28,16 @@ class Auth extends BaseAuth
     protected $requestUri = '';
     protected $breadcrumb = [];
     protected $logined = false; //登录状态
-    protected $adminModel=null;
-    protected $AuthGroupModel=null;
-    protected $AuthGroupAccessModel=null;
+    protected $adminModel = null;
+    protected $AuthGroupModel = null;
+    protected $AuthGroupAccessModel = null;
+
     public function __construct()
     {
         parent::__construct();
-        $this->adminModel=new Admin();
-        $this->AuthGroupModel=new AuthGroup;
-        $this->AuthGroupAccessModel=new AuthGroupAccess;
+        $this->adminModel           = new Admin();
+        $this->AuthGroupModel       = new AuthGroup;
+        $this->AuthGroupAccessModel = new AuthGroupAccess;
     }
 
     public function __get($name)
@@ -63,7 +65,7 @@ class Auth extends BaseAuth
             return false;
         }
 
-        if ($admin->password != md5(md5($password) . $admin->salt)) {
+        if (!Hash::check($password . $admin->salt, $admin->password)) {
             $admin->loginfailure++;
             $admin->save();
             $this->setError('Password is incorrect');
@@ -73,7 +75,6 @@ class Auth extends BaseAuth
         $admin->logintime    = time();
         $admin->token        = Random::uuid();
         $admin->save();
-
         Session::put("admin", $admin->toArray());
         $this->keeplogin($keeptime);
         return true;
@@ -87,13 +88,15 @@ class Auth extends BaseAuth
      */
     protected function keeplogin($keeptime = 0)
     {
+
         if ($keeptime) {
             $expiretime = time() + $keeptime;
             $key        = md5(md5($this->id) . md5($keeptime) . md5($expiretime) . $this->token);
             $data       = [$this->id, $keeptime, $expiretime, $key];
-            Cookie::make('keeplogin', implode('|', $data), 86400 * 30);
+            Cookie::queue('keeplogin', implode('|', $data), 86400 * 30);
             return true;
         }
+
         return false;
     }
 
@@ -118,7 +121,7 @@ class Auth extends BaseAuth
     public function match($arr = [])
     {
 
-        $arr     = is_array($arr) ? $arr : explode(',', $arr);
+        $arr = is_array($arr) ? $arr : explode(',', $arr);
         if (!$arr) {
             return FALSE;
         }
@@ -140,6 +143,7 @@ class Auth extends BaseAuth
      */
     public function isLogin()
     {
+
         if ($this->logined) {
             return true;
         }
@@ -149,7 +153,7 @@ class Auth extends BaseAuth
             return false;
         }
         //判断是否同一时间同一账号只能在一个地方登录
-        if (config('app.admin.login_unique')) {
+        if (config('admin.login_unique')) {
             $my = Admin::find($admin['id'])->toArray();
             if (!$my || $my['token'] != $admin['token']) {
                 return false;
@@ -329,7 +333,7 @@ class Auth extends BaseAuth
         $colorArr  = ['red', 'green', 'yellow', 'blue', 'teal', 'orange', 'purple'];
         $colorNums = count($colorArr);
         $badgeList = [];
-        $module    =\Future\Admin\Facades\Admin::module();
+        $module    = \Future\Admin\Facades\Admin::module();
         // 生成菜单的badge
         foreach ($params as $k => $v) {
             $url = $k;
@@ -438,4 +442,51 @@ class Auth extends BaseAuth
     {
         return $this->_error = $error;
     }
+
+    /**
+     * 注销登录
+     */
+    public function logout()
+    {
+        $admin = Admin::find(intval($this->id));
+        if (!$admin) {
+            return true;
+        }
+        $admin->token = '';
+        $admin->save();
+        Session::forget("admin");
+        Cookie::forget("keeplogin");
+        return true;
+    }
+
+    /**
+     * 自动登录
+     * @return boolean
+     */
+    public function autologin()
+    {
+        $keeplogin = Cookie::get('keeplogin');
+
+        if (!$keeplogin) {
+            return false;
+        }
+        list($id, $keeptime, $expiretime, $key) = explode('|', $keeplogin);
+        if ($id && $keeptime && $expiretime && $key && $expiretime > time()) {
+            $admin = Admin::find($id);
+            if (!$admin || !$admin->token) {
+                return false;
+            }
+            //token有变更
+            if ($key != md5(md5($id) . md5($keeptime) . md5($expiretime) . $admin->token)) {
+                return false;
+            }
+            Session::put("admin", $admin->toArray());
+            //刷新自动登录的时效
+            $this->keeplogin($keeptime);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

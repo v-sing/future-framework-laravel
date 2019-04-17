@@ -11,3 +11,4 @@ Route::get('/', 'IndexController@index');
 Route::get('index', 'IndexController@index');
 Route::get('index/index', 'IndexController@index');
 Route::any('login','IndexController@login');
+Route::get('logout','IndexController@logout');

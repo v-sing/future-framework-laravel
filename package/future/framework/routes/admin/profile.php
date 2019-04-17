@@ -9,3 +9,4 @@
 
 Route::any('profile', 'ProfileController@index');
 Route::any('profile/index', 'ProfileController@index');
+Route::post('profile/update', 'ProfileController@update');

@@ -42,7 +42,8 @@
                         <li class="divider"></li>
                         <li><a href="javascript:;" data-type="content"><i class="fa fa-file-text"></i> {{lang('Wipe content cache')}}</a></li>
                         <li><a href="javascript:;" data-type="template"><i class="fa fa-file-image-o"></i> {{lang(('Wipe template cache'))}}</a></li>
-                        <li><a href="javascript:;" data-type="addons"><i class="fa fa-rocket"></i> {{lang(('Wipe addons cache'))}}</a></li>
+                        <li><a href="javascript:;" data-type="config"><i class="fa fa-rocket"></i> {{lang(('Wipe config cache'))}}</a></li>
+                        <li><a href="javascript:;" data-type="route"><i class="fa fa-link"></i> {{lang(('Wipe route cache'))}}</a></li>
                     </ul>
                 </li>
 
@@ -55,8 +56,8 @@
                         <li class="{{$config['language']=='zh-cn'?'active':''}}">
                             <a href="?ref=addtabs&lang=zh-cn">简体中文</a>
                         </li>
-                        <li class="{{$config['language']=='en'?'active':''}}">
-                            <a href="?ref=addtabs&lang=en">English</a>
+                        <li class="{{$config['language']=='en-gb'?'active':''}}">
+                            <a href="?ref=addtabs&lang=en-gb">English</a>
                         </li>
                     </ul>
                 </li>
@@ -70,13 +71,13 @@
                 <!-- 账号信息下拉框 -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="{{$admin['avatar']|$admin['cdnurl']}}" class="user-image" alt="{{$admin['nickname']}}">
+                        <img src="{{get_storage_image($admin['avatar'])}}" onerror="{{$admin['cdnurl']}}" class="user-image" alt="{{$admin['nickname']}}">
                         <span class="hidden-xs">{{$admin['nickname']}}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <img src="{{$admin['avatar']|$admin['cdnurl']}}" class="img-circle" alt="">
+                            <img  src="{{get_storage_image($admin['avatar'])}}" onerror="{{$admin['cdnurl']}}" class="img-circle" alt="">
                             <p>
                                 {{$admin['nickname']}}
                                 <small><?php echo date('Y-m-d H:i:s',$admin['logintime']);?></small>
@@ -99,11 +100,11 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="general/profile" class="btn btn-primary addtabsit"><i class="fa fa-user"></i>
+                                <a href="{{url('admin/profile')}}" class="btn btn-primary addtabsit"><i class="fa fa-user"></i>
                                     {{lang('Profile')}}</a>
                             </div>
                             <div class="pull-right">
-                                <a href="{{url('index/logout')}}" class="btn btn-danger"><i class="fa fa-sign-out"></i>
+                                <a href="{{url('admin/logout')}}" class="btn btn-danger"><i class="fa fa-sign-out"></i>
                                     {{lang('Logout')}}</a>
                             </div>
                         </li>
