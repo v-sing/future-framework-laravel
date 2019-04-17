@@ -28,7 +28,7 @@
                 </li>
                 <!-- 账号信息下拉框 -->
                 <li class="hidden-xs">
-                    <a href="javascript:;" data-toggle="checkupdate" title="{:__('Check for updates')}">
+                    <a href="javascript:;" data-toggle="checkupdate" title="{{lang('Check for updates')}}">
                         <i class="fa fa-refresh"></i>
                     </a>
                 </li>
