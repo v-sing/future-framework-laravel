@@ -109,4 +109,14 @@ class Admin
     {
 
     }
+
+    /**
+     * 获取模板输出
+     * @param $key
+     * @return mixed
+     */
+    public function getAssign($key)
+    {
+      return  $this->assign[$key];
+    }
 }

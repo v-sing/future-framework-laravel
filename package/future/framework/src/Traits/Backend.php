@@ -105,6 +105,7 @@ trait Backend
                 $name      = parseName(basename(str_replace('\\', '/', get_class($model))));
                 $tableName = $name . '.';
             }
+
             $sortArr = explode(',', $sort);
             foreach ($sortArr as $index => & $item) {
                 $item = stripos($item, ".") === false ? $tableName . trim($item) : $item;
@@ -243,6 +244,7 @@ trait Backend
         }
         return $adminIds;
     }
+
     /**
      * 加载模板
      * @param string $template
@@ -267,4 +269,11 @@ trait Backend
         }
     }
 
+    /**
+     * 最后执行函数
+     */
+    public function __destruct()
+    {
+        // TODO: Implement __destruct() method.
+    }
 }

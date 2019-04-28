@@ -38,6 +38,7 @@ class Auth extends BaseAuth
         $this->adminModel           = new Admin();
         $this->AuthGroupModel       = new AuthGroup;
         $this->AuthGroupAccessModel = new AuthGroupAccess;
+
     }
 
     public function __get($name)
@@ -183,26 +184,26 @@ class Auth extends BaseAuth
 
     public function getGroups($uid = null)
     {
-        $uid = is_null($uid) ? $this->id : $uid;
+        $uid = $this->getAdminId($uid);
         return parent::getGroups($uid);
     }
 
     public function getRuleList($uid = null)
     {
-        $uid = is_null($uid) ? $this->id : $uid;
+        $uid = $this->getAdminId($uid);
         return parent::getRuleList($uid);
     }
 
     public function getUserInfo($uid = null)
     {
-        $uid = is_null($uid) ? $this->id : $uid;
+        $uid = $this->getAdminId($uid);
 
         return $uid != $this->id ? Admin::get(intval($uid)) : Session::get('admin');
     }
 
     public function getRuleIds($uid = null)
     {
-        $uid = is_null($uid) ? $this->id : $uid;
+        $uid = $this->getAdminId($uid);
         return parent::getRuleIds($uid);
     }
 
@@ -234,7 +235,7 @@ class Auth extends BaseAuth
     public function getChildrenGroupIds($withself = false)
     {
         //取出当前管理员所有的分组
-        $groups   = $this->getGroups();
+        $groups = $this->getGroups();
         $groupIds = [];
         foreach ($groups as $k => $v) {
             $groupIds[] = $v['id'];
@@ -283,7 +284,8 @@ class Auth extends BaseAuth
             }
         } else {
             //超级管理员拥有所有人的权限
-            $childrenAdminIds = $this->adminModel->lists('id');
+            $childrenAdminIds = toArray(Admin::all(['id'])->toArray());
+            $childrenAdminIds = array_column($childrenAdminIds, 'id');
         }
         if ($withself) {
             if (!in_array($this->id, $childrenAdminIds)) {
@@ -489,4 +491,13 @@ class Auth extends BaseAuth
         }
     }
 
+    /**
+     * 获取id
+     * @param null $uid
+     * @return mixed|null
+     */
+    protected function getAdminId($uid = null)
+    {
+        return $uid = is_null($uid) ? $this->id=Session::get('admin.id') : $uid;
+    }
 }

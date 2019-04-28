@@ -30,6 +30,7 @@ class Initialization
      */
     public function handle($request, Closure $next, $guard = null)
     {
+
         $action    = [];
         $route     = $request->route();
         $array     = explode('@', $route->getAction()['controller']);

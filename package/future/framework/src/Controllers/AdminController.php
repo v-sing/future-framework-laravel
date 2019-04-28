@@ -9,7 +9,11 @@
 
 namespace Future\Admin\Controllers;
 
+
+use Illuminate\Http\Request;
+use Future\Admin\Facades\Admin;
 use Future\Admin\Auth\Database\AuthGroup;
+use Future\Admin\Auth\Database\AuthGroupAccess;
 class AdminController extends BackendController
 {
     /**
@@ -19,14 +23,68 @@ class AdminController extends BackendController
     protected $childrenGroupIds = [];
     protected $childrenAdminIds = [];
 
-    public function _initialize()
+    protected function _initialize()
     {
         parent::_initialize();
         $this->model = model('Admin');
-        $this->childrenAdminIds = $this->auth->getChildrenAdminIds(true);
-        $this->childrenGroupIds = $this->auth->getChildrenGroupIds(true);
-
-        $groupList = toArray(AuthGroup::where('id', 'in', $this->childrenGroupIds)->select());
+        $this->middleware('admin.adminController');
     }
 
+    public function index(Request $request)
+    {
+
+        if(isAjax()){
+            $filter    = input('filter');
+            $childrenGroupIds=Admin::getAssign('childrenGroupIds');
+$childrenAdminIds=Admin::getAssign('childrenAdminIds');
+            $groupNameData= AuthGroup::whereIn('id', $childrenGroupIds)
+                ->select('id','name')->get();
+            $groupName=[];
+            foreach ($groupNameData as $v){
+                $groupName['id']=lang($v['name']);
+            }
+            $authGroupList = AuthGroupAccess::whereIn('group_id', $childrenGroupIds)
+                ->select('uid','group_id')
+                ->get();
+            $adminGroupName = [];
+            foreach ($authGroupList as $k => $v)
+            {
+                if (isset($groupName[$v['group_id']]))
+                    $adminGroupName[$v['uid']][$v['group_id']] = $groupName[$v['group_id']];
+            }
+            $groups = $this->auth->getGroups();
+            foreach ($groups as $m => $n)
+            {
+                $adminGroupName[$this->auth->id][$n['id']] = $n['name'];
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $total = $this->model
+                ->where($where)
+                ->whereIn('id', $childrenAdminIds)
+                ->orderby($sort, $order)
+                ->count();
+
+            $list = $this->model
+                ->where($where)
+                ->whereIn('id', $childrenAdminIds)
+                ->orderby($sort, $order)
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
+            foreach ($list as $k => &$v)
+            {
+                unset($v['password']);
+                unset($v['token']);
+                unset($v['salt']);
+                $groups = isset($adminGroupName[$v['id']]) ? $adminGroupName[$v['id']] : [];
+                $v['groups'] = implode(',', array_keys($groups));
+                $v['groups_text'] = implode(',', array_values($groups));
+            }
+            unset($v);
+            $result = array("total" => $total, "rows" => $list);
+
+            return json($result);
+        }
+        return $this->view();
+    }
 }

@@ -27,6 +27,7 @@ class Auth
      */
     protected static $instance = null;
     protected $rules = [];
+    public $id;
     /**
      * 当前请求实例
      * @var Request
@@ -62,6 +63,7 @@ class Auth
     public static function instance()
     {
         $name = get_called_class();
+
         if (!isset(self::$instance[$name])) {
             self::$instance[$name] = new $name();
         }
@@ -194,11 +196,16 @@ class Auth
      */
     public function getRuleIds($uid)
     {
+
         //读取用户所属用户组
         $groups = $this->getGroups($uid);
         $ids = []; //保存用户所属用户组设置的所有权限规则id
-        foreach ($groups as $g) {
-            $ids = array_merge($ids, explode(',', trim($g['rules'], ',')));
+        if(!isset($groups['rules'])){
+            foreach ($groups as $g) {
+                $ids = array_merge($ids, trim($g['rules'])=='*'?['*']:explode(',', trim($g['rules'], ',')));
+            }
+        }else{
+            $ids=array_merge($ids, trim($groups['rules'])=='*'?['*']:explode(',', trim($groups['rules'], ',')));
         }
         $ids = array_unique($ids);
         return $ids;
@@ -213,10 +220,6 @@ class Auth
      */
     public function getGroups($uid)
     {
-        static $groups = [];
-        if (isset($groups[$uid])) {
-            return $groups[$uid];
-        }
         $user_groups = DB::table($this->config['auth_group_access'] . ' as aga')
             ->leftJoin($this->config['auth_group'] . ' as ag', 'ag.id', '=', 'aga.group_id')
             ->where(['aga.uid' => $uid, 'ag.status' => 'normal'])

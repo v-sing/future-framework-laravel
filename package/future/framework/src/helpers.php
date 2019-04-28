@@ -499,7 +499,7 @@ if (!function_exists('base64EncodeImage')) {
 if (!function_exists('replace_null')) {
     function replace_null(&$array, $replace_string = '')
     {
-        if (!is_string($array) && isset($array)) {
+        if (!is_string($array) && isset($array)&&!is_null($array)) {
             foreach ($array as $key => $value) {
                 if (!is_string($value) && isset($value)) {
 

@@ -2,7 +2,6 @@
 
 namespace Future\Admin;
 
-
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Future\Admin\Form\FormBuilder;
@@ -32,6 +31,7 @@ class AdminServiceProvider extends ServiceProvider
         'admin.init'    => Middleware\Initialization::class,
         'admin.session' => Middleware\Session::class,
         'admin.auth'    => Middleware\AuthMiddleware::class,
+        'admin.adminController'=>Middleware\AdminControllerMiddleware::class
     ];
 
     protected $middlewareGroups = [
