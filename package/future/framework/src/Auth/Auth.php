@@ -450,14 +450,14 @@ class Auth extends BaseAuth
      */
     public function logout()
     {
-        $admin = Admin::find(intval($this->id));
+        $admin = Admin::find(Session::get('admin.id'));
         if (!$admin) {
             return true;
         }
         $admin->token = '';
         $admin->save();
-        Session::forget("admin");
-        Cookie::forget("keeplogin");
+        $session=Session::forget("admin");
+        $cookie= Cookie::unqueue('keeplogin');
         return true;
     }
 

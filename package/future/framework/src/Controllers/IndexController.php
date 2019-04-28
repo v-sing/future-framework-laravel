@@ -47,15 +47,9 @@ class IndexController extends BackendController
     {
 
         $url = Session::get('referer') ? Session::get('referer') : url('/admin');
-        if (isGet()) {
-            if ($this->auth->isLogin()) {
-               return success(lang("You've logged in, do not login again"), array_merge(Session::get("admin"), ['url' => $url]));
-            }
-            if ($this->auth->autologin()) {
-                return  success(lang("Auto login"), array_merge(Session::get("admin"), ['url' => $url]));
-            }
-            return $this->view(['title' => lang('Login')]);
-        } else {
+
+
+        if (isAjax()) {
             $rule = [
                 'username' => 'required',
                 'password' => 'required',
@@ -84,6 +78,13 @@ class IndexController extends BackendController
             }
 
         }
+        if ($this->auth->isLogin()) {
+            return success(lang("You've logged in, do not login again"), array_merge(Session::get("admin"), ['url' => $url]));
+        }
+        if ($this->auth->autologin()) {
+            return success(lang("Auto login"), array_merge(Session::get("admin"), ['url' => $url]));
+        }
+        return $this->view(['title' => lang('Login')]);
     }
 
     /**
