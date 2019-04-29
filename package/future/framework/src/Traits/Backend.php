@@ -19,6 +19,7 @@ trait Backend
 {
 
 
+
     /**
      * Get a validation factory instance.
      *
@@ -124,6 +125,7 @@ trait Backend
                 $v = stripos($v, ".") === false ? $tableName . $v : $v;
             }
             unset($v);
+
             $where[] = [implode("|", $searcharr), "LIKE", "%{$search}%"];
         }
         foreach ($filter as $k => $v) {
@@ -212,10 +214,16 @@ trait Backend
         }
 
         $where = function ($query) use ($where) {
-
             foreach ($where as $k => $v) {
                 if (is_array($v)) {
-                    call_user_func_array([$query, 'where'], $v);
+                    if(strpos($v[0],'|')!==false){
+                        $arr= explode('|',$v[0]);
+                        foreach ($arr as $v1){
+                            $query->orWhere($v1,$v[1],$v[2]);
+                        }
+                    }else{
+                        call_user_func_array([$query, 'where'], $v);
+                    }
                 } else {
                     $query->where($v);
                 }
