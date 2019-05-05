@@ -188,6 +188,19 @@ class Auth extends BaseAuth
         return parent::getGroups($uid);
     }
 
+    public function getGroupAll()
+    {
+        $user_groups = $this->AuthGroupAccessModel->from('auth_group_access as aga')
+            ->leftJoin($this->config['auth_group'] . ' as ag', 'ag.id', '=', 'aga.group_id')
+            ->where(['ag.status' => 'normal'])
+            ->select('aga.uid', 'aga.group_id', 'ag.id', 'ag.pid', 'ag.name', 'ag.rules')
+            ->get()->toArray();
+        $groups      = [];
+        foreach ($user_groups as $v) {
+            $groups[$v['id']][] = $v['name'];
+        }
+        return $groups;
+    }
     public function getRuleList($uid = null)
     {
         $uid = $this->getAdminId($uid);
@@ -235,7 +248,7 @@ class Auth extends BaseAuth
     public function getChildrenGroupIds($withself = false)
     {
         //取出当前管理员所有的分组
-        $groups = $this->getGroups();
+        $groups   = $this->getGroups();
         $groupIds = [];
         foreach ($groups as $k => $v) {
             $groupIds[] = $v['id'];
@@ -456,8 +469,8 @@ class Auth extends BaseAuth
         }
         $admin->token = '';
         $admin->save();
-        $session=Session::forget("admin");
-        $cookie= Cookie::unqueue('keeplogin');
+        $session = Session::forget("admin");
+        $cookie  = Cookie::unqueue('keeplogin');
         return true;
     }
 
@@ -498,6 +511,6 @@ class Auth extends BaseAuth
      */
     protected function getAdminId($uid = null)
     {
-        return $uid = is_null($uid) ? $this->id=Session::get('admin.id') : $uid;
+        return $uid = is_null($uid) ? $this->id = Session::get('admin.id') : $uid;
     }
 }

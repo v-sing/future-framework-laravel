@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Future\Admin\Facades\Admin;
 use Future\Admin\Auth\Database\AuthGroup;
 use Future\Admin\Auth\Database\AuthGroupAccess;
+use Illuminate\Support\Facades\Session;
 
 class AdminController extends BackendController
 {
@@ -33,12 +34,11 @@ class AdminController extends BackendController
 
     public function index(Request $request)
     {
-
         if (isAjax()) {
             $childrenGroupIds = Admin::getAssign('childrenGroupIds');
             $childrenAdminIds = Admin::getAssign('childrenAdminIds');
             $groupNameData    = AuthGroup::whereIn('id', $childrenGroupIds)
-                ->select('id', 'name')->get();
+                ->select('id', 'name')->get()->toArray();
             $groupName        = [];
             foreach ($groupNameData as $v) {
                 $groupName['id'] = lang($v['name']);
@@ -51,18 +51,13 @@ class AdminController extends BackendController
                 if (isset($groupName[$v['group_id']]))
                     $adminGroupName[$v['uid']][$v['group_id']] = $groupName[$v['group_id']];
             }
-            var_dump($authGroupList);exit;
-            $groups = $this->auth->getGroups();
-            foreach ($groups as $m => $n) {
-                $adminGroupName[$this->auth->id][$n['id']] = $n['name'];
-            }
+            $adminGroupName = $this->auth->getGroupAll();
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username,nickname');
             $total = $this->model
                 ->where($where)
                 ->whereIn('id', $childrenAdminIds)
                 ->orderby($sort, $order)
                 ->count();
-
             $list = $this->model
                 ->where($where)
                 ->whereIn('id', $childrenAdminIds)
@@ -70,7 +65,6 @@ class AdminController extends BackendController
                 ->offset($offset)
                 ->limit($limit)
                 ->get();
-
             foreach ($list as $k => &$v) {
                 unset($v['password']);
                 unset($v['token']);
@@ -81,7 +75,6 @@ class AdminController extends BackendController
             }
             unset($v);
             $result = array("total" => $total, "rows" => $list);
-
             return json($result);
         }
         return $this->view();
