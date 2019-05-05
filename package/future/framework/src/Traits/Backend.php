@@ -19,7 +19,6 @@ trait Backend
 {
 
 
-
     /**
      * Get a validation factory instance.
      *
@@ -98,15 +97,13 @@ trait Backend
         $filter         = (array)json_decode($filter, TRUE);
         $op             = (array)json_decode($op, TRUE);
         $filter         = $filter ? $filter : [];
-
-        $where     = [];
-        $tableName = '';
+        $where          = [];
+        $tableName      = '';
         if ($relationSearch) {
             if (!empty($model)) {
                 $name      = parseName(basename(str_replace('\\', '/', get_class($model))));
                 $tableName = $name . '.';
             }
-
             $sortArr = explode(',', $sort);
             foreach ($sortArr as $index => & $item) {
                 $item = stripos($item, ".") === false ? $tableName . trim($item) : $item;
@@ -116,9 +113,8 @@ trait Backend
         }
         $adminIds = $this->getDataLimitAdminIds();
         if (is_array($adminIds)) {
-            $where[] = [$tableName . $this->dataLimitField, 'in', $adminIds];
+            $where[] = ['in', $tableName . $this->dataLimitField, 'in', $adminIds];
         }
-
         if ($search) {
             $searcharr = is_array($searchfields) ? $searchfields : explode(',', $searchfields);
             foreach ($searcharr as $k => &$v) {
@@ -126,12 +122,15 @@ trait Backend
             }
             unset($v);
 
-            $where[] = [implode("|", $searcharr), "LIKE", "%{$search}%"];
+            $where[] = ['search', implode("|", $searcharr), "LIKE", "{$search}"];
         }
         foreach ($filter as $k => $v) {
-            if ($k === 'categoryL1|categoryL2|categoryL3') {
-                $array = explode('-', $v);
-                $v     = $array[1];
+            if (stripos($k, '|') !== false) {
+                if (stripos($k, ".") === false) {
+                    $k = $tableName . $k;
+                }
+                $where[] = ['search', $k, '=', (string)$v];
+                continue;
             }
             $sym = isset($op[$k]) ? $op[$k] : '=';
             if (stripos($k, ".") === false) {
@@ -142,30 +141,30 @@ trait Backend
             switch ($sym) {
                 case '=':
                 case '!=':
-                    $where[] = [$k, $sym, (string)$v];
+                    $where[] = ['basics', $k, $sym, (string)$v];
                     break;
                 case 'LIKE':
                 case 'NOT LIKE':
                 case 'LIKE %...%':
                 case 'NOT LIKE %...%':
-                    $where[] = [$k, trim(str_replace('%...%', '', $sym)), "%{$v}%"];
+                    $where[] = ['like', $k, trim(str_replace('%...%', '', $sym)), $v];
                     break;
                 case '>':
                 case '>=':
                 case '<':
                 case '<=':
-                    $where[] = [$k, $sym, intval($v)];
+                    $where[] = ['basics', $k, $sym, intval($v)];
                     break;
                 case 'FINDIN':
                 case 'FINDINSET':
                 case 'FIND_IN_SET':
-                    $where[] = "FIND_IN_SET('{$v}', " . ($relationSearch ? $k : '`' . str_replace('.', '`.`', $k) . '`') . ")";
+                    $where[] = ['find_id', "FIND_IN_SET('{$v}', " . ($relationSearch ? $k : '`' . str_replace('.', '`.`', $k) . '`') . ")"];
                     break;
                 case 'IN':
                 case 'IN(...)':
                 case 'NOT IN':
                 case 'NOT IN(...)':
-                    $where[] = [$k, str_replace('(...)', '', $sym), is_array($v) ? $v : explode(',', $v)];
+                    $where[] = ['in', $k, str_replace('(...)', '', $sym), is_array($v) ? $v : explode(',', $v)];
                     break;
                 case 'BETWEEN':
                 case 'NOT BETWEEN':
@@ -180,7 +179,7 @@ trait Backend
                         $sym = $sym == 'BETWEEN' ? '>=' : '<';
                         $arr = $arr[0];
                     }
-                    $where[] = [$k, $sym, $arr];
+                    $where[] = ['range', $k, $sym, $arr];
                     break;
                 case 'RANGE':
                 case 'NOT RANGE':
@@ -196,38 +195,64 @@ trait Backend
                         $sym = $sym == 'RANGE' ? '>=' : '<';
                         $arr = $arr[0];
                     }
-                    $where[] = [$k, str_replace('RANGE', 'BETWEEN', $sym) . ' time', $arr];
+                    $arr[0]  = strtotime($arr[0]);
+                    $arr[1]  = strtotime($arr[1]);
+                    $where[] = ['range', $k, str_replace('RANGE', 'BETWEEN', $sym) . ' ', $arr];
                     break;
                 case 'LIKE':
                 case 'LIKE %...%':
-                    $where[] = [$k, 'LIKE', "%{$v}%"];
+                    $where[] = ['like', $k, 'LIKE', $v];
                     break;
                 case 'NULL':
                 case 'IS NULL':
                 case 'NOT NULL':
                 case 'IS NOT NULL':
-                    $where[] = [$k, strtolower(str_replace('IS ', '', $sym))];
+                    $where[] = ['null', $k, strtolower(str_replace('IS ', '', $sym))];
                     break;
                 default:
                     break;
             }
         }
-
         $where = function ($query) use ($where) {
             foreach ($where as $k => $v) {
-                if (is_array($v)) {
-                    if(strpos($v[0],'|')!==false){
-                        $arr= explode('|',$v[0]);
-                        foreach ($arr as $v1){
-                            $query->orWhere($v1,$v[1],$v[2]);
+                switch ($v[0]) {
+                    case 'search';
+                        $arr = explode('|', $v[1]);
+                        if (stripos($v[3], '-') !== false) {
+                            $v[3] = explode('-', $v[3]);
                         }
-                    }else{
-                        call_user_func_array([$query, 'where'], $v);
-                    }
-                } else {
-                    $query->where($v);
+                        foreach ($arr as $k1 => $v1) {
+                            if (is_array($v[3])) {
+                                if (isset($v[3][$k1])) {
+                                    $query->orWhere($v1, 'like', '%' . $v[3][$k1] . '%');
+                                }
+                            } else {
+                                $query->orWhere($v1, 'like', '%' . $v[3] . '%');
+                            }
+                        }
+                        break;
+                    case 'basics';
+                        $query->where($v[1], $v[2], $v[3]);
+                        break;
+                    case 'find_id';
+                        $query->whereRaw($v[1]);
+                        break;
+                    case 'in';
+                        $query->whereIn($v[1],$v[3]);
+                        break;
+                    case 'like';
+                        $query->where($v[1], $v[2], '%' . $v[3] . '%');
+                        break;
+                    case 'range';
+                        if (stripos($v[2], 'NOT') !== false) {
+                            $query->whereNotBetween($v[1], $v[3]);
+                        } else {
+                            $query->whereBetween($v[1], $v[3]);
+                        }
+                        break;
                 }
             }
+
         };
 
         return [$where, $sort, $order, $offset, $limit];

@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Future\Admin\Facades\Admin;
 use Future\Admin\Auth\Database\AuthGroup;
 use Future\Admin\Auth\Database\AuthGroupAccess;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends BackendController
 {
@@ -35,24 +35,9 @@ class AdminController extends BackendController
     public function index(Request $request)
     {
         if (isAjax()) {
-            $childrenGroupIds = Admin::getAssign('childrenGroupIds');
             $childrenAdminIds = Admin::getAssign('childrenAdminIds');
-            $groupNameData    = AuthGroup::whereIn('id', $childrenGroupIds)
-                ->select('id', 'name')->get()->toArray();
-            $groupName        = [];
-            foreach ($groupNameData as $v) {
-                $groupName['id'] = lang($v['name']);
-            }
-            $authGroupList  = AuthGroupAccess::whereIn('group_id', $childrenGroupIds)
-                ->select('uid', 'group_id')
-                ->get()->toArray();
-            $adminGroupName = [];
-            foreach ($authGroupList as $k => $v) {
-                if (isset($groupName[$v['group_id']]))
-                    $adminGroupName[$v['uid']][$v['group_id']] = $groupName[$v['group_id']];
-            }
             $adminGroupName = $this->auth->getGroupAll();
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username,nickname');
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('id,username,nickname,email,status,logintime');
             $total = $this->model
                 ->where($where)
                 ->whereIn('id', $childrenAdminIds)

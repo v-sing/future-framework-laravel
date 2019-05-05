@@ -30,7 +30,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {field: 'state', checkbox: true, },
-                        {field: 'id', title: 'ID'},
+                        {field: 'id', title: 'ID',operate:'IN'},
                         {field: 'username', title: __('Username')},
                         {field: 'nickname', title: __('Nickname')},
                         {field: 'groups_text', title: __('Group'), operate:false, formatter: Table.api.formatter.label},
