@@ -31,7 +31,7 @@ class ProfileController extends BackendController
     public function index()
     {
         if (isAjax()) {
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('title,url');
 
             $total = $this->model
                 ->where($where)

@@ -9,6 +9,7 @@
 
 namespace Future\Admin\Form;
 
+use Future\Admin\Form;
 use Illuminate\Support\Facades\Facade;
 
 class FormFacade extends Facade
@@ -19,6 +20,7 @@ class FormFacade extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'form';
+//        return 'form';
+        return Form::class;
     }
 }

@@ -82,7 +82,7 @@ class Field implements Renderable
     ];
 
     protected $elementClass = [
-       
+
     ];
     /**
      * 是否隐藏
@@ -113,9 +113,25 @@ class Field implements Renderable
      */
     protected $option = [];
 
+    public function field()
+    {
+
+    }
+
+    /**
+     * 按钮
+     */
+    public function button()
+    {
+        echo 'button';
+        return $this;
+    }
+
     public function render()
     {
 
         // TODO: Implement render() method.
     }
+
+
 }
