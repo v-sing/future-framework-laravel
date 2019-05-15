@@ -7,6 +7,9 @@
  * Time: 10:30
  */
 
+namespace Future\Admin\Form\Field;
+
+use Future\Admin\Form\Builder;
 use Future\Admin\Form\Field;
 
 /**
@@ -34,31 +37,36 @@ class Button extends Field
      <button type="<%type%>" class="btn <%class%>" <%extend%>><%name%></button>
 EOF;
 
-
-    public function submit($name='提交', $option = [])
+    public function __construct($form)
     {
-        if(empty($option['class'])){
-            $option['class']=[
+        $this->form = $form;
+    }
+
+    public function submit($name = '提交', $option = [])
+    {
+        if (empty($option['class'])) {
+            $option['class'] = [
                 'btn-success',
                 'btn-embossed'
             ];
         }
-        $this->type[]    = 'submit';
-        $this->name = [] = $name;
-        $this->option[]  = $option;
+        $this->type[]   = 'submit';
+        $this->name[]   = $name;
+        $this->option[] = $option;
         return $this;
     }
-    public function reset($name='重置', $option = [])
+
+    public function reset($name = '重置', $option = [])
     {
-        if(empty($option['class'])){
-            $option['class']=[
+        if (empty($option['class'])) {
+            $option['class'] = [
                 'btn-default',
                 'btn-embossed'
             ];
         }
-        $this->type[]    = 'reset';
-        $this->name = [] = $name;
-        $this->option[]  = $option;
+        $this->type[]   = 'reset';
+        $this->name []  = $name;
+        $this->option[] = $option;
         return $this;
     }
 
@@ -69,16 +77,20 @@ EOF;
      * @param array $option
      * @return $this
      */
-    public function addButton($type,$name, $option = [])
+    public function addButton($name, $option = ['class' => 'btn-primary'])
     {
-        $this->type[]    = $type;
-        $this->name = [] = $name;
-        $this->option[]  = $option;
+        $this->type[]   = 'button';
+        $this->name[]   = $name;
+        $this->option[] = $option;
         return $this;
     }
 
     public function render()
     {
 
+        $this->form->form[] = $this;
+        $Builder            = new Builder();
+        $Builder->button($this);
     }
+
 }

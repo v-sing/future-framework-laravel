@@ -10,12 +10,16 @@
 namespace Future\Admin\Form;
 
 
+use Future\Admin\Form\Field\Button;
+use Future\Admin\Form;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Traits\Macroable;
 
 class Field implements Renderable
 {
     use Macroable;
+
+    protected $form = null;
     /**
      * 元素id
      * @var
@@ -113,6 +117,13 @@ class Field implements Renderable
      */
     protected $option = [];
 
+
+    public function init(Form $form)
+    {
+        $this->form = $form;
+
+    }
+
     public function field()
     {
 
@@ -123,15 +134,27 @@ class Field implements Renderable
      */
     public function button()
     {
-        echo 'button';
-        return $this;
+        $button = new Button($this->form);
+        return $button;
     }
 
     public function render()
     {
 
-        // TODO: Implement render() method.
     }
 
+    public function getOption()
+    {
+        return $this->option;
+    }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
 }

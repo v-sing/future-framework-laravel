@@ -10,6 +10,7 @@
 namespace Future\Admin\Form;
 
 
+use Future\Admin\Form\Field\Button;
 use Future\Admin\Interfaces\BuilderInterface;
 
 class Builder implements BuilderInterface
@@ -100,9 +101,9 @@ class Builder implements BuilderInterface
         // TODO: Implement text() method.
     }
 
-    public function button()
+    public function button($button)
     {
-
+dd($button->getName());
     }
 
 }

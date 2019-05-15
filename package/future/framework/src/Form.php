@@ -16,6 +16,7 @@ use Closure;
 
 class Form implements Renderable
 {
+    public $form=[];
     protected $initCallback = null;
 
     /**
@@ -25,15 +26,19 @@ class Form implements Renderable
     public function action(Closure $callback)
     {
         $this->initCallback = new Field();
+        $this->initCallback->init($this);
         if ($callback instanceof Closure) {
             $callback($this->initCallback);
         }
+
+
         return $this;
     }
 
     public function render()
     {
-        dd($this->initCallback);exit;
+
+        dd($this->form);exit;
         // TODO: Implement render() method.
     }
 }

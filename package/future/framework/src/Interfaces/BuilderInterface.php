@@ -9,14 +9,13 @@
 
 namespace Future\Admin\Interfaces;
 
-
 interface BuilderInterface
 {
     /**
      * 按钮
      * @return mixed
      */
-    public function button();
+    public function button($button);
 
     /**
      * 数字类型
