@@ -332,16 +332,20 @@ class HtmlBuilder
 
     /**
      * Build a single attribute element.
-     *
-     * @param  string $key
-     * @param  string $value
+     * @param $key
+     * @param $value
      * @return string
+     * @throws \Think\Exception
      */
     protected function attributeElement($key, $value)
     {
-        if (is_numeric($key)) $key = $value;
+        if (is_numeric($key)) {
+            $key = $value;
+        }
 
-        if (!is_null($value)) return $key . '="' . e($value) . '"';
+        if (!is_null($value)) {
+            return $key . '="' . e($value) . '"';
+        }
     }
 
     /**

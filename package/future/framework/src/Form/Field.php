@@ -84,10 +84,6 @@ class Field implements Renderable
     protected $outerClass = [
         'col-xs-12', 'col-sm-4'
     ];
-
-    protected $elementClass = [
-
-    ];
     /**
      * 是否隐藏
      * @var bool
@@ -98,8 +94,10 @@ class Field implements Renderable
      * 标签class
      * @var array
      */
-    protected $labelClass = [
-        'col-xs-12', 'col-sm-2'
+    protected $labelOption = [
+        'class' => [
+            'col-sm-2', 'col-xs-12'
+        ]
     ];
     /**
      * 在之后添加元素
@@ -115,8 +113,9 @@ class Field implements Renderable
      * 属性
      * @var array
      */
-    protected $option = [];
+    protected $elementOption = [];
 
+    protected $labelName;
 
     public function init(Form $form)
     {
@@ -143,18 +142,23 @@ class Field implements Renderable
 
     }
 
-    public function getOption()
+    public function label($name, $option = [])
     {
-        return $this->option;
+        $this->labelName=$name;
+        if (!empty($option['class'])) {
+            $this->labelOption['class']=$option['class'];
+            unset($option['class']);
+        }
+        $this->labelOption=array_merge($this->labelOption,$option);
     }
 
-    public function getId()
+    public function __call($method, $parameters)
     {
-        return $this->id;
+        preg_match('/^get(.*)/s', $method, $m);
+        if (!empty($m[0]) && !empty($m[1])) {
+            $param = lcfirst($m[1]);
+            return $this->$param;
+        }
     }
 
-    public function getName()
-    {
-        return $this->name;
-    }
 }

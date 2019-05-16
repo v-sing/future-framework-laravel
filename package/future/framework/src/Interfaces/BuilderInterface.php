@@ -15,7 +15,7 @@ interface BuilderInterface
      * 按钮
      * @return mixed
      */
-    public function button($button);
+    public function button();
 
     /**
      * 数字类型

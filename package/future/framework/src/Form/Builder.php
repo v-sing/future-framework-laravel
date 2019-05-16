@@ -9,12 +9,21 @@
 
 namespace Future\Admin\Form;
 
-
-use Future\Admin\Form\Field\Button;
 use Future\Admin\Interfaces\BuilderInterface;
 
 class Builder implements BuilderInterface
 {
+    /**
+     * 元素
+     * @var
+     */
+    protected $elementClass;
+    protected $field = null;
+
+    public function __construct($field)
+    {
+        $this->field = $field;
+    }
 
     public function date()
     {
@@ -101,9 +110,54 @@ class Builder implements BuilderInterface
         // TODO: Implement text() method.
     }
 
-    public function button($button)
+    public function button()
     {
-dd($button->getName());
+
+        dd($this->attributes($this->field->getElementOption()));
     }
+
+    /**
+     *
+     * @param $attributes
+     * @return array
+     * @throws \Exception
+     */
+    protected function attributes($attributes)
+    {
+        $html = array();
+        foreach ((array)$attributes as $key => $value) {
+            if (is_numeric($key) && is_array($value)) {
+                $html1=[];
+                foreach ($value as $key1 => $value1) {
+                    $element = $this->attributeElement($key1, is_array($value1) ? implode(' ', $value1) : $value1);
+                    if (!is_null($element)) $html1[] = $element;
+                }
+                if (!is_null($element)) $html[] = implode(' ',$html1);
+            } else {
+                $element = $this->attributeElement($key, is_array($value) ? implode(' ', $value) : $value);
+                if (!is_null($element)) $html[] = $element;
+            }
+        }
+        return $html;
+    }
+
+    /**
+     * Build a single attribute element.
+     * @param $key
+     * @param $value
+     * @return string
+     * @throws \Exception
+     */
+    protected function attributeElement($key, $value)
+    {
+        if (is_numeric($key)) {
+            $key = $value;
+        }
+
+        if (!is_null($value)) {
+            return $key . '="' . e($value) . '"';
+        }
+    }
+
 
 }

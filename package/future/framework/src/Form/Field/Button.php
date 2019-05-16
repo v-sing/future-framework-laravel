@@ -34,7 +34,7 @@ class Button extends Field
      * @var string
      */
     protected $buttonModel = <<<EOF
-     <button type="<%type%>" class="btn <%class%>" <%extend%>><%name%></button>
+     <button type="<%type%>" class="btn " <%elementAttribute%>><%name%></button>
 EOF;
 
     public function __construct($form)
@@ -42,7 +42,7 @@ EOF;
         $this->form = $form;
     }
 
-    public function submit($name = '提交', $option = [])
+    public function submit($name, $option = [])
     {
         if (empty($option['class'])) {
             $option['class'] = [
@@ -52,11 +52,11 @@ EOF;
         }
         $this->type[]   = 'submit';
         $this->name[]   = $name;
-        $this->option[] = $option;
+        $this->elementOption[] = $option;
         return $this;
     }
 
-    public function reset($name = '重置', $option = [])
+    public function reset($name, $option = [])
     {
         if (empty($option['class'])) {
             $option['class'] = [
@@ -66,7 +66,7 @@ EOF;
         }
         $this->type[]   = 'reset';
         $this->name []  = $name;
-        $this->option[] = $option;
+        $this->elementOption[] = $option;
         return $this;
     }
 
@@ -81,7 +81,7 @@ EOF;
     {
         $this->type[]   = 'button';
         $this->name[]   = $name;
-        $this->option[] = $option;
+        $this->elementOption[] = $option;
         return $this;
     }
 
@@ -89,8 +89,8 @@ EOF;
     {
 
         $this->form->form[] = $this;
-        $Builder            = new Builder();
-        $Builder->button($this);
+        $Builder   = new Builder($this);
+        $Builder->button();
     }
 
 }
