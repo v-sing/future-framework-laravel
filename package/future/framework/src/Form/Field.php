@@ -10,79 +10,34 @@
 namespace Future\Admin\Form;
 
 
-use Future\Admin\Form\Field\Button;
+//use Future\Admin\Form\Field\Button;
 use Future\Admin\Form;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Traits\Macroable;
+use Future\Admin\Traits\FieldView;
 
 class Field implements Renderable
 {
-    use Macroable;
-
+    use Macroable, FieldView;
+    protected $model = null;
+    protected $data = [];
     protected $form = null;
-    /**
-     * 元素id
-     * @var
-     */
-    protected $id;
     /**
      * 展示方式
      * @var array
      */
     protected $horizontal = true;
     /**
-     * 设置比例
-     * @var array
-     */
-    protected $width = [
-        'label' => '2',
-        'field' => '10'
-    ];
-    /**
-     * 字段
-     * @var
-     */
-    protected $column;
-    /**
-     * 值
-     * @var
-     */
-    protected $value;
-    /**
-     * 原始列的数据
-     * @var
-     */
-    protected $data;
-    /**
      * 验证规则
      * @var string
      */
-    protected $rule = '';
-    /**
-     * 单独验证字段
-     * @var string
-     */
-    protected $check = '';
-    /**
-     *
-     * @var string
-     */
-    protected $placeholder = '';
-
-    /**
-     * 表单元素的名字
-     *
-     * @var string
-     */
-    protected $elementName = '';
-
     /**
      * 外层div元素classes.
      *
      * @var array
      */
-    protected $outerClass = [
-        'col-xs-12', 'col-sm-4'
+    protected $outerOption = [
+        'class' => ['col-xs-12', 'col-sm-4']
     ];
     /**
      * 是否隐藏
@@ -96,7 +51,7 @@ class Field implements Renderable
      */
     protected $labelOption = [
         'class' => [
-            'col-sm-2', 'col-xs-12'
+            'col-sm-2', 'col-xs-12','control-label'
         ]
     ];
     /**
@@ -113,7 +68,11 @@ class Field implements Renderable
      * 属性
      * @var array
      */
-    protected $elementOption = [];
+    protected $elementOption = [
+        'class'=>[
+            'form-control'
+        ]
+    ];
 
     protected $labelName;
 
@@ -123,42 +82,154 @@ class Field implements Renderable
 
     }
 
-    public function field()
+    public function data($data)
     {
-
+        $this->data = $data;
+        return $this;
     }
 
     /**
-     * 按钮
+     * 字段
+     * @param $column
+     * @param string $value
+     * @param array $option
+     * @return $this
      */
-    public function button()
+    public function field($column, $value = '', $option = [])
     {
-        $button = new Button($this->form);
-        return $button;
+        $this->elementOption['name']  = "row[{$column}]";
+        $this->elementOption['value'] = $value;
+        $this->elementOption['id']    = 'c-' . $column;
+        $this->labelOption['for']     = 'c-' . $column;
+        if (!empty($option['class'])) {
+            $this->elementOption['class'] = $option['class'];
+            unset($option['class']);
+        }
+        $this->elementOption = array_merge($this->elementOption, $option);
+        return $this;
     }
 
     public function render()
     {
+        $Builder = new Builder($this);
+        $method  = strtolower(str_replace("Future\\Admin\\Form\\Field\\", '', get_class($this)));
+        $data    = $Builder->$method();
 
+        $field   = '';
+        foreach ($data as $key => $value) {
+            if ($key == 'buttonName') {
+                unset($data[$key]);
+                continue;
+            }
+            if (is_array($value)) {
+                foreach ($value as $key1 => $value1) {
+                    $view = $this->view;
+                    $view = str_replace("<%{$key}%>", $value1, $view);
+
+                    if (!empty($data['buttonName'])) {
+                        $view = str_replace("<%buttonName%>", isset($data['buttonName'][$key1])?$data['buttonName'][$key1]:'', $view);
+                    }
+                    $field .= $view . "\n";
+                }
+                unset($data[$key]);
+            }
+        }
+
+        $data['field'] = $field;
+        $default       = $this->defaultView;
+        foreach ($data as $key => $value) {
+            $default = str_replace("<%$key%>", $value, $default);
+        }
+        $this->form->form[] = $default;
+        return $default;
     }
 
+    /**
+     *
+     * @param $name
+     * @param array $option
+     * @return $this
+     */
     public function label($name, $option = [])
     {
-        $this->labelName=$name;
+        $this->labelName = $name;
         if (!empty($option['class'])) {
-            $this->labelOption['class']=$option['class'];
+            $this->labelOption['class'] = $option['class'];
             unset($option['class']);
         }
-        $this->labelOption=array_merge($this->labelOption,$option);
+        $this->labelOption = array_merge($this->labelOption, $option);
+        return $this;
     }
 
+    /**
+     * @param string $beforeHtml
+     * @param string $afterHtml
+     * @return $this
+     */
+    public function html($beforeHtml = '', $afterHtml = '')
+    {
+        $this->beforeHtml = $beforeHtml;
+        $this->afterHtml  = $afterHtml;
+        return $this;
+    }
+
+    /**
+     * @param array $option
+     * @return $this
+     */
+    public function rule($option = [])
+    {
+        $this->elementOption['data-rule'] = $option;
+        return $this;
+    }
+
+    /**
+     * @param $tip
+     * @return $this
+     */
+    public function tip($tip)
+    {
+        $this->elementOption['data-tip'] = $tip;
+        return $this;
+    }
+
+    /**
+     * @param array $option
+     * @return $this
+     */
+    public function outer($option = [])
+    {
+        if (!empty($option['class'])) {
+            $this->outerOption['class'] = $option['class'];
+            unset($option['class']);
+        }
+        $this->outerOption = array_merge($this->outerOption, $option);
+        return $this;
+    }
+
+    /***
+     * @param $method
+     * @param $parameters
+     * @return string
+     */
     public function __call($method, $parameters)
     {
         preg_match('/^get(.*)/s', $method, $m);
         if (!empty($m[0]) && !empty($m[1])) {
             $param = lcfirst($m[1]);
-            return $this->$param;
+            if (property_exists($this, $param)) {
+                return $this->$param;
+            } else {
+                return false;
+            }
         }
+        if (empty($parameters)) {
+            $method      = "Future\\Admin\\Form\\Field\\" . ucfirst($method);
+            $method      = new $method($this->form);
+            $this->model = $method;
+            return $method;
+        }
+
     }
 
 }

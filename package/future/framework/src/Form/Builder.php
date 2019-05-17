@@ -11,7 +11,7 @@ namespace Future\Admin\Form;
 
 use Future\Admin\Interfaces\BuilderInterface;
 
-class Builder implements BuilderInterface
+class Builder
 {
     /**
      * 元素
@@ -25,95 +25,100 @@ class Builder implements BuilderInterface
         $this->field = $field;
     }
 
-    public function date()
+//    public function date()
+//    {
+//        // TODO: Implement date() method.
+//    }
+//
+//    public function dateRange()
+//    {
+//        // TODO: Implement dateRange() method.
+//    }
+//
+//    public function input()
+//    {
+//        // TODO: Implement input() method.
+//    }
+//
+//    public function image()
+//    {
+//        // TODO: Implement image() method.
+//    }
+//
+//    public function images()
+//    {
+//        // TODO: Implement images() method.
+//    }
+//
+//    public function file()
+//    {
+//        // TODO: Implement file() method.
+//    }
+//
+//    public function fieldList()
+//    {
+//        // TODO: Implement fieldList() method.
+//    }
+//
+//    public function files()
+//    {
+//        // TODO: Implement files() method.
+//    }
+//
+//    public function number()
+//    {
+//        // TODO: Implement number() method.
+//    }
+//
+//    public function editor()
+//    {
+//        // TODO: Implement editor() method.
+//    }
+//
+//    public function select()
+//    {
+//        // TODO: Implement select() method.
+//    }
+//
+//    public function selects()
+//    {
+//        // TODO: Implement selects() method.
+//    }
+//
+//    public function checkbox()
+//    {
+//        // TODO: Implement checkbox() method.
+//    }
+//
+//    public function cityArea()
+//    {
+//        // TODO: Implement cityArea() method.
+//    }
+//
+//    public function color()
+//    {
+//        // TODO: Implement color() method.
+//    }
+//
+//    public function radio()
+//    {
+//        // TODO: Implement radio() method.
+//    }
+//
+//    public function text()
+//    {
+//        // TODO: Implement text() method.
+//    }
+//
+//    public function button()
+//    {
+//
+//    }
+    public function form()
     {
-        // TODO: Implement date() method.
-    }
-
-    public function dateRange()
-    {
-        // TODO: Implement dateRange() method.
-    }
-
-    public function input()
-    {
-        // TODO: Implement input() method.
-    }
-
-    public function image()
-    {
-        // TODO: Implement image() method.
-    }
-
-    public function images()
-    {
-        // TODO: Implement images() method.
-    }
-
-    public function file()
-    {
-        // TODO: Implement file() method.
-    }
-
-    public function fieldList()
-    {
-        // TODO: Implement fieldList() method.
-    }
-
-    public function files()
-    {
-        // TODO: Implement files() method.
-    }
-
-    public function number()
-    {
-        // TODO: Implement number() method.
-    }
-
-    public function editor()
-    {
-        // TODO: Implement editor() method.
-    }
-
-    public function select()
-    {
-        // TODO: Implement select() method.
-    }
-
-    public function selects()
-    {
-        // TODO: Implement selects() method.
-    }
-
-    public function checkbox()
-    {
-        // TODO: Implement checkbox() method.
-    }
-
-    public function cityArea()
-    {
-        // TODO: Implement cityArea() method.
-    }
-
-    public function color()
-    {
-        // TODO: Implement color() method.
-    }
-
-    public function radio()
-    {
-        // TODO: Implement radio() method.
-    }
-
-    public function text()
-    {
-        // TODO: Implement text() method.
-    }
-
-    public function button()
-    {
-
-        dd($this->attributes($this->field->getElementOption()));
+        $option                  = [];
+        $option['<%formAttribute%>'] =implode(' ',$this->attributes($this->field->getFormOption())) ;
+        return $option;
     }
 
     /**
@@ -127,12 +132,12 @@ class Builder implements BuilderInterface
         $html = array();
         foreach ((array)$attributes as $key => $value) {
             if (is_numeric($key) && is_array($value)) {
-                $html1=[];
+                $html1 = [];
                 foreach ($value as $key1 => $value1) {
                     $element = $this->attributeElement($key1, is_array($value1) ? implode(' ', $value1) : $value1);
                     if (!is_null($element)) $html1[] = $element;
                 }
-                if (!is_null($element)) $html[] = implode(' ',$html1);
+                if (!is_null($element)) $html[] = implode(' ', $html1);
             } else {
                 $element = $this->attributeElement($key, is_array($value) ? implode(' ', $value) : $value);
                 if (!is_null($element)) $html[] = $element;
@@ -159,5 +164,17 @@ class Builder implements BuilderInterface
         }
     }
 
-
+    public function __call($name, $arguments)
+    {
+        $option                     = [];
+        $option['elementAttribute'] = $this->field->getButtonName() === false ? [implode(' ', $this->attributes($this->field->getElementOption()))] : $this->attributes($this->field->getElementOption());
+        $option['labelAttribute']   = implode(' ', $this->attributes($this->field->getLabelOption()));
+        $option['outerAttribute']   = implode(' ', $this->attributes($this->field->getOuterOption()));
+        $option['beforeHtml']       = $this->field->getBeforeHtml();
+        $option['afterHtml']        = $this->field->getAfterHtml();
+        $option['labelName']        = $this->field->getLabelName();
+        $option['display']          = !$this->field->getDisplay() ? implode(' ', $this->attributes(['style' => ['display:none;']])) : "";
+        $option['buttonName']       = $this->field->getButtonName();
+        return $option;
+    }
 }

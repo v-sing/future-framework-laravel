@@ -1,7 +1,7 @@
-<?php
-Form::action(function ($form){
-    $form->button()->submit(lang('Submit'))->reset(lang('Reset'))->addButton('button')->label()->render();
-    $form->button()->submit(lang('Submit'))->render();
-})->render();
+{!!
+ Form::action(function ($form){
+    $form->number()->field('weigh','2')->label('weigh')->render();
+    $form->button()->submit(lang('Submit'))->reset(lang('Reset'))->addButton('button')->label('name')->render();
+})->render()
 
-?>
+ !!}

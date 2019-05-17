@@ -8,8 +8,6 @@
  */
 
 namespace Future\Admin\Form\Field;
-
-use Future\Admin\Form\Builder;
 use Future\Admin\Form\Field;
 
 /**
@@ -18,40 +16,31 @@ use Future\Admin\Form\Field;
  */
 class Button extends Field
 {
-    protected $name = [];
-    /**
-     * 默认class
-     * @var string
-     */
-    protected $class = '';
-    /**
-     * 按钮类型
-     * @var string
-     */
-    protected $type = [];
+    protected $buttonName = [];
     /**
      * 按钮模板
      * @var string
      */
-    protected $buttonModel = <<<EOF
-     <button type="<%type%>" class="btn " <%elementAttribute%>><%name%></button>
+    protected $view = <<<EOF
+     <button  <%elementAttribute%>><%buttonName%></button>
 EOF;
 
     public function __construct($form)
     {
+        unset($this->elementOption['class']);
         $this->form = $form;
     }
-
     public function submit($name, $option = [])
     {
         if (empty($option['class'])) {
             $option['class'] = [
                 'btn-success',
-                'btn-embossed'
+                'btn-embossed',
+                'btn'
             ];
         }
-        $this->type[]   = 'submit';
-        $this->name[]   = $name;
+        $option['type']='submit';
+        $this->buttonName[]   = $name;
         $this->elementOption[] = $option;
         return $this;
     }
@@ -61,11 +50,12 @@ EOF;
         if (empty($option['class'])) {
             $option['class'] = [
                 'btn-default',
-                'btn-embossed'
+                'btn-embossed',
+                'btn'
             ];
         }
-        $this->type[]   = 'reset';
-        $this->name []  = $name;
+        $option['type']='reset';
+        $this->buttonName[]   = $name;
         $this->elementOption[] = $option;
         return $this;
     }
@@ -77,20 +67,14 @@ EOF;
      * @param array $option
      * @return $this
      */
-    public function addButton($name, $option = ['class' => 'btn-primary'])
+    public function addButton($name, $option = ['class' => 'btn-primary btn'])
     {
-        $this->type[]   = 'button';
-        $this->name[]   = $name;
+        $option['type']='button';
+        $this->buttonName[]   = $name;
         $this->elementOption[] = $option;
         return $this;
     }
 
-    public function render()
-    {
 
-        $this->form->form[] = $this;
-        $Builder   = new Builder($this);
-        $Builder->button();
-    }
 
 }

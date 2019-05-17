@@ -10,14 +10,33 @@
 namespace Future\Admin;
 
 
+use Future\Admin\Form\Builder;
 use Future\Admin\Form\Field;
 use Illuminate\Contracts\Support\Renderable;
 use Closure;
 
 class Form implements Renderable
 {
-    public $form=[];
+    public $form = [];
     protected $initCallback = null;
+    protected $formOption = [
+        'class'       => 'form-horizontal',
+        'role'        => 'form',
+        'data-toggle' => 'validator',
+        'method'      => 'POST'
+    ];
+    protected $formView = <<<EOF
+<form <%formAttribute%>>
+<%form%>
+</form>
+
+EOF;
+
+    public function option($option = [])
+    {
+        $this->formOption = array_merge($this->formOption, $option);
+        return $this;
+    }
 
     /**
      * @param Closure $callback
@@ -30,15 +49,32 @@ class Form implements Renderable
         if ($callback instanceof Closure) {
             $callback($this->initCallback);
         }
-
-
         return $this;
     }
 
     public function render()
     {
 
-        dd($this->form);exit;
-        // TODO: Implement render() method.
+        $form             = implode("\n", $this->form);
+
+        $builder          = new Builder($this);
+        $data             = $builder->form();
+        $data['<%form%>'] = $form;
+        $view             = str_replace(array_keys($data), array_values($data), $this->formView);
+
+        return $view;
+    }
+
+    public function __call($name, $arguments)
+    {
+        preg_match('/^get(.*)/s', $name, $m);
+        if (!empty($m[0]) && !empty($m[1])) {
+            $param = lcfirst($m[1]);
+            if (property_exists($this, $param)) {
+                return $this->$param;
+            } else {
+                return false;
+            }
+        }
     }
 }
