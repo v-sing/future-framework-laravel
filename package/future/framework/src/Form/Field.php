@@ -22,6 +22,7 @@ class Field implements Renderable
     protected $model = null;
     protected $data = [];
     protected $form = null;
+    protected $column='';
     /**
      * 展示方式
      * @var array
@@ -51,7 +52,7 @@ class Field implements Renderable
      */
     protected $labelOption = [
         'class' => [
-            'col-sm-2', 'col-xs-12','control-label'
+            'col-sm-2', 'col-xs-12', 'control-label'
         ]
     ];
     /**
@@ -69,7 +70,7 @@ class Field implements Renderable
      * @var array
      */
     protected $elementOption = [
-        'class'=>[
+        'class' => [
             'form-control'
         ]
     ];
@@ -82,11 +83,6 @@ class Field implements Renderable
 
     }
 
-    public function data($data)
-    {
-        $this->data = $data;
-        return $this;
-    }
 
     /**
      * 字段
@@ -98,6 +94,7 @@ class Field implements Renderable
     public function field($column, $value = '', $option = [])
     {
         $this->elementOption['name']  = "row[{$column}]";
+        $this->column=$column;
         $this->elementOption['value'] = $value;
         $this->elementOption['id']    = 'c-' . $column;
         $this->labelOption['for']     = 'c-' . $column;
@@ -115,7 +112,7 @@ class Field implements Renderable
         $method  = strtolower(str_replace("Future\\Admin\\Form\\Field\\", '', get_class($this)));
         $data    = $Builder->$method();
 
-        $field   = '';
+        $field = '';
         foreach ($data as $key => $value) {
             if ($key == 'buttonName') {
                 unset($data[$key]);
@@ -127,7 +124,7 @@ class Field implements Renderable
                     $view = str_replace("<%{$key}%>", $value1, $view);
 
                     if (!empty($data['buttonName'])) {
-                        $view = str_replace("<%buttonName%>", isset($data['buttonName'][$key1])?$data['buttonName'][$key1]:'', $view);
+                        $view = str_replace("<%buttonName%>", isset($data['buttonName'][$key1]) ? $data['buttonName'][$key1] : '', $view);
                     }
                     $field .= $view . "\n";
                 }
@@ -137,9 +134,12 @@ class Field implements Renderable
 
         $data['field'] = $field;
         $default       = $this->defaultView;
+
+//        dd($data);
         foreach ($data as $key => $value) {
             $default = str_replace("<%$key%>", $value, $default);
         }
+
         $this->form->form[] = $default;
         return $default;
     }
@@ -179,7 +179,20 @@ class Field implements Renderable
      */
     public function rule($option = [])
     {
+        foreach ($option as $k => $v) {
+            $option[$k] = $v . ';';
+        }
         $this->elementOption['data-rule'] = $option;
+        return $this;
+    }
+
+    /**
+     * @param string $url
+     * @return $this
+     */
+    public function check($url = '')
+    {
+        $this->elementOption['data-rule'][] = 'remote(' . $url . ');';
         return $this;
     }
 
