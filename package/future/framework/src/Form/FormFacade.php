@@ -20,7 +20,6 @@ class FormFacade extends Facade
      */
     protected static function getFacadeAccessor()
     {
-//        return 'form';
         return Form::class;
     }
 }
