@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Request;
 use Future\Admin\Facades\Admin;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
 if (!function_exists('lang')) {
     function lang($name, $vars = [])
@@ -456,26 +457,48 @@ if (!function_exists('get_storage_image')) {
      */
     function get_storage_image($url = '', $storage = 'local', $mime_type = 'image/png')
     {
-        $default = file_get_contents(config('admin.default_image'));
+        if (!($default = Cache::get('default-image'))) {
+            $default = file_get_contents(str_replace('%s', config('admin.default_image'), config('admin.default_image_url')));
+            Cache::put('default-image', $default);
+        }
         if (!$url) {
             $mime_type = 'image/png';
             $base64    = $default;
         } else {
+            $ex = pathinfo($url, PATHINFO_EXTENSION);
             if (Storage::disk($storage)->exists($url)) {
                 $result = Storage::disk($storage)->get($url);
-                if ($result) {
-                    $base64 = $result;
+                if (isImg($result)) {
+                    if ($result) {
+                        $base64 = $result;
+                    }
+                } else {
+                    if (!($extension = Cache::get('Storage-get_storage_image-' . $ex))) {
+                        $extension = file_get_contents(str_replace('%s', $ex, config('admin.default_image_url')));
+                        Cache::get('Storage-get_storage_image-' . $ex, $extension);
+                    }
+                    $mime_type = 'image/png';
+                    $base64    = $extension;
                 }
+
             } else {
                 $result = @file_get_contents('.' . $url);
                 if ($result) {
                     $base64 = $result;
                 } else {
+                    if (!($extension = Cache::get('Storage-get_storage_image-' . $ex))) {
+                        $extension = file_get_contents(str_replace('%s', $ex, config('admin.default_image_url')));
+                        Cache::get('Storage-get_storage_image-' . $ex, $extension);
+                    }
                     $mime_type = 'image/png';
-                    $base64    = $default;
+                    $base64    = $extension;
                 }
             }
 
+        }
+        if (!$base64) {
+            $base64    = $default;
+            $mime_type = 'image/png';
         }
 
         return base64EncodeImage($base64, $mime_type);
@@ -497,9 +520,15 @@ if (!function_exists('base64EncodeImage')) {
 
 
 if (!function_exists('replace_null')) {
+    /**
+     * 数组替换null
+     * @param $array
+     * @param string $replace_string
+     * @return mixed
+     */
     function replace_null(&$array, $replace_string = '')
     {
-        if (!is_string($array) && isset($array)&&!is_null($array)) {
+        if (!is_string($array) && isset($array) && !is_null($array)) {
             foreach ($array as $key => $value) {
                 if (!is_string($value) && isset($value)) {
 
@@ -520,5 +549,18 @@ if (!function_exists('replace_null')) {
         }
 
         return $array;
+    }
+
+}
+if (!function_exists('isImage')) {
+    function isImg($bin)
+    {
+        $strInfo  = @unpack("C2chars", $bin);
+        $typeCode = intval($strInfo['chars1'] . $strInfo['chars2']);
+        if ($typeCode == 255216 /*jpg*/ || $typeCode == 7173 /*gif*/ || $typeCode == 13780 /*png*/) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

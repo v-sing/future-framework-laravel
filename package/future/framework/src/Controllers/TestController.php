@@ -14,7 +14,6 @@ class TestController extends BackendController
 {
     public function index()
     {
-
         return $this->view();
     }
 }

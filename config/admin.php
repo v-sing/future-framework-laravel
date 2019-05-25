@@ -84,5 +84,6 @@ return [
     'api_url'             => 'https://api.fastadmin.net',
     //
     'lang_switch_on'      => true,
-    'default_image'       => './assets/img/png.png'
+    'default_image'       => 'file',
+    'default_image_url'=>'https://tool.fastadmin.net/icon/%s.png'
 ];

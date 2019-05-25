@@ -248,71 +248,71 @@
                     </div>
                 </div>
             @endforeach
-            <div class="tab-pane fade" id="addcfg">
-                {!! Form::open(['id'=>'add-form','class'=>'form-horizontal','role'=>'form','data-toggle'=>'validator','url'=>url('admin/config/add')]) !!}
-                <div class="form-group">
-                    {!! Form::label('type',lang('Type'),['class'=>'control-label col-xs-12 col-sm-2']) !!}
-                    <div class="col-xs-12 col-sm-4">
-                        {!! Form::select('row[type]',$typeList,'string',['class'=>'form-control selectpicker']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('group',lang('Group'),['class'=>'control-label col-xs-12 col-sm-2']) !!}
-                    <div class="col-xs-12 col-sm-4">
-                        {!! Form::select('row[group]',$groupList,'basic',['class'=>'form-control selectpicker']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('name',lang('Name'),['class'=>'control-label col-xs-12 col-sm-2']) !!}
-                    <div class="col-xs-12 col-sm-4">
-                        {!! Form::input('text','row[name]',null,['class'=>'form-control','data-rule'=>'required; length(3~30); remote(config/check)']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('title',lang('Title'),['class'=>'control-label col-xs-12 col-sm-2']) !!}
-                    <div class="col-xs-12 col-sm-4">
-                        {!! Form::input('text','row[title]',null,['class'=>'form-control','data-rule'=>'required']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('value',lang('Value'),['class'=>'control-label col-xs-12 col-sm-2']) !!}
-                    <div class="col-xs-12 col-sm-4">
-                        {!! Form::input('text','row[value]',null,['class'=>'form-control','data-rule'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group hide" id="add-content-container">
-                    {!! Form::label('content',lang('Content'),['class'=>'control-label col-xs-12 col-sm-2']) !!}
-                    <div class="col-xs-12 col-sm-4">
-                        {!! Form::textarea('row[content]','value1|title1value2|title2',['id'=>'content','cols'=>'30','rows'=>'5','class'=>'form-control','data-rule'=>'required']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('tip',lang('Tip'),['class'=>'control-label col-xs-12 col-sm-2']) !!}
-                    <div class="col-xs-12 col-sm-4">
-                        {!! Form::input('text','row[tip]',null,['class'=>'form-control','data-rule'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('rule',lang('Rule'),['class'=>'control-label col-xs-12 col-sm-2']) !!}
-                    <div class="col-xs-12 col-sm-4">
-                        {!! Form::input('text','row[rule]',null,['class'=>'form-control','data-rule'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('extend',lang('Extend'),['class'=>'control-label col-xs-12 col-sm-2']) !!}
-                    <div class="col-xs-12 col-sm-4">
-                        {!! Form::textarea('row[extend]','',['id'=>'content','cols'=>'30','rows'=>'5','class'=>'form-control']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-2"></label>
-                    <div class="col-xs-12 col-sm-4">
-                        <button type="submit" class="btn btn-success btn-embossed">{{lang('OK')}}</button>
-                        <button type="reset" class="btn btn-default btn-embossed">{{lang('Reset')}}</button>
-                    </div>
-                </div>
-            {!! Form::close() !!}
-            </div>
+            {{--<div class="tab-pane fade" id="addcfg">--}}
+                {{--{!! Form::open(['id'=>'add-form','class'=>'form-horizontal','role'=>'form','data-toggle'=>'validator','url'=>url('admin/config/add')]) !!}--}}
+                {{--<div class="form-group">--}}
+                    {{--{!! Form::label('type',lang('Type'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
+                    {{--<div class="col-xs-12 col-sm-4">--}}
+                        {{--{!! Form::select('row[type]',$typeList,'string',['class'=>'form-control selectpicker']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--{!! Form::label('group',lang('Group'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
+                    {{--<div class="col-xs-12 col-sm-4">--}}
+                        {{--{!! Form::select('row[group]',$groupList,'basic',['class'=>'form-control selectpicker']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--{!! Form::label('name',lang('Name'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
+                    {{--<div class="col-xs-12 col-sm-4">--}}
+                        {{--{!! Form::input('text','row[name]',null,['class'=>'form-control','data-rule'=>'required; length(3~30); remote(config/check)']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--{!! Form::label('title',lang('Title'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
+                    {{--<div class="col-xs-12 col-sm-4">--}}
+                        {{--{!! Form::input('text','row[title]',null,['class'=>'form-control','data-rule'=>'required']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--{!! Form::label('value',lang('Value'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
+                    {{--<div class="col-xs-12 col-sm-4">--}}
+                        {{--{!! Form::input('text','row[value]',null,['class'=>'form-control','data-rule'=>'']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="form-group hide" id="add-content-container">--}}
+                    {{--{!! Form::label('content',lang('Content'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
+                    {{--<div class="col-xs-12 col-sm-4">--}}
+                        {{--{!! Form::textarea('row[content]','value1|title1value2|title2',['id'=>'content','cols'=>'30','rows'=>'5','class'=>'form-control','data-rule'=>'required']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--{!! Form::label('tip',lang('Tip'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
+                    {{--<div class="col-xs-12 col-sm-4">--}}
+                        {{--{!! Form::input('text','row[tip]',null,['class'=>'form-control','data-rule'=>'']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--{!! Form::label('rule',lang('Rule'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
+                    {{--<div class="col-xs-12 col-sm-4">--}}
+                        {{--{!! Form::input('text','row[rule]',null,['class'=>'form-control','data-rule'=>'']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--{!! Form::label('extend',lang('Extend'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
+                    {{--<div class="col-xs-12 col-sm-4">--}}
+                        {{--{!! Form::textarea('row[extend]','',['id'=>'content','cols'=>'30','rows'=>'5','class'=>'form-control']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--<label class="control-label col-xs-12 col-sm-2"></label>--}}
+                    {{--<div class="col-xs-12 col-sm-4">--}}
+                        {{--<button type="submit" class="btn btn-success btn-embossed">{{lang('OK')}}</button>--}}
+                        {{--<button type="reset" class="btn btn-default btn-embossed">{{lang('Reset')}}</button>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--{!! Form::close() !!}--}}
+            {{--</div>--}}
         </div>
     </div>
 </div>
