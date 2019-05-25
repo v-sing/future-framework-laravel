@@ -102,15 +102,15 @@
                                                                data-rule="{{$item['rule']}}"/>
 
                                                     @endif
-                                                        @if($item['type']=='date'||$item['type']=='time')
-                                                            <input {{$item['extend']}} type="text"
-                                                                   name="row[{{$item['name']}}]"
-                                                                   value="{{$item['value']}}"
-                                                                   class="form-control datetimepicker"
-                                                                   data-tip="{{$item['tip']}}"
-                                                                   data-rule="{{$item['rule']}}"/>
+                                                    @if($item['type']=='date'||$item['type']=='time')
+                                                        <input {{$item['extend']}} type="text"
+                                                               name="row[{{$item['name']}}]"
+                                                               value="{{$item['value']}}"
+                                                               class="form-control datetimepicker"
+                                                               data-tip="{{$item['tip']}}"
+                                                               data-rule="{{$item['rule']}}"/>
 
-                                                        @endif
+                                                    @endif
                                                     @if($item['type']=='number')
                                                         <input {{$item['extend']}} type="number"
                                                                name="row[{{$item['name']}}]"
@@ -157,7 +157,8 @@
                                                             <input id="c-{{$item['name']}}" class="form-control"
                                                                    size="50"
                                                                    name="row[{{$item['name']}}]" type="text"
-                                                                   value="{{$item['value']}}" data-base64="@if($item['value']){!!get_upload_image($item['value'])!!} @endif"
+                                                                   value="{{$item['value']}}"
+                                                                   data-base64="@if($item['value']){!!get_upload_image($item['value'])!!} @endif"
                                                                    data-tip="{{$item['tip']}}">
                                                             <span><button type="button" id="plupload-{{$item['name']}}"
                                                                           class="btn btn-danger plupload"
@@ -248,71 +249,20 @@
                     </div>
                 </div>
             @endforeach
-            {{--<div class="tab-pane fade" id="addcfg">--}}
-                {{--{!! Form::open(['id'=>'add-form','class'=>'form-horizontal','role'=>'form','data-toggle'=>'validator','url'=>url('admin/config/add')]) !!}--}}
-                {{--<div class="form-group">--}}
-                    {{--{!! Form::label('type',lang('Type'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
-                    {{--<div class="col-xs-12 col-sm-4">--}}
-                        {{--{!! Form::select('row[type]',$typeList,'string',['class'=>'form-control selectpicker']) !!}--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                {{--<div class="form-group">--}}
-                    {{--{!! Form::label('group',lang('Group'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
-                    {{--<div class="col-xs-12 col-sm-4">--}}
-                        {{--{!! Form::select('row[group]',$groupList,'basic',['class'=>'form-control selectpicker']) !!}--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                {{--<div class="form-group">--}}
-                    {{--{!! Form::label('name',lang('Name'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
-                    {{--<div class="col-xs-12 col-sm-4">--}}
-                        {{--{!! Form::input('text','row[name]',null,['class'=>'form-control','data-rule'=>'required; length(3~30); remote(config/check)']) !!}--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                {{--<div class="form-group">--}}
-                    {{--{!! Form::label('title',lang('Title'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
-                    {{--<div class="col-xs-12 col-sm-4">--}}
-                        {{--{!! Form::input('text','row[title]',null,['class'=>'form-control','data-rule'=>'required']) !!}--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                {{--<div class="form-group">--}}
-                    {{--{!! Form::label('value',lang('Value'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
-                    {{--<div class="col-xs-12 col-sm-4">--}}
-                        {{--{!! Form::input('text','row[value]',null,['class'=>'form-control','data-rule'=>'']) !!}--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                {{--<div class="form-group hide" id="add-content-container">--}}
-                    {{--{!! Form::label('content',lang('Content'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
-                    {{--<div class="col-xs-12 col-sm-4">--}}
-                        {{--{!! Form::textarea('row[content]','value1|title1value2|title2',['id'=>'content','cols'=>'30','rows'=>'5','class'=>'form-control','data-rule'=>'required']) !!}--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                {{--<div class="form-group">--}}
-                    {{--{!! Form::label('tip',lang('Tip'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
-                    {{--<div class="col-xs-12 col-sm-4">--}}
-                        {{--{!! Form::input('text','row[tip]',null,['class'=>'form-control','data-rule'=>'']) !!}--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                {{--<div class="form-group">--}}
-                    {{--{!! Form::label('rule',lang('Rule'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
-                    {{--<div class="col-xs-12 col-sm-4">--}}
-                        {{--{!! Form::input('text','row[rule]',null,['class'=>'form-control','data-rule'=>'']) !!}--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                {{--<div class="form-group">--}}
-                    {{--{!! Form::label('extend',lang('Extend'),['class'=>'control-label col-xs-12 col-sm-2']) !!}--}}
-                    {{--<div class="col-xs-12 col-sm-4">--}}
-                        {{--{!! Form::textarea('row[extend]','',['id'=>'content','cols'=>'30','rows'=>'5','class'=>'form-control']) !!}--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                {{--<div class="form-group">--}}
-                    {{--<label class="control-label col-xs-12 col-sm-2"></label>--}}
-                    {{--<div class="col-xs-12 col-sm-4">--}}
-                        {{--<button type="submit" class="btn btn-success btn-embossed">{{lang('OK')}}</button>--}}
-                        {{--<button type="reset" class="btn btn-default btn-embossed">{{lang('Reset')}}</button>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--{!! Form::close() !!}--}}
-            {{--</div>--}}
+            <div class="tab-pane fade" id="addcfg">
+               {!!Form::action(function ($form)use ($typeList,$groupList){
+                    $form->select()->field('type')->label(lang('Type'))->data($typeList)->render();
+                    $form->select()->field('group')->label(lang('Group'))->data($groupList)->render();
+                    $form->text()->field('name')->label(lang('Name'))->rule(['required; length(3~30); remote(config/check)'])->render();
+                    $form->text()->field('title')->label(lang('Title'))->rule(['required'])->render();
+                    $form->text()->field('value')->label(lang('Value'))->render();
+                    $form->textarea()->field('content',"value1|title1\nvalue2|title2")->option(['class'=>'hide','id'=>'add-content-container'])->rule(['required'])->label(lang('Content'))->render();
+                    $form->text()->field('tip')->label(lang('Tip'))->render();
+                    $form->text()->field('rule')->label(lang('Rule'))->render();
+                    $form->textarea()->field('extend')->label(lang('Extend'))->render();
+                    $form->button()->submit(lang('OK'))->reset(lang('Reset'))->render();
+                })->option(['id'=>'add-form','action'=>url('admin/config/add')])->render() !!}
+            </div>
         </div>
     </div>
 </div>

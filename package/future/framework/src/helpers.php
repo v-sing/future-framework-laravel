@@ -553,8 +553,14 @@ if (!function_exists('replace_null')) {
 
 }
 if (!function_exists('isImage')) {
+    /**
+     *
+     * @param $bin
+     * @return bool
+     */
     function isImg($bin)
     {
+
         $strInfo  = @unpack("C2chars", $bin);
         $typeCode = intval($strInfo['chars1'] . $strInfo['chars2']);
         if ($typeCode == 255216 /*jpg*/ || $typeCode == 7173 /*gif*/ || $typeCode == 13780 /*png*/) {
@@ -562,5 +568,12 @@ if (!function_exists('isImage')) {
         } else {
             return false;
         }
+    }
+}
+
+if (!function_exists('arrays_merge')) {
+    function arrays_merge($array,$array1)
+    {
+
     }
 }

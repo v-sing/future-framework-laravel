@@ -22,7 +22,7 @@ class Field implements Renderable
     protected $model = null;
     protected $data = [];
     protected $form = null;
-    protected $column='';
+    protected $column = '';
     /**
      * 展示方式
      * @var array
@@ -39,6 +39,9 @@ class Field implements Renderable
      */
     protected $outerOption = [
         'class' => ['col-xs-12', 'col-sm-4']
+    ];
+    protected $withoutOption=[
+      'class'=>['form-group']
     ];
     /**
      * 是否隐藏
@@ -94,15 +97,11 @@ class Field implements Renderable
     public function field($column, $value = '', $option = [])
     {
         $this->elementOption['name']  = "row[{$column}]";
-        $this->column=$column;
+        $this->column                 = $column;
         $this->elementOption['value'] = $value;
         $this->elementOption['id']    = 'c-' . $column;
         $this->labelOption['for']     = 'c-' . $column;
-        if (!empty($option['class'])) {
-            $this->elementOption['class'] = $option['class'];
-            unset($option['class']);
-        }
-        $this->elementOption = array_merge($this->elementOption, $option);
+        $this->elementOption = array_merge_recursive($this->elementOption, $option);
         return $this;
     }
 
@@ -111,7 +110,6 @@ class Field implements Renderable
         $Builder = new Builder($this);
         $method  = strtolower(str_replace("Future\\Admin\\Form\\Field\\", '', get_class($this)));
         $data    = $Builder->$method();
-
         $field = '';
         foreach ($data as $key => $value) {
             if ($key == 'buttonName') {
@@ -131,15 +129,11 @@ class Field implements Renderable
                 unset($data[$key]);
             }
         }
-
         $data['field'] = $field;
         $default       = $this->defaultView;
-
-//        dd($data);
         foreach ($data as $key => $value) {
             $default = str_replace("<%$key%>", $value, $default);
         }
-
         $this->form->form[] = $default;
         return $default;
     }
@@ -153,11 +147,7 @@ class Field implements Renderable
     public function label($name, $option = [])
     {
         $this->labelName = $name;
-        if (!empty($option['class'])) {
-            $this->labelOption['class'] = $option['class'];
-            unset($option['class']);
-        }
-        $this->labelOption = array_merge($this->labelOption, $option);
+        $this->labelOption = array_merge_recursive($this->labelOption, $option);
         return $this;
     }
 
@@ -212,11 +202,13 @@ class Field implements Renderable
      */
     public function outer($option = [])
     {
-        if (!empty($option['class'])) {
-            $this->outerOption['class'] = $option['class'];
-            unset($option['class']);
-        }
-        $this->outerOption = array_merge($this->outerOption, $option);
+        $this->outerOption = array_merge_recursive($this->outerOption, $option);
+        return $this;
+    }
+
+    public function option($option = [])
+    {
+        $this->withoutOption = array_merge_recursive( $this->withoutOption,$option);
         return $this;
     }
 

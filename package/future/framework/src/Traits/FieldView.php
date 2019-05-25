@@ -15,7 +15,7 @@ trait FieldView
     protected $defaultView = <<<EOF
     
 <%beforeHtml%>
-<div class="form-group" <%display%>>
+<div <%withoutAttribute%>>
     <label  <%labelAttribute%>><%labelName%></label>
     <div <%outerAttribute%>>
         <%field%>

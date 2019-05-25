@@ -23,7 +23,7 @@ class Form implements Renderable
         'class'       => 'form-horizontal',
         'role'        => 'form',
         'data-toggle' => 'validator',
-        'method'      => 'POST'
+        'methods'      => 'POST'
     ];
     protected $formView = <<<EOF
 <form <%formAttribute%>>

@@ -8,3 +8,4 @@
  */
 
 Route::any('test/index','TestController@index');
+Route::any('test/test','TestController@test');

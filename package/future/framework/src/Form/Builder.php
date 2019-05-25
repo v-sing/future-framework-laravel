@@ -170,6 +170,7 @@ class Builder
         $option['elementAttribute'] = $this->field->getButtonName() === false ? [implode(' ', $this->attributes($this->field->getElementOption()))] : $this->attributes($this->field->getElementOption());
         $option['labelAttribute']   = implode(' ', $this->attributes($this->field->getLabelOption()));
         $option['outerAttribute']   = implode(' ', $this->attributes($this->field->getOuterOption()));
+        $option['withoutAttribute']=implode(' ',$this->attributes($this->field->getWithoutOption()));
         $option['beforeHtml']       = $this->field->getBeforeHtml();
         $option['afterHtml']        = $this->field->getAfterHtml();
         $option['labelName']        = $this->field->getLabelName();
