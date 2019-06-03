@@ -44,14 +44,6 @@
                 {{lang('Profile')}}
             </div>
             <div class="panel-body">
-                {!!
-                 Form::action(function ($form){
-                    $form->number()->field('weigh','2')->label('weigh')->render();
-                    $form->button()->submit(lang('Submit'))->reset(lang('Reset'))->addButton('button')->label('name')->render();
-                    $form->button()->submit(lang('Submit'))->render();
-                })->option(['id'=>'update-form'])->render();
-
-                 !!}
                 <form id="update-form" role="form" data-toggle="validator" method="POST" action="{{url('admin/profile/update')}}">
                     <input type="hidden" id="c-avatar" name="row[avatar]" value="{{$admin['avatar']}}"/>
                     <div class="box-body box-profile">

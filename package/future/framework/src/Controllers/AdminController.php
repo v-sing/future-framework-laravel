@@ -36,14 +36,14 @@ class AdminController extends BackendController
     {
         if (isAjax()) {
             $childrenAdminIds = Admin::getAssign('childrenAdminIds');
-            $adminGroupName = $this->auth->getGroupAll();
+            $adminGroupName   = $this->auth->getGroupAll();
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('id,username,nickname,email,status,logintime');
             $total = $this->model
                 ->where($where)
                 ->whereIn('id', $childrenAdminIds)
                 ->orderby($sort, $order)
                 ->count();
-            $list = $this->model
+            $list  = $this->model
                 ->where($where)
                 ->whereIn('id', $childrenAdminIds)
                 ->orderby($sort, $order)

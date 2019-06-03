@@ -38,7 +38,7 @@ class Field implements Renderable
      * @var array
      */
     protected $outerOption = [
-        'class' => ['col-xs-12', 'col-sm-4']
+        'class' => ['col-xs-12' ,'col-sm-8']
     ];
     protected $withoutOption=[
       'class'=>['form-group']

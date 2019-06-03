@@ -10,3 +10,7 @@
 Route::any('admin','AdminController@index');
 
 Route::any('admin/index','AdminController@index');
+
+Route::any('admin/add','AdminController@add');
+
+Route::any('admin/edit','AdminController@edit');

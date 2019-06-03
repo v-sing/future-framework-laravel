@@ -9,3 +9,6 @@
 
 Route::get('demo', 'DemoController@index');
 Route::get('database', 'DemoController@database');
+Route::get('demo/logs', 'DemoController@logs');
+
+Route::get('quchong','DemoController@quchong');

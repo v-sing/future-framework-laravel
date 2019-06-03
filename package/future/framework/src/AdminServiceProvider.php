@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Future\Admin\Form\FormBuilder;
 use Future\Admin\Form\HtmlBuilder;
+use Illuminate\Support\Facades\Input;
 class AdminServiceProvider extends ServiceProvider
 {
     protected $namespace = 'Future\Admin\Controllers';

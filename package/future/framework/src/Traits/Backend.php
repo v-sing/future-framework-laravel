@@ -238,7 +238,7 @@ trait Backend
                         $query->whereRaw($v[1]);
                         break;
                     case 'in';
-                        $query->whereIn($v[1],$v[3]);
+                        $query->whereIn($v[1], $v[3]);
                         break;
                     case 'like';
                         $query->where($v[1], $v[2], '%' . $v[3] . '%');
@@ -302,11 +302,14 @@ trait Backend
         }
     }
 
-    /**
-     * 最后执行函数
-     */
-    public function __destruct()
+    public function add()
     {
-        // TODO: Implement __destruct() method.
+        return $this->view();
+    }
+
+    public function edit()
+    {
+
+        return $this->view();
     }
 }
