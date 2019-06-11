@@ -9,6 +9,7 @@
 
 namespace Future\Admin\Controllers;
 
+use function Couchbase\defaultDecoder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 

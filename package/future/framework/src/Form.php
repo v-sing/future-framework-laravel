@@ -23,7 +23,7 @@ class Form implements Renderable
         'class'       => 'form-horizontal',
         'role'        => 'form',
         'data-toggle' => 'validator',
-        'methods'      => 'POST'
+        'methods'     => 'POST'
     ];
     protected $formView = <<<EOF
 <form <%formAttribute%>>
@@ -55,7 +55,7 @@ EOF;
     public function render()
     {
 
-        $form             = implode("\n", $this->form);
+        $form = implode("\n", $this->form);
 
         $builder          = new Builder($this);
         $data             = $builder->form();

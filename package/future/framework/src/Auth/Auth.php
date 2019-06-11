@@ -9,6 +9,7 @@
 
 namespace Future\Admin\Auth;
 
+use function Couchbase\defaultDecoder;
 use Future\Admin\Fast\Auth as BaseAuth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
@@ -369,7 +370,6 @@ class Auth extends BaseAuth
 
         // 读取管理员当前拥有的权限节点
         $userRule = $this->getRuleList();
-
         $selected   = $referer = [];
         $refererUrl = Session::get('referer');
         // 必须将结果集转换为数组
@@ -436,7 +436,6 @@ class Auth extends BaseAuth
                 $nav .= '<li role="presentation" id="tab_' . $referer['id'] . '" class="active"><a href="#con_' . $referer['id'] . '" node-id="' . $referer['id'] . '" aria-controls="' . $referer['id'] . '" role="tab" data-toggle="tab"><i class="' . $referer['icon'] . ' fa-fw"></i> <span>' . $referer['title'] . '</span> </a> <i class="close-tab fa fa-remove"></i></li>';
             }
         }
-
         return [$menu, $nav, $selected, $referer];
     }
 

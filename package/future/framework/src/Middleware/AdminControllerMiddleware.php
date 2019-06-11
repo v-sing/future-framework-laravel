@@ -50,17 +50,20 @@ class AdminControllerMiddleware
                 $childlist = Tree::instance()->getTreeList(Tree::instance()->getTreeArray($n['id']));
                 $temp      = [];
                 foreach ($childlist as $k => $v) {
-                    $temp[$v['id']] = $v['name'];
+                    $temp[$v['id']] =lang( $v['name']);
                 }
                 $result[lang($n['name'])] = $temp;
             }
             $groupdata = $result;
         }
+        $config          = Admin::getAssign('config');
+        $config['admin'] = array_merge($config['admin'], ['id' => $auth->id, 'group_ids' => $auth->getGroupIds()]);
         Admin::setAssign(
             [
-                'groupdata' => $groupdata,
-                'childrenAdminIds'=>$this->childrenAdminIds,
-                'childrenGroupIds'=>$this->childrenGroupIds
+                'config'           => $config,
+                'groupdata'        => $groupdata,
+                'childrenAdminIds' => $this->childrenAdminIds,
+                'childrenGroupIds' => $this->childrenGroupIds
             ]
         );
         return $next($request);
