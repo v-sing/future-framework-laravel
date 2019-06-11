@@ -11,3 +11,4 @@
 Route::any('ajax/lang', 'AjaxController@lang');
 Route::any('ajax/upload', 'AjaxController@upload');
 Route::get('ajax/wipecache', 'AjaxController@wipecache');
+Route::any('ajax/weigh','AjaxController@weigh');

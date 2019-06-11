@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Future\Admin\Fast\Random;
 use Illuminate\Support\Facades\Artisan;
-
+use Illuminate\Support\Facades\DB;
 class AjaxController extends BackendController
 {
     protected $noNeedLogin = '*';
@@ -163,6 +163,57 @@ class AjaxController extends BackendController
                 Artisan::call('route:clear');
                 break;
 
+        }
+        return success();
+    }
+
+    public function weigh()
+    {
+        $input=input();
+        $ids=$input['ids'];
+        $changeid=$input['changeid'];
+        $field=$input['field'];
+        $table=$input['table'];
+        $orderway=strtolower($input['orderway']);
+        $orderway = $orderway == 'asc' ? 'ASC' : 'DESC';
+        $sour = $weighdata = [];
+        $ids = explode(',', $ids);
+        $prikey = 'id';
+        $pid=$input['pid'];
+        $field = in_array($field, ['weigh']) ? $field : 'weigh';
+
+        // 如果设定了pid的值,此时只匹配满足条件的ID,其它忽略
+        if ($pid !== '') {
+            $hasids = [];
+            $list =  DB::table($table)->whereIn($prikey, $ids)->whereIn('pid', [$pid])->select('id','pid')->get();
+            foreach ($list as $k => $v) {
+                $hasids[] = $v->id;
+            }
+            $ids = array_values(array_intersect($ids, $hasids));
+        }
+        $list =  DB::table($table)->select($prikey,$field)->whereIn($prikey, $ids)->orderBy($field, $orderway)->get();
+        foreach ($list as $k => $v) {
+            $sour[] = $v->$prikey;
+            $weighdata[$v->$prikey] = $v->$field;
+        }
+
+        $position = array_search($changeid, $ids);
+        $desc_id = $sour[$position];    //移动到目标的ID值,取出所处改变前位置的值
+        $sour_id = $changeid;
+        $weighids = array();
+        $temp = array_values(array_diff_assoc($ids, $sour));
+        foreach ($temp as $m => $n) {
+            if ($n == $sour_id) {
+                $offset = $desc_id;
+            } else {
+                if ($sour_id == $temp[0]) {
+                    $offset = isset($temp[$m + 1]) ? $temp[$m + 1] : $sour_id;
+                } else {
+                    $offset = isset($temp[$m - 1]) ? $temp[$m - 1] : $sour_id;
+                }
+            }
+            $weighids[$n] = $weighdata[$offset];
+            DB::table($table)->where($prikey, $n)->update([$field => $weighdata[$offset]]);
         }
         return success();
     }
