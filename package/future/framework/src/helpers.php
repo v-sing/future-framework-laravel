@@ -16,8 +16,13 @@ use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 if (!function_exists('lang')) {
     function lang($name, $vars = [])
     {
+        $name  = trim($name);
         $array = config('admin.lang');
-        $name  = isset($array[$name]) ? $array[$name] : $name;
+        if (!$array) {
+            loadLang();
+            $array = config('admin.lang');
+        }
+        $name = isset($array[$name]) ? $array[$name] : $name;
         if (!is_array($vars)) {
             $vars = func_get_args();
             array_shift($vars);
@@ -30,7 +35,34 @@ if (!function_exists('lang')) {
         return $name;
     }
 }
+if (!function_exists('loadLang')) {
+    /**
+     * 初始化语言包
+     * @param $controller
+     */
+    function loadLang($controller = '')
+    {
+        if ($controller == '') {
+            $backtrace = debug_backtrace();
+            preg_match('/([\w]+)Controller$/', pathinfo($backtrace[1]['file'], PATHINFO_FILENAME), $ma);
+            $controller = strtolower($ma[1]);
+        }
+        $add   = trans('admin_vendor' . '::' . $controller);
+        $array = [];
+        if (is_array($add)) {
+            $array = trans('admin_vendor' . '::' . $controller);
+        }
+        if (empty($array)) {
+            $add = trans('admin' . '::' . $controller);
+            if (is_array($add)) {
+                $array = trans('admin' . '::' . $controller);
+            }
+        }
+        $array = array_merge(trans('admin_vendor::' . config('app.locale')), $array);
+        config(['admin.lang' => $array]);
 
+    }
+}
 if (!function_exists('toArray')) {
     /**
      * 对象转数组
@@ -572,7 +604,7 @@ if (!function_exists('isImage')) {
 }
 
 if (!function_exists('arrays_merge')) {
-    function arrays_merge($array,$array1)
+    function arrays_merge($array, $array1)
     {
 
     }

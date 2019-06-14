@@ -9,7 +9,6 @@
 
 namespace Future\Admin\Auth;
 
-use function Couchbase\defaultDecoder;
 use Future\Admin\Fast\Auth as BaseAuth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;

@@ -36,6 +36,9 @@ class AdminControllerMiddleware
         $this->childrenAdminIds = $auth->getChildrenAdminIds(true);
         $this->childrenGroupIds = $auth->getChildrenGroupIds(true);
         $groupList              = AuthGroup::whereIn('id', $this->childrenGroupIds)->get()->toArray();
+        foreach ($groupList as $k =>$v){
+            $groupList[$k]['name']=lang($groupList[$k]['name']);
+        }
         Tree::instance()->init($groupList);
         $groupdata = [];
         if ($auth->isSuperAdmin()) {
@@ -46,11 +49,12 @@ class AdminControllerMiddleware
         } else {
             $result = [];
             $groups = $auth->getGroups();
+
             foreach ($groups as $m => $n) {
                 $childlist = Tree::instance()->getTreeList(Tree::instance()->getTreeArray($n['id']));
                 $temp      = [];
                 foreach ($childlist as $k => $v) {
-                    $temp[$v['id']] =lang( $v['name']);
+                    $temp[$v['id']] =$v['name'];
                 }
                 $result[lang($n['name'])] = $temp;
             }

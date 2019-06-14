@@ -9,3 +9,4 @@
 
 Route::any('rule','RuleController@index');
 Route::any('rule/index','RuleController@index');
+Route::any('rule/multi','RuleController@multi');

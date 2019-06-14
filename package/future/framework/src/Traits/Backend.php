@@ -14,6 +14,7 @@ use Illuminate\Validation\Factory;
 use Illuminate\Validation\Validator;
 use Illuminate\Support\Facades\View;
 use Future\Admin\Facades\Admin;
+use Illuminate\Support\Facades\DB;
 
 trait Backend
 {
@@ -268,12 +269,12 @@ trait Backend
         if (!$this->dataLimit) {
             return null;
         }
-        if ($this->auth->isSuperAdmin()) {
+        if (Admin::getAssgin('auth')->isSuperAdmin()) {
             return null;
         }
         $adminIds = [];
         if (in_array($this->dataLimit, ['auth', 'personal'])) {
-            $adminIds = $this->dataLimit == 'auth' ? $this->auth->getChildrenAdminIds(true) : [$this->auth->id];
+            $adminIds = $this->dataLimit == 'auth' ? Admin::getAssgin('auth')->getChildrenAdminIds(true) : [Admin::getAssgin('auth')->id];
         }
         return $adminIds;
     }
@@ -312,4 +313,46 @@ trait Backend
 
         return $this->view();
     }
+
+    public function multi()
+    {
+        $ids = input("ids");
+        if (input('params')) {
+            parse_str(input("params"), $values);
+            $values = array_intersect_key($values, array_flip(is_array($this->multiFields) ? $this->multiFields : explode(',', $this->multiFields)));
+        }
+        if ($values || Admin::getAssgin('auth')->isSuperAdmin()) {
+            $adminIds = $this->getDataLimitAdminIds();
+            if (is_array($adminIds)) {
+                $this->model->whereIn($this->dataLimitField, $adminIds);
+            }
+            DB::beginTransaction();
+            try {
+                $list = $this->model->whereIn($this->model->getPk(), explode(',', $ids))->get()->toArray();
+                foreach ($list as $index => $item) {
+                    foreach ($values as $key => $value) {
+                        $list[$index][$key] = $value;
+                    }
+//                   $data= $this->model->where($this->model->getPk(), $item[$this->model->getPk()])->first();
+//                    $count += $data->data($item)->save();
+                }
+                $result = $this->model->updateBatch($list);
+                DB::commit();
+            } catch (PDOException $e) {
+                DB::rollback();
+                return error($e->getMessage());
+            } catch (Exception $e) {
+                Db::rollback();
+                return error($e->getMessage());
+            }
+            if ($result) {
+                return success();
+            } else {
+                return error(lang('No rows were updated'));
+            }
+        } else {
+            return error(lang('You have no permission'));
+        }
+    }
+
 }

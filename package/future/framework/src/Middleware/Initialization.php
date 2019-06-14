@@ -45,7 +45,7 @@ class Initialization
         Admin::setController($controller);
         Admin::setModule($module);
         $this->config($request);
-        $this->loadLang($controller);
+        loadLang($controller);
         return $next($request);
     }
 
@@ -101,21 +101,5 @@ class Initialization
             'admin'  => Session::get('admin') ? array_merge(Session::get('admin'), ['cdnurl' => $config['site']['cdnurl']]) : []
         ]);
     }
-    //初始化语言包
-    protected function loadLang($controller)
-    {
-        $add   = trans('admin_vendor' . '::' . $controller);
-        $array = [];
-        if (is_array($add)) {
-            $array = trans('admin_vendor' . '::' . $controller);
-        }
-        if (empty($array)) {
-            $add = trans('admin' . '::' . $controller);
-            if (is_array($add)) {
-                $array = trans('admin' . '::' . $controller);
-            }
-        }
-        $array = array_merge(trans('admin_vendor::' . config('app.locale')), $array);
-        config(['admin.lang' => $array]);
-    }
+
 }

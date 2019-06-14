@@ -32,9 +32,7 @@ class AjaxController extends BackendController
 
     public function upload()
     {
-
         $fileCharater = $this->request->file('file');
-
         if ($fileCharater->isValid()) {
             //获取文件的扩展名
             $ext           = $fileCharater->getClientOriginalExtension();

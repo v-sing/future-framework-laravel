@@ -12,6 +12,7 @@ namespace Future\Admin\Auth\Database;
 use Illuminate\Database\Eloquent\Model;
 use Future\Admin\Traits\ModelTree;
 use Future\Admin\Traits\AdminBuilder;
+
 class AuthRule extends BaseModel
 {
     use AdminBuilder, ModelTree {
@@ -23,6 +24,7 @@ class AuthRule extends BaseModel
      * @var array
      */
     protected $fillable = ['*'];
+    public $primaryKey = 'id';
 
     /**
      * Create a new Eloquent model instance.
