@@ -10,6 +10,7 @@
 namespace Future\Admin\Controllers;
 
 
+use Future\Admin\Future\Loader;
 use Illuminate\Http\Request;
 use Future\Admin\Facades\Admin;
 use Illuminate\Support\Facades\DB;
@@ -81,14 +82,13 @@ class AdminController extends BackendController
                     return error($this->model->getError());
                 }
                 $group = $this->request->post("group/a");
-
                 //过滤不允许的组别,避免越权
-                $group   = array_intersect($this->childrenGroupIds, $group);
+                $group   = array_intersect(Admin::getAssign('childrenAdminIds'), $group);
                 $dataset = [];
                 foreach ($group as $value) {
                     $dataset[] = ['uid' => $this->model->id, 'group_id' => $value];
                 }
-                model('AuthGroupAccess')->saveAll($dataset);
+                Model('AuthGroupAccess')->saveAll($dataset);
                 $this->success();
             }
             return error();
@@ -102,7 +102,9 @@ class AdminController extends BackendController
     public function edit()
     {
         $ids = input('ids');
+
         $row = $this->model->where(['id' => $ids])->first();
+       dd( $row->getError());
         if (!$row)
             return error(lang('No Results were found'));
         if (isAjax()) {
@@ -115,7 +117,7 @@ class AdminController extends BackendController
                     unset($params['password'], $params['salt']);
                 }
                 //这里需要针对username和email做唯一验证
-                $adminValidate = \think\Loader::validate('Admin');
+                $adminValidate = Loader::validate('Admin');
                 $adminValidate->rule([
                     'username' => 'require|max:50|unique:admin,username,' . $row->id,
                     'email'    => 'require|email|unique:admin,email,' . $row->id

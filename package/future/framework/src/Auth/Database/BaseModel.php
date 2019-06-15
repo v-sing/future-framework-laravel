@@ -12,9 +12,22 @@ namespace Future\Admin\Auth\Database;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Future\Admin\Future\Loader;
+use Future\Admin\Future\Exception\ValidateException;
+
 class BaseModel extends Model
 {
+    // 错误信息
+    protected $error;
+    // 字段验证规则
+    protected $validate;
+    // 数据表主键 复合主键使用数组定义 不设置则自动获取
     protected $dateFormat = 'U';
+    // 验证失败是否抛出异常
+    protected $failException = false;
+    // 是否采用批量验证
+    protected $batchValidate = false;
+    protected $error;
 
     /**
      * 获取单条记录
@@ -94,7 +107,7 @@ class BaseModel extends Model
             foreach ($updateColumn as $uColumn) {
                 $setSql = "`" . $uColumn . "` = CASE ";
                 foreach ($multipleData as $data) {
-                    $setSql .= "WHEN `" . $referenceColumn . "` = ? THEN ? ";
+                    $setSql     .= "WHEN `" . $referenceColumn . "` = ? THEN ? ";
                     $bindings[] = $data[$referenceColumn];
                     $bindings[] = $data[$uColumn];
                 }
@@ -113,4 +126,78 @@ class BaseModel extends Model
         }
     }
 
+    /**
+     * 设置字段验证
+     * @access public
+     * @param array|string|bool $rule 验证规则 true表示自动读取验证器类
+     * @param array $msg 提示信息
+     * @param bool $batch 批量验证
+     * @return $this
+     */
+    public function validate($rule = true, $msg = [], $batch = false)
+    {
+        if (is_array($rule)) {
+            $this->validate = [
+                'rule' => $rule,
+                'msg'  => $msg,
+            ];
+        } else {
+            $this->validate = true === $rule ? $this->name : $rule;
+        }
+        $this->batchValidate = $batch;
+        return $this;
+    }
+
+    /**
+     * 设置验证失败后是否抛出异常
+     * @access public
+     * @param bool $fail 是否抛出异常
+     * @return $this
+     */
+    public function validateFailException($fail = true)
+    {
+        $this->failException = $fail;
+        return $this;
+    }
+
+    /**
+     * 自动验证数据
+     * @access protected
+     * @param array $data 验证数据
+     * @param mixed $rule 验证规则
+     * @param bool $batch 批量验证
+     * @return bool
+     */
+    protected function validateData($data, $rule = null, $batch = null)
+    {
+        $info = is_null($rule) ? $this->validate : $rule;
+
+        if (!empty($info)) {
+            if (is_array($info)) {
+                $validate = Loader::validate();
+                $validate->rule($info['rule']);
+                $validate->message($info['msg']);
+            } else {
+                $name = is_string($info) ? $info : $this->name;
+                if (strpos($name, '.')) {
+                    list($name, $scene) = explode('.', $name);
+                }
+                $validate = Loader::validate($name);
+                if (!empty($scene)) {
+                    $validate->scene($scene);
+                }
+            }
+            $batch = is_null($batch) ? $this->batchValidate : $batch;
+            if (!$validate->batch($batch)->check($data)) {
+                $this->error = $validate->getError();
+                if ($this->failException) {
+                    throw new ValidateException($this->error);
+                } else {
+                    return false;
+                }
+            }
+            $this->validate = null;
+        }
+        return true;
+    }
 }
