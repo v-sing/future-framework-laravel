@@ -15,50 +15,85 @@ use Illuminate\Validation\Validator;
 use Illuminate\Support\Facades\View;
 use Future\Admin\Facades\Admin;
 use Illuminate\Support\Facades\DB;
+use Future\Admin\Future\Exception\ValidateException;
+use Future\Admin\Future\Loader;
 
 trait Backend
 {
-
+    /**
+     * @var bool 验证失败是否抛出异常
+     */
+    protected $failException = false;
 
     /**
-     * Get a validation factory instance.
-     *
-     * @return \Illuminate\Contracts\Validation\Factory
+     * @var bool 是否批量验证
      */
-    protected function getValidationFactory()
+    protected $batchValidate = false;
+
+    /**
+     * 设置验证失败后是否抛出异常
+     * @access protected
+     * @param bool $fail 是否抛出异常
+     * @return $this
+     */
+    protected function validateFailException($fail = true)
     {
-        return app(Factory::class);
+        $this->failException = $fail;
+
+        return $this;
     }
 
     /**
-     * 验证重写
-     * @param Request $request
-     * @param array $rules
-     * @param array $messages
-     * @param array $customAttributes
-     * @return mixed
+     * 验证数据
+     * @access protected
+     * @param  array $data 数据
+     * @param  string|array $validate 验证器名或者验证规则数组
+     * @param  array $message 提示信息
+     * @param  bool $batch 是否批量验证
+     * @param  mixed $callback 回调方法（闭包）
+     * @return array|string|true
+     * @throws ValidateException
      */
-    public function validate(Request $request, array $rules, array $messages = [], array $customAttributes = [])
+    protected function validate($data, $validate, $message = [], $batch = false, $callback = null)
     {
-
-        $validator = $this->getValidationFactory()->make($request->all(), $rules, $messages, $customAttributes);
-        if ($validator->fails()) {
-            foreach ($this->formatValidationErrors($validator) as $k => $v) {
-                foreach ($v as $v1) {
-                    return $v1;
-                }
+        if (is_array($validate)) {
+            $v = Loader::validate();
+            $v->rule($validate);
+        } else {
+            // 支持场景
+            if (strpos($validate, '.')) {
+                list($validate, $scene) = explode('.', $validate);
             }
-        }
-    }
 
-    /**
-     * Format the validation errors to be returned.
-     * @param  \Illuminate\Contracts\Validation\Validator $validator
-     * @return array
-     */
-    protected function formatValidationErrors(Validator $validator)
-    {
-        return $validator->errors()->getMessages();
+            $v = Loader::validate($validate);
+
+            !empty($scene) && $v->scene($scene);
+        }
+
+        // 批量验证
+        if ($batch || $this->batchValidate) {
+            $v->batch(true);
+        }
+
+        // 设置错误信息
+        if (is_array($message)) {
+            $v->message($message);
+        }
+
+        // 使用回调验证
+        if ($callback && is_callable($callback)) {
+            call_user_func_array($callback, [$v, &$data]);
+        }
+
+        if (!$v->check($data)) {
+            if ($this->failException) {
+                throw new ValidateException($v->getError());
+            }
+
+            return $v->getError();
+        }
+
+        return true;
     }
 
     /**

@@ -27,7 +27,8 @@ class BaseModel extends Model
     protected $failException = false;
     // 是否采用批量验证
     protected $batchValidate = false;
-    protected $error;
+    //验证错误返回
+    public $validateError = '';
 
     /**
      * 获取单条记录
@@ -189,7 +190,7 @@ class BaseModel extends Model
             }
             $batch = is_null($batch) ? $this->batchValidate : $batch;
             if (!$validate->batch($batch)->check($data)) {
-                $this->error = $validate->getError();
+                $this->validateError = $validate->getError();
                 if ($this->failException) {
                     throw new ValidateException($this->error);
                 } else {
@@ -199,5 +200,14 @@ class BaseModel extends Model
             $this->validate = null;
         }
         return true;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getError()
+    {
+        return $this->validateError;
     }
 }
