@@ -11,7 +11,7 @@ namespace Future\Admin\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Future\Admin\Fast\Random;
+use Future\Admin\Future\Random;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 class AjaxController extends BackendController

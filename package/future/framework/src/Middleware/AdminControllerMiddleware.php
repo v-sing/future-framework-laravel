@@ -12,7 +12,7 @@ namespace Future\Admin\Middleware;
 use Closure;
 use Future\Admin\Facades\Admin;
 use Future\Admin\Auth\Database\AuthGroup;
-use Future\Admin\Fast\Tree;
+use Future\Admin\Future\Tree;
 
 /**
  * AdminController控制器中间件

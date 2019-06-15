@@ -16,7 +16,7 @@ class Password extends Field
 {
     protected $view = <<<EOF
 
-<input type="password"  class="form-control" <%elementAttribute%>>
+<input type="password"  autocomplete='new-password' class="form-control" <%elementAttribute%>>
 EOF;
 
     public function __construct($form)

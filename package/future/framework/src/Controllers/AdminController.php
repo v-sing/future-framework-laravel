@@ -12,9 +12,9 @@ namespace Future\Admin\Controllers;
 
 use Illuminate\Http\Request;
 use Future\Admin\Facades\Admin;
-use Future\Admin\Auth\Database\AuthGroup;
-use Future\Admin\Auth\Database\AuthGroupAccess;
 use Illuminate\Support\Facades\DB;
+use Future\Admin\Future\Random;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends BackendController
 {
@@ -62,6 +62,95 @@ class AdminController extends BackendController
             $result = array("total" => $total, "rows" => $list);
             return json($result);
         }
+        return $this->view();
+    }
+
+    /**
+     * 添加
+     */
+    public function add()
+    {
+        if (isAjax()) {
+            $params = input();
+            if ($params) {
+                $params['salt']     = Random::alnum();
+                $params['password'] = Hash::make($params['password'] . $params['salt']);
+                $params['avatar']   = '/assets/img/avatar.png'; //设置新管理员默认头像。
+                $result             = $this->model->validate('Admin.add')->save($params);
+                if ($result === false) {
+                    return error($this->model->getError());
+                }
+                $group = $this->request->post("group/a");
+
+                //过滤不允许的组别,避免越权
+                $group   = array_intersect($this->childrenGroupIds, $group);
+                $dataset = [];
+                foreach ($group as $value) {
+                    $dataset[] = ['uid' => $this->model->id, 'group_id' => $value];
+                }
+                model('AuthGroupAccess')->saveAll($dataset);
+                $this->success();
+            }
+            return error();
+        }
+        return $this->view();
+    }
+
+    /**
+     * 编辑
+     */
+    public function edit()
+    {
+        $ids = input('ids');
+        $row = $this->model->where(['id' => $ids])->first();
+        if (!$row)
+            return error(lang('No Results were found'));
+        if (isAjax()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                if ($params['password']) {
+                    $params['salt']     = Random::alnum();
+                    $params['password'] = Hash::make($params['password'] . $params['salt']);
+                } else {
+                    unset($params['password'], $params['salt']);
+                }
+                //这里需要针对username和email做唯一验证
+                $adminValidate = \think\Loader::validate('Admin');
+                $adminValidate->rule([
+                    'username' => 'require|max:50|unique:admin,username,' . $row->id,
+                    'email'    => 'require|email|unique:admin,email,' . $row->id
+                ]);
+                $result = $row->validate('Admin.edit')->save($params);
+                if ($result === false) {
+                    $this->error($row->getError());
+                }
+
+                // 先移除所有权限
+                model('AuthGroupAccess')->where('uid', $row->id)->delete();
+
+                $group = $this->request->post("group/a");
+
+                // 过滤不允许的组别,避免越权
+                $group = array_intersect($this->childrenGroupIds, $group);
+
+                $dataset = [];
+                foreach ($group as $value) {
+                    $dataset[] = ['uid' => $row->id, 'group_id' => $value];
+                }
+                model('AuthGroupAccess')->saveAll($dataset);
+                $this->success();
+            }
+            $this->error();
+        }
+        $grouplist = $this->auth->getGroups($row['id']);
+
+        $groupids = [];
+        foreach ($grouplist as $k => $v)
+        {
+            $groupids[] = $v['id'];
+        }
+        $this->assign("row", toArray($row));
+        $this->assign("groupids", $groupids);
         return $this->view();
     }
 }

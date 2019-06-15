@@ -1,6 +1,6 @@
 <?php
 
-namespace Future\Admin\Fast;
+namespace Future\Admin\Future;
 /**
  * 随机生成类
  */

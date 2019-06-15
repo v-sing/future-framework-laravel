@@ -68,19 +68,21 @@ class AdminServiceProvider extends ServiceProvider
             \URL::forceScheme('https');
             $this->app['request']->server->set('HTTPS', true);
         }
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'admin_vendor');
-        $this->loadTranslationsFrom(app_path(admin_base_path('Resources/lang')), 'admin');
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'admin');
 
-        $this->loadViewsFrom(app_path(admin_base_path('Resources/views')), 'admin');
-        if (file_exists($routes = admin_path('routes.php'))) {
-            $this->registerAuthRoutes();
-            $this->loadRoutesFrom($routes);
-        }
         if ($this->app->runningInConsole()) {
             $this->publishes([__DIR__ . '/../config' => config_path()], 'future-admin-config');
             $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'future-admin-migrations');
             $this->publishes([__DIR__ . '/../resources/assets' => public_path('assets')], 'future-admin-assets');
+        }else{
+            $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'admin_vendor');
+            $this->loadTranslationsFrom(app_path(admin_base_path('Resources/lang')), 'admin');
+            $this->loadViewsFrom(__DIR__ . '/../resources/views', 'admin');
+
+            $this->loadViewsFrom(app_path(admin_base_path('Resources/views')), 'admin');
+            if (file_exists($routes = admin_path('routes.php'))) {
+                $this->registerAuthRoutes();
+                $this->loadRoutesFrom($routes);
+            }
         }
         //remove default feature of double encoding enable in laravel 5.6 or later.
         $bladeReflectionClass = new \ReflectionClass('\Illuminate\View\Compilers\BladeCompiler');

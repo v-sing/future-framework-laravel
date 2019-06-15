@@ -7,7 +7,7 @@
  * Time: 9:26
  */
 
-namespace Future\Admin\Fast;
+namespace Future\Admin\Future;
 
 
 class Date

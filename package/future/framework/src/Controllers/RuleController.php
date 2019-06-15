@@ -10,7 +10,7 @@
 namespace Future\Admin\Controllers;
 
 use Future\Admin\Facades\Admin;
-use Future\Admin\Fast\Tree;
+use Future\Admin\Future\Tree;
 
 class RuleController extends BackendController
 {

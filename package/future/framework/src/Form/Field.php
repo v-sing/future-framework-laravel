@@ -38,10 +38,10 @@ class Field implements Renderable
      * @var array
      */
     protected $outerOption = [
-        'class' => ['col-xs-12' ,'col-sm-8']
+        'class' => ['col-xs-12', 'col-sm-8']
     ];
-    protected $withoutOption=[
-      'class'=>['form-group']
+    protected $withoutOption = [
+        'class' => ['form-group']
     ];
     /**
      * 是否隐藏
@@ -96,12 +96,15 @@ class Field implements Renderable
      */
     public function field($column, $value = '', $option = [])
     {
-        $this->elementOption['name']  = "row[{$column}]";
+        $this->elementOption['name'] = "row[{$column}]";
+        if (preg_match('/\[|\]/', $column, $m)) {
+            $this->elementOption['name'] = $column;
+        }
         $this->column                 = $column;
         $this->elementOption['value'] = $value;
         $this->elementOption['id']    = 'c-' . $column;
         $this->labelOption['for']     = 'c-' . $column;
-        $this->elementOption = array_merge_recursive($this->elementOption, $option);
+        $this->elementOption          = array_merge_recursive($this->elementOption, $option);
         return $this;
     }
 
@@ -110,7 +113,7 @@ class Field implements Renderable
         $Builder = new Builder($this);
         $method  = strtolower(str_replace("Future\\Admin\\Form\\Field\\", '', get_class($this)));
         $data    = $Builder->$method();
-        $field = '';
+        $field   = '';
         foreach ($data as $key => $value) {
             if ($key == 'buttonName') {
                 unset($data[$key]);
@@ -146,7 +149,7 @@ class Field implements Renderable
      */
     public function label($name, $option = [])
     {
-        $this->labelName = $name;
+        $this->labelName   = $name;
         $this->labelOption = array_merge_recursive($this->labelOption, $option);
         return $this;
     }
@@ -208,7 +211,7 @@ class Field implements Renderable
 
     public function option($option = [])
     {
-        $this->withoutOption = array_merge_recursive( $this->withoutOption,$option);
+        $this->withoutOption = array_merge_recursive($this->withoutOption, $option);
         return $this;
     }
 

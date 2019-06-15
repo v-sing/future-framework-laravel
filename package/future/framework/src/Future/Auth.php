@@ -8,7 +8,7 @@
  */
 
 
-namespace Future\Admin\Fast;
+namespace Future\Admin\Future;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;

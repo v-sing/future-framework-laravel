@@ -72,7 +72,7 @@ if (!function_exists('toArray')) {
     function toArray($array)
     {
         if (is_object($array)) {
-            $array = (array)$array;
+            $array = json_decode(json_encode($array, true), true);
         }
         if (is_array($array)) {
             foreach ($array as $key => $value) {
@@ -318,6 +318,7 @@ if (!function_exists('Model')) {
      */
     function Model($model)
     {
+        $model=parse_hump($model);
         if (!class_exists($class = '\\App\\Model\\' . $model)) {
             $class = '\\Future\\Admin\\Auth\\Database\\' . $model;
         }

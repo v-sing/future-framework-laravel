@@ -100,7 +100,7 @@
                             <div class="input-group-addon"><span class="glyphicon glyphicon-lock"
                                                                  aria-hidden="true"></span></div>
                             <input type="password" class="form-control" id="pd-form-password"
-                                   placeholder="{{lang('Password')}}" name="password" autocomplete="off" value=""
+                                   placeholder="{{lang('Password')}}" name="password"  autocomplete='new-password' value=""
                                    data-rule="{{lang('Password')}}:required;password"/>
                         </div>
                         @if($config['admin']['login_captcha'])

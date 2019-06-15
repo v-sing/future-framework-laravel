@@ -1,6 +1,6 @@
 <?php
 
-namespace Future\Admin\Fast;
+namespace Future\Admin\Future;
 
 /**
  * 通用的树型类

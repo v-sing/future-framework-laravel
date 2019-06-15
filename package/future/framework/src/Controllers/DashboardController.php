@@ -8,7 +8,7 @@
  */
 
 namespace Future\Admin\Controllers;
-use Future\Admin\Fast\Date;
+use Future\Admin\Future\Date;
 
 use Illuminate\Http\Request;
 

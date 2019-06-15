@@ -9,7 +9,7 @@
 
 namespace Future\Admin\Controllers;
 
-use Future\Admin\Fast\Random;
+use Future\Admin\Future\Random;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;

@@ -41,8 +41,9 @@ EOF;
         $this->form->form = array_values($this->form->form);
         $default          = "\n";
         foreach ($this->data as $key => $value) {
-            $selected = in_array($key, explode(',', $this->value)) ? ' selected ' : '';
-            $default  .= "<option value='{$key}'{$selected}>{$value}</option>\n";
+            $this->value = is_array($this->value) ? $this->value : explode(',', $this->value);
+            $selected    = in_array($key, $this->value) ? ' selected ' : '';
+            $default     .= "<option value='{$key}'{$selected}>{$value}</option>\n";
         }
         $html               = str_replace('<%option%>', $default, $html);
         $this->form->form[] = $html;

@@ -310,10 +310,21 @@ trait Backend
 
     public function edit()
     {
-
+        $ids = input('ids');
+        if (isAjax()) {
+            return success();
+        }
+        $rows = $this->model->where($this->model->getPk(), $ids)->first()->toArray();
+        if ($rows) {
+            Admin::setAssign(['rows' => $rows]);
+        }
         return $this->view();
     }
 
+    /**
+     * 多条更新
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\think\response\Redirect
+     */
     public function multi()
     {
         $ids = input("ids");
@@ -333,8 +344,6 @@ trait Backend
                     foreach ($values as $key => $value) {
                         $list[$index][$key] = $value;
                     }
-//                   $data= $this->model->where($this->model->getPk(), $item[$this->model->getPk()])->first();
-//                    $count += $data->data($item)->save();
                 }
                 $result = $this->model->updateBatch($list);
                 DB::commit();

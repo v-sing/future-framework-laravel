@@ -38,7 +38,7 @@ require(['form', 'upload'], function (Form, Upload) {
                                     callback: function (data) {
                                         var urlArr = data.fullurl.split('|');
                                         $.each(urlArr, function () {
-                                            // var url = Fast.api.cdnurl(this);
+                                            // var url = Future.api.cdnurl(this);
                                             context.invoke('editor.insertImage', this);
                                         });
                                     }

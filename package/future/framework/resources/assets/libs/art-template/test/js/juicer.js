@@ -1,6 +1,6 @@
 /*
     ********** Juicer **********
-    ${A Fast template engine}
+    ${A Future template engine}
     Project Home: http://juicer.name
 
     Author: Guokai

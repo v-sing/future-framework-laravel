@@ -9,7 +9,7 @@
 
 namespace Future\Admin\Auth;
 
-use Future\Admin\Fast\Auth as BaseAuth;
+use Future\Admin\Future\Auth as BaseAuth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\Cache;
 use Future\Admin\Auth\Database\Admin;
 use Future\Admin\Auth\Database\AuthGroupAccess;
 use Future\Admin\Auth\Database\AuthGroup;
-use Future\Admin\Fast\Tree;
-use Future\Admin\Fast\Random;
+use Future\Admin\Future\Tree;
+use Future\Admin\Future\Random;
 use Illuminate\Support\Facades\Hash;
 
 class Auth extends BaseAuth
