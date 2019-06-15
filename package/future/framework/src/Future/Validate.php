@@ -88,6 +88,7 @@ class Validate
         'fileSize'    => 'filesize not match',
         'fileExt'     => 'extensions to upload is not allowed',
         'fileMime'    => 'mimetype to upload is not allowed',
+        'captcha'     => 'Verification code error'
     ];
 
     // 当前验证场景
@@ -874,7 +875,7 @@ class Validate
             try {
                 $db = Model($rule[0]);
             } catch (ClassNotFoundException $e) {
-                $db =new $rule[0];
+                $db = new $rule[0];
             }
         }
         $key = isset($rule[1]) ? $rule[1] : $field;
@@ -1273,12 +1274,12 @@ class Validate
         } elseif (0 === strpos($type, 'require')) {
             $msg = self::$typeMsg['require'];
         } else {
-            $msg = $title .lang('not conform to the rules');
+            $msg = $title . lang('not conform to the rules');
         }
 
         if (is_string($msg) && 0 === strpos($msg, '{%')) {
             $msg = lang(substr($msg, 2, -1));
-        } else{
+        } else {
             $msg = lang($msg);
         }
 
@@ -1320,6 +1321,11 @@ class Validate
             $scene = [];
         }
         return $scene;
+    }
+
+    public static function captcha()
+    {
+        captcha_check();
     }
 
     public static function __callStatic($method, $params)

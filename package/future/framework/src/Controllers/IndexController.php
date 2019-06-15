@@ -52,19 +52,15 @@ class IndexController extends BackendController
 
         if (isAjax()) {
             $rule = [
-                'username' => 'required',
-                'password' => 'required',
+                ['username', 'required'],
+                ['password', 'required']
             ];
             if (config('app.admin.login_captcha')) {
-                $message         = [
-                    'captcha.required' => trans('validation.required'),
-                    'captcha.captcha'  => trans('validation.captcha'),
-                ];
-                $rule['captcha'] = 'required|captcha';
-            } else {
-                $message = [];
+                $rule[] = ['captcha', 'required|captcha'];
             }
-            $result = $this->validate($request, $rule, $message, ['username' => lang('Username'), 'password' => lang('Password'), 'captcha' => lang('Captcha')]);
+var_dump($rule);exit;
+            $result = $this->validate(input(), $rule);
+            var_dump($result);exit;
             if ($result !== null) {
                 return error($result);
             }

@@ -102,9 +102,7 @@ class AdminController extends BackendController
     public function edit()
     {
         $ids = input('ids');
-
         $row = $this->model->where(['id' => $ids])->first();
-       dd( $row->getError());
         if (!$row)
             return error(lang('No Results were found'));
         if (isAjax()) {
