@@ -14,6 +14,7 @@ use Closure;
 use Illuminate\Support\Facades\Session;
 use Future\Admin\Auth\Database\Config;
 use Future\Admin\Facades\Admin;
+
 /**
  *
  * 初始化框架需要的配置
@@ -30,8 +31,6 @@ class Initialization
      */
     public function handle($request, Closure $next, $guard = null)
     {
-
-        $action    = [];
         $route     = $request->route();
         $array     = explode('@', $route->getAction()['controller']);
         $className = get_class($this);
@@ -40,12 +39,16 @@ class Initialization
         } else {
             $controller = $className;
         }
-        $module = str_replace('/', '', $route->getAction()['prefix']);
-        Admin::setAction($array[1]);
-        Admin::setController($controller);
-        Admin::setModule($module);
-        $this->config($request);
-        loadLang($controller);
+        $action = $route->getAction();
+        if (isset($action['prefix'])) {
+            if (['prefix'])
+                $module = str_replace('/', '', $route->getAction()['prefix']);
+            Admin::setAction($array[1]);
+            Admin::setController($controller);
+            Admin::setModule($module);
+            $this->config($request);
+            loadLang($controller);
+        }
         return $next($request);
     }
 
@@ -93,7 +96,7 @@ class Initialization
             'upload'         => config('upload'),
             'app_debug'      => config('app.debug')
         ];
-        config(['app.timezone'=>$config['site']['timezone']]);
+        config(['app.timezone' => $config['site']['timezone']]);
         config(['app.locale' => $lang]);
         Admin::setAssign([
             'config' => $config,

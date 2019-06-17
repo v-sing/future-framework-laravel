@@ -46,12 +46,8 @@ class IndexController extends BackendController
      */
     public function login(Request $request)
     {
-
         $url = Session::get('referer') ? Session::get('referer') : url('/admin');
-
-        dump( \session());exit;
         if (isAjax()) {
-
             $rule = [
                 ['username', 'require'],
                 ['password', 'require']

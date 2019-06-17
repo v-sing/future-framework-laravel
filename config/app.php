@@ -175,7 +175,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         \Future\Admin\AdminServiceProvider::class,
-        Overtrue\LaravelPinyin\ServiceProvider::class
+        Overtrue\LaravelPinyin\ServiceProvider::class,
+        \Mews\Captcha\CaptchaServiceProvider::class
     ],
 
     /*
@@ -228,7 +229,8 @@ return [
         'View'         => Illuminate\Support\Facades\View::class,
         'Admin'        => \Future\Admin\Facades\Admin::class,
         'Pinyin'       => Overtrue\LaravelPinyin\Facades\Pinyin::class,
-        'Form'         =>\Future\Admin\Form\FormFacade::class
+        'Form'         => \Future\Admin\Form\FormFacade::class,
+        'Captcha'      => \Mews\Captcha\Facades\Captcha::class
     ],
 
 ];
