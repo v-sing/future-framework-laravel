@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Blade;
 use Future\Admin\Form\FormBuilder;
 use Future\Admin\Form\HtmlBuilder;
 use Illuminate\Support\Facades\Input;
+
 class AdminServiceProvider extends ServiceProvider
 {
     protected $namespace = 'Future\Admin\Controllers';
@@ -29,16 +30,20 @@ class AdminServiceProvider extends ServiceProvider
     ];
 
     protected $routeMiddleware = [
-        'admin.init'    => Middleware\Initialization::class,
-        'admin.session' => Middleware\Session::class,
-        'admin.auth'    => Middleware\AuthMiddleware::class,
-        'admin.adminController'=>Middleware\AdminControllerMiddleware::class
+        'admin.init'            => Middleware\Initialization::class,
+        'admin.session'         => Middleware\Session::class,
+        'admin.auth'            => Middleware\AuthMiddleware::class,
+        'admin.adminController' => Middleware\AdminControllerMiddleware::class,
     ];
 
     protected $middlewareGroups = [
         'admin' => [
             'admin.init',
-            'admin.session'
+            'admin.session',
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+
         ]
     ];
 
@@ -73,7 +78,7 @@ class AdminServiceProvider extends ServiceProvider
             $this->publishes([__DIR__ . '/../config' => config_path()], 'future-admin-config');
             $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'future-admin-migrations');
             $this->publishes([__DIR__ . '/../resources/assets' => public_path('assets')], 'future-admin-assets');
-        }else{
+        } else {
             $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'admin_vendor');
             $this->loadTranslationsFrom(app_path(admin_base_path('Resources/lang')), 'admin');
             $this->loadViewsFrom(__DIR__ . '/../resources/views', 'admin');
@@ -134,7 +139,7 @@ class AdminServiceProvider extends ServiceProvider
         app('router')->group($attributes, function ($router) {
             /* @var \Illuminate\Routing\Router $router */
             $router->namespace($this->namespace)->group(function ($router) {
-                $array = $this->loadRoutesFile(__DIR__.'/../routes/admin');
+                $array = $this->loadRoutesFile(__DIR__ . '/../routes/admin');
                 foreach ($array as $routes) {
                     require_once $routes;
                 }
@@ -151,6 +156,7 @@ class AdminServiceProvider extends ServiceProvider
             });
         });
     }
+
     /**
      * 递归文件
      * @param $path
@@ -176,8 +182,7 @@ class AdminServiceProvider extends ServiceProvider
      */
     protected function registerHtmlBuilder()
     {
-        $this->app->singleton('html', function($app)
-        {
+        $this->app->singleton('html', function ($app) {
             return new HtmlBuilder($app['url']);
         });
     }
@@ -189,8 +194,7 @@ class AdminServiceProvider extends ServiceProvider
      */
     protected function registerFormBuilder()
     {
-        $this->app->singleton('form', function($app)
-        {
+        $this->app->singleton('form', function ($app) {
             $form = new FormBuilder($app['html'], $app['url'], $app['session.store']->token());
 
             return $form->setSessionStore($app['session.store']);

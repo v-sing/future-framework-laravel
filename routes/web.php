@@ -12,7 +12,7 @@
 */
 
 Route::get('/',  function (){
-
+      dd(session());
     return view('admin::test');
 });
 Route::get('array','TableController@getTableArray');

@@ -16,6 +16,9 @@ use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 if (!function_exists('lang')) {
     function lang($name, $vars = [])
     {
+        if ($name==''||!is_string($name)) {
+            return $name;
+        }
         $name  = trim($name);
         $array = config('admin.lang');
         if (!$array) {
@@ -318,7 +321,7 @@ if (!function_exists('Model')) {
      */
     function Model($model)
     {
-        $model=parse_hump($model);
+        $model = parse_hump($model);
         if (!class_exists($class = '\\App\\Model\\' . $model)) {
             $class = '\\Future\\Admin\\Auth\\Database\\' . $model;
         }

@@ -49,22 +49,20 @@ class IndexController extends BackendController
 
         $url = Session::get('referer') ? Session::get('referer') : url('/admin');
 
-
+        dump( \session());exit;
         if (isAjax()) {
+
             $rule = [
-                ['username', 'required'],
-                ['password', 'required']
+                ['username', 'require'],
+                ['password', 'require']
             ];
-            if (config('app.admin.login_captcha')) {
-                $rule[] = ['captcha', 'required|captcha'];
+            if (config('admin.login_captcha')) {
+                $rule[] = ['captcha', 'require|captcha'];
             }
-var_dump($rule);exit;
             $result = $this->validate(input(), $rule);
-            var_dump($result);exit;
-            if ($result !== null) {
+            if ($result !== true) {
                 return error($result);
             }
-
             $username = $request->input('username');
             $password = $request->input('password');
             $result   = $this->auth->login($username, $password, config('site.keeptime'));

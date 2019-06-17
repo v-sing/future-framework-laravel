@@ -14,7 +14,7 @@ namespace Future\Admin\Future;
 use Future\Admin\Future\Exception\ClassNotFoundException;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Session;
 class Validate
 {
     // 实例
@@ -405,13 +405,13 @@ class Validate
             } else {
                 // 判断验证类型
                 list($type, $rule, $info) = $this->getValidateType($key, $rule);
-
                 // 如果不是require 有数据才会行验证
                 if (0 === strpos($info, 'require') || (!is_null($value) && '' !== $value)) {
                     // 验证类型
                     $callback = isset(self::$type[$type]) ? self::$type[$type] : [$this, $type];
                     // 验证数据
                     $result = call_user_func_array($callback, [$value, $rule, $data, $field, $title]);
+
                 } else {
                     $result = true;
                 }
@@ -422,7 +422,7 @@ class Validate
                 if (isset($msg[$i])) {
                     $message = $msg[$i];
                     if (is_string($message) && strpos($message, '{%') === 0) {
-                        $message = Lang::get(substr($message, 2, -1));
+                        $message = lang(substr($message, 2, -1));
                     }
                 } else {
                     $message = $this->getRuleMsg($field, $title, $info, $rule);
@@ -1323,9 +1323,9 @@ class Validate
         return $scene;
     }
 
-    public static function captcha()
+    public static function captcha($value)
     {
-        captcha_check();
+        var_dump(captcha_check($value));exit;
     }
 
     public static function __callStatic($method, $params)

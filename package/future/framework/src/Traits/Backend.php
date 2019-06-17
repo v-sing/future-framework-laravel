@@ -10,14 +10,11 @@
 namespace Future\Admin\Traits;
 
 use Illuminate\Http\Request;
-use Illuminate\Validation\Factory;
-use Illuminate\Validation\Validator;
 use Illuminate\Support\Facades\View;
 use Future\Admin\Facades\Admin;
 use Illuminate\Support\Facades\DB;
 use Future\Admin\Future\Exception\ValidateException;
 use Future\Admin\Future\Loader;
-
 trait Backend
 {
     /**
@@ -59,6 +56,7 @@ trait Backend
         if (is_array($validate)) {
             $v = Loader::validate();
             $v->rule($validate);
+//            var_dump($v);exit;
         } else {
             // 支持场景
             if (strpos($validate, '.')) {
@@ -84,7 +82,6 @@ trait Backend
         if ($callback && is_callable($callback)) {
             call_user_func_array($callback, [$v, &$data]);
         }
-
         if (!$v->check($data)) {
             if ($this->failException) {
                 throw new ValidateException($v->getError());
