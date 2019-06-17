@@ -37,7 +37,7 @@ class AdminController extends BackendController
     {
         if (isAjax()) {
             $childrenAdminIds = Admin::getAssign('childrenAdminIds');
-            $adminGroupName   = $this->auth->getGroupAll();
+            $adminGroupName   = $this->auth->getGroupsAccessAll();
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('id,username,nickname,email,status,logintime');
             $total = $this->model
                 ->where($where)
@@ -142,7 +142,7 @@ class AdminController extends BackendController
                     $group = input('group');
 //                    var_dump([Admin::getAssign('childrenAdminIds'), $group]);exit;
                     // 过滤不允许的组别,避免越权
-                    $group   = array_intersect(Admin::getAssign('childrenAdminIds'), $group);
+//                    $group   = array_intersect(Admin::getAssign('childrenAdminIds'), $group);
 //                    var_dump($group);exit;
                     $dataset = [];
                     foreach ($group as $value) {
