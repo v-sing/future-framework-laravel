@@ -8,6 +8,6 @@
          $form->password()->field('password')->label(lang('Password'))->rule(['require'])->render();
          $form->radio()->field('status',$row['status'])->label(lang('Status'))->data( ['normal'=>lang('Normal'), 'hidden'=>lang('Hidden')])->render();
          $form->button()->submit(lang('Submit'))->reset(lang('Reset'))->render();
-     })->render();
+     })->option(['id'=>'edit-form'])->render();
 
  !!}

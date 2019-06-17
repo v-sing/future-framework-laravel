@@ -99,6 +99,7 @@ class Field implements Renderable
         $this->elementOption['name'] = "row[{$column}]";
         if (preg_match('/\[|\]/', $column, $m)) {
             $this->elementOption['name'] = $column;
+            $column=str_replace(['[',']'],['',''],$column);
         }
         $this->column                 = $column;
         $this->elementOption['value'] = $value;

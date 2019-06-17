@@ -359,7 +359,6 @@ if (!function_exists('input')) {
         } else {
             $result = Request::all();
         }
-
         return replace_null($result);
     }
 }
@@ -567,11 +566,10 @@ if (!function_exists('replace_null')) {
         if (!is_string($array) && isset($array) && !is_null($array)) {
             foreach ($array as $key => $value) {
                 if (!is_string($value) && isset($value)) {
-
                     foreach ($value as $k => $v) {
-                        if (!is_string($value[$k])) {
+                        if (is_array($value[$k])) {
                             $array[$key][$k] = replace_null($value[$v], $replace_string);
-                        } else if (!isset($value[$v])) {
+                        } else if (!isset($value[$k])) {
                             $array[$key][$k] = $replace_string;
                         }
                     }

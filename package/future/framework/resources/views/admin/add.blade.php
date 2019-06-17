@@ -6,8 +6,8 @@
          $form->email()->field('email')->label(lang('Email'))->rule(['require','email'])->render();
          $form->text()->field('nickname')->label(lang('Nickname'))->rule(['require'])->render();
          $form->password()->field('password')->label(lang('Password'))->rule(['require'])->render();
-         $form->radio()->field('status')->label(lang('Status'))->data( ['normal'=>lang('Normal'), 'hidden'=>lang('Hidden')])->render();
+         $form->radio()->field('status','normal')->label(lang('Status'))->data( ['normal'=>lang('Normal'), 'hidden'=>lang('Hidden')])->render();
          $form->button()->submit(lang('Submit'))->reset(lang('Reset'))->render();
-     })->render();
+     })->option(['id'=>'add-form'])->render();
 
  !!}

@@ -15,6 +15,7 @@ use Future\Admin\Facades\Admin;
 use Illuminate\Support\Facades\DB;
 use Future\Admin\Future\Exception\ValidateException;
 use Future\Admin\Future\Loader;
+
 trait Backend
 {
     /**
@@ -396,4 +397,13 @@ trait Backend
         }
     }
 
+    protected function success($msg = 'Operation completed', $data = [], $url = '')
+    {
+        return success();
+    }
+
+    protected function error($msg = 'Operation failed', $data = [], $url = '')
+    {
+        return error();
+    }
 }

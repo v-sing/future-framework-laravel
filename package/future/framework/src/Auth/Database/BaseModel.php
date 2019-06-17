@@ -203,6 +203,17 @@ class BaseModel extends Model
     }
 
     /**
+     * 批量插入
+     * @param array $data
+     * @return bool
+     */
+    public function addAll(Array $data)
+    {
+        $rs = DB::table($this->getTable())->insert($data);
+        return $rs;
+    }
+
+    /**
      *
      * @return string
      */

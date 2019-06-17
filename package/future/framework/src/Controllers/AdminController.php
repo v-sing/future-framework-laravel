@@ -50,7 +50,7 @@ class AdminController extends BackendController
                 ->orderby($sort, $order)
                 ->offset($offset)
                 ->limit($limit)
-                ->get();
+                ->get()->toArray();
             foreach ($list as $k => &$v) {
                 unset($v['password']);
                 unset($v['token']);
@@ -72,24 +72,33 @@ class AdminController extends BackendController
     public function add()
     {
         if (isAjax()) {
-            $params = input();
+            $params = input('row');
             if ($params) {
-                $params['salt']     = Random::alnum();
-                $params['password'] = Hash::make($params['password'] . $params['salt']);
-                $params['avatar']   = '/assets/img/avatar.png'; //设置新管理员默认头像。
-                $result             = $this->model->validate('Admin.add')->save($params);
-                if ($result === false) {
-                    return error($this->model->getError());
+                DB::beginTransaction();
+                try {
+                    $params['salt']     = Random::alnum();
+                    $params['password'] = Hash::make($params['password'] . $params['salt']);
+                    $params['avatar']   = '/assets/img/avatar.png'; //设置新管理员默认头像。
+                    $result             = $this->model->validate('Admin.add')->data($params)->save();
+                    if ($result === false) {
+                        DB::rollBack();
+                        return error($this->model->getError());
+                    }
+                    $group = input('group');
+                    //过滤不允许的组别,避免越权
+                    $group   = array_intersect(Admin::getAssign('childrenAdminIds'), $group);
+                    $dataset = [];
+                    foreach ($group as $value) {
+                        $dataset[] = ['uid' => $this->model->id, 'group_id' => $value];
+                    }
+                    Model('AuthGroupAccess')->addAll($dataset);
+                    DB::commit();
+                    return success();
+                } catch (\Exception $exception) {
+                    DB::rollBack();
+                    return error($exception);
                 }
-                $group = $this->request->post("group/a");
-                //过滤不允许的组别,避免越权
-                $group   = array_intersect(Admin::getAssign('childrenAdminIds'), $group);
-                $dataset = [];
-                foreach ($group as $value) {
-                    $dataset[] = ['uid' => $this->model->id, 'group_id' => $value];
-                }
-                Model('AuthGroupAccess')->saveAll($dataset);
-                $this->success();
+
             }
             return error();
         }
@@ -106,48 +115,56 @@ class AdminController extends BackendController
         if (!$row)
             return error(lang('No Results were found'));
         if (isAjax()) {
-            $params = $this->request->post("row/a");
+            $params = input('row');
             if ($params) {
-                if ($params['password']) {
-                    $params['salt']     = Random::alnum();
-                    $params['password'] = Hash::make($params['password'] . $params['salt']);
-                } else {
-                    unset($params['password'], $params['salt']);
+                DB::beginTransaction();
+                try {
+                    if ($params['password']) {
+                        $params['salt']     = Random::alnum();
+                        $params['password'] = Hash::make($params['password'] . $params['salt']);
+                    } else {
+                        unset($params['password'], $params['salt']);
+                    }
+                    //这里需要针对username和email做唯一验证
+                    $adminValidate = Loader::validate('Admin');
+                    $adminValidate->rule([
+                        'username' => 'require|max:50|unique:admin,username,' . $row->id,
+                        'email'    => 'require|email|unique:admin,email,' . $row->id
+                    ]);
+                    $result = $row->validate('Admin.edit')->data($params)->save();
+
+                    if ($result === false) {
+                        DB::rollBack();
+                        return error($row->getError());
+                    }
+                    // 先移除所有权限
+                    model('AuthGroupAccess')->where('uid', $row->id)->delete();
+                    $group = input('group');
+//                    var_dump([Admin::getAssign('childrenAdminIds'), $group]);exit;
+                    // 过滤不允许的组别,避免越权
+                    $group   = array_intersect(Admin::getAssign('childrenAdminIds'), $group);
+//                    var_dump($group);exit;
+                    $dataset = [];
+                    foreach ($group as $value) {
+                        $dataset[] = ['uid' => $row->id, 'group_id' => $value];
+                    }
+                    model('AuthGroupAccess')->addAll($dataset);
+                    DB::commit();
+                    return success();
+                } catch (\Exception $exception) {
+                    DB::rollBack();
+                    return error($exception);
                 }
-                //这里需要针对username和email做唯一验证
-                $adminValidate = Loader::validate('Admin');
-                $adminValidate->rule([
-                    'username' => 'require|max:50|unique:admin,username,' . $row->id,
-                    'email'    => 'require|email|unique:admin,email,' . $row->id
-                ]);
-                $result = $row->validate('Admin.edit')->save($params);
-                if ($result === false) {
-                    $this->error($row->getError());
-                }
 
-                // 先移除所有权限
-                model('AuthGroupAccess')->where('uid', $row->id)->delete();
-
-                $group = $this->request->post("group/a");
-
-                // 过滤不允许的组别,避免越权
-                $group = array_intersect($this->childrenGroupIds, $group);
-
-                $dataset = [];
-                foreach ($group as $value) {
-                    $dataset[] = ['uid' => $row->id, 'group_id' => $value];
-                }
-                model('AuthGroupAccess')->saveAll($dataset);
-                $this->success();
             }
-            $this->error();
+            return error();
         }
-        $grouplist = $this->auth->getGroups($row['id']);
-
+        $grouplist = $this->auth->getGroupsAccess($ids);
         $groupids = [];
-        foreach ($grouplist as $k => $v)
-        {
-            $groupids[] = $v['id'];
+        foreach ($grouplist as $k => $v) {
+            if(isset($v['group_id'])){
+                $groupids[] = $v['group_id'];
+            }
         }
         $this->assign("row", toArray($row));
         $this->assign("groupids", $groupids);

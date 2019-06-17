@@ -193,7 +193,20 @@ class Auth extends BaseAuth
         $user_groups = $this->AuthGroupAccessModel->from('auth_group_access as aga')
             ->leftJoin($this->config['auth_group'] . ' as ag', 'ag.id', '=', 'aga.group_id')
             ->where(['ag.status' => 'normal'])
-            ->select('aga.uid', 'aga.group_id', 'ag.id', 'ag.pid', 'ag.name', 'ag.rules')
+            ->select('aga.uid as id', 'aga.group_id', 'ag.pid', 'ag.name', 'ag.rules')
+            ->get()->toArray();
+        $groups      = [];
+        foreach ($user_groups as $v) {
+            $groups[$v['id']][] = $v['name'];
+        }
+        return $groups;
+    }
+    public function getGroupsAccessAll()
+    {
+        $user_groups = $this->AuthGroupAccessModel->from('auth_group_access as aga')
+            ->leftJoin($this->config['auth_group'] . ' as ag', 'ag.id', '=', 'aga.group_id')
+            ->where(['ag.status' => 'normal'])
+            ->select('aga.uid as id', 'aga.group_id', 'ag.pid', 'ag.name', 'ag.rules')
             ->get()->toArray();
         $groups      = [];
         foreach ($user_groups as $v) {
