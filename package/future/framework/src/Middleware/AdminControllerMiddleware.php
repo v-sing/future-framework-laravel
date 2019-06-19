@@ -49,7 +49,6 @@ class AdminControllerMiddleware
         } else {
             $result = [];
             $groups = $auth->getGroups();
-
             foreach ($groups as $m => $n) {
                 $childlist = Tree::instance()->getTreeList(Tree::instance()->getTreeArray($n['id']));
                 $temp      = [];

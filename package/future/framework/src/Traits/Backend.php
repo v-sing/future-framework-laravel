@@ -336,11 +336,55 @@ trait Backend
         }
     }
 
+    /**
+     * 删除
+     */
+    public function del()
+    {
+        $ids = input('ids');
+        if ($ids) {
+            $pk       = $this->model->getPk();
+            $adminIds = $this->getDataLimitAdminIds();
+            if (is_array($adminIds)) {
+                $this->model->whereIn($this->dataLimitField, $adminIds);
+            }
+            $list  = $this->model->whereIn($pk, explode(',', $ids))->get();
+            $count = 0;
+            DB::beginTransaction();
+            try {
+                foreach ($list as $k => $v) {
+                    $count += $v->delete();
+                }
+                DB::commit();
+            } catch (PDOException $e) {
+                DB::rollback();
+                return $this->error($e->getMessage());
+            } catch (Exception $e) {
+                DB::rollback();
+                return $this->error($e->getMessage());
+            }
+            if ($count) {
+                return   $this->success();
+            } else {
+                return $this->error(lang('No rows were deleted'));
+            }
+        }
+        return $this->error(lang('Parameter %s can not be empty', 'ids'));
+    }
+
+    /**
+     * 添加
+     * @return mixed
+     */
     public function add()
     {
         return $this->view();
     }
 
+    /**
+     * 编辑
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|mixed|\think\response\Redirect
+     */
     public function edit()
     {
         $ids = input('ids');

@@ -86,11 +86,12 @@ class AdminController extends BackendController
                     }
                     $group = input('group');
                     //过滤不允许的组别,避免越权
-                    $group   = array_intersect(Admin::getAssign('childrenAdminIds'), $group);
+                    $group   = array_intersect(Admin::getAssign('childrenGroupIds'), $group);
                     $dataset = [];
                     foreach ($group as $value) {
                         $dataset[] = ['uid' => $this->model->id, 'group_id' => $value];
                     }
+
                     Model('AuthGroupAccess')->addAll($dataset);
                     DB::commit();
                     return success();
@@ -140,10 +141,9 @@ class AdminController extends BackendController
                     // 先移除所有权限
                     model('AuthGroupAccess')->where('uid', $row->id)->delete();
                     $group = input('group');
-//                    var_dump([Admin::getAssign('childrenAdminIds'), $group]);exit;
+
                     // 过滤不允许的组别,避免越权
-//                    $group   = array_intersect(Admin::getAssign('childrenAdminIds'), $group);
-//                    var_dump($group);exit;
+                    $group   = array_intersect(Admin::getAssign('childrenGroupIds'), $group);
                     $dataset = [];
                     foreach ($group as $value) {
                         $dataset[] = ['uid' => $row->id, 'group_id' => $value];

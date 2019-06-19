@@ -14,3 +14,5 @@ Route::any('admin/index','AdminController@index');
 Route::any('admin/add','AdminController@add');
 
 Route::any('admin/edit','AdminController@edit');
+
+Route::any('admin/del','AdminController@del');
