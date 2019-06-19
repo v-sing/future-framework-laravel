@@ -59,7 +59,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //切换显示隐藏变量字典列表
             $(document).on("change", "form#add-form select[name='row[type]']", function (e) {
-                console.log($(this).val());
+                console.log($(this).val() );
               $("#add-content-container").toggleClass("hide", ['select', 'selects', 'checkbox', 'radio'].indexOf($(this).val()) > -1 ? false : true);
             });
 
