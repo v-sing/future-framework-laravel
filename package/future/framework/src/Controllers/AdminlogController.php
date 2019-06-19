@@ -55,6 +55,10 @@ class AdminlogController extends BackendController
      */
     public function detail()
     {
+        $row = $this->model->where(['id' => input('ids')])->first();
+        if (!$row)
+            $this->error(lang('No Results were found'));
+        $this->assign("row", $row->toArray());
         return $this->view();
     }
 }

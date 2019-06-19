@@ -10,3 +10,4 @@ Route::any('adminlog','AdminlogController@index');
 Route::any('adminlog/index','AdminlogController@index');
 
 Route::any('adminlog/detail','AdminlogController@detail');
+Route::any('adminlog/del','AdminlogController@del');

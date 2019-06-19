@@ -1,17 +1,19 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>{:__('Title')}</th>
-            <th>{:__('Content')}</th>
+            <th>{{lang(('Title'))}}</th>
+            <th>{{lang('Content')}}</th>
         </tr>
     </thead>
     <tbody>
-        {volist name="row" id="vo"  }
-            <tr>
-                <td>{:__($key)}</td>
-                <td>{$vo}</td>
-            </tr>
-        {/volist}
+    @foreach($row as $k =>$v)
+        <tr>
+            <td>{{lang(str_replace('_',' ',ucfirst($k)))}}</td>
+
+            <td>{{$k=='created_at'?date('Y-m-d H:i:s',$v):$v}}</td>
+        </tr>
+        @endforeach
+
     </tbody>
 </table>
 <div class="hide layer-footer">
