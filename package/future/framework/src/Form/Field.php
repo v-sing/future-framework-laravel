@@ -47,7 +47,7 @@ class Field implements Renderable
      * 是否隐藏
      * @var bool
      */
-    protected $display = true;
+    protected $display = false;
 
     /**
      * 标签class
@@ -111,6 +111,9 @@ class Field implements Renderable
 
     public function render()
     {
+        if($this->display==true){
+            $this->withoutOption['style']='display:none;';
+        }
         $Builder = new Builder($this);
         $method  = strtolower(str_replace("Future\\Admin\\Form\\Field\\", '', get_class($this)));
         $data    = $Builder->$method();

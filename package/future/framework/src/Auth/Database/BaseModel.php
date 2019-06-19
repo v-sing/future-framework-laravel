@@ -146,6 +146,7 @@ class BaseModel extends Model
             $this->validate = true === $rule ? $this->name : $rule;
         }
         $this->batchValidate = $batch;
+        $this->validateData();
         return $this;
     }
 
@@ -169,7 +170,7 @@ class BaseModel extends Model
      * @param bool $batch 批量验证
      * @return bool
      */
-    protected function validateData($data, $rule = null, $batch = null)
+    public function validateData($data, $rule = null, $batch = null)
     {
         $info = is_null($rule) ? $this->validate : $rule;
 
@@ -192,7 +193,7 @@ class BaseModel extends Model
             if (!$validate->batch($batch)->check($data)) {
                 $this->validateError = $validate->getError();
                 if ($this->failException) {
-                    throw new ValidateException($this->error);
+                    throw new ValidateException($this->validateError);
                 } else {
                     return false;
                 }

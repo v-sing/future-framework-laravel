@@ -104,7 +104,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'jstree'], function (
                                     $("#treeview").jstree("destroy");
                                     Controller.api.rendertree(data);
                                 } else {
-                                    Backend.api.toastr.error(ret.data);
+                                    Backend.api.toastr.error(ret.msg);
                                 }
                             }
                         }, error: function (e) {

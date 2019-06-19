@@ -54,7 +54,6 @@ EOF;
 
     public function render()
     {
-
         $form = implode("\n", $this->form);
 
         $builder          = new Builder($this);

@@ -11,3 +11,4 @@ Route::any('group/index', 'GroupController@index');
 Route::any('group/add', 'GroupController@add');
 Route::any('group/edit', 'GroupController@edit');
 Route::any('group/roletree', 'GroupController@roletree');
+Route::any('group/del', 'GroupController@del');
