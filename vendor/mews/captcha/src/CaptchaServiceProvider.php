@@ -28,8 +28,8 @@ class CaptchaServiceProvider extends ServiceProvider
             $this->app->get('captcha[/{config}]', 'Mews\Captcha\LumenCaptchaController@getCaptcha');
         } else {
             if ((double)$this->app->version() >= 5.2) {
-                $this->app['router']->get('captcha/api/{config?}', '\Mews\Captcha\CaptchaController@getCaptchaApi')->middleware('web');
-                $this->app['router']->get('captcha/{config?}', '\Mews\Captcha\CaptchaController@getCaptcha')->middleware('web');
+                $this->app['router']->get('captcha/api/{config?}', '\Mews\Captcha\CaptchaController@getCaptchaApi')->middleware('web','admin');
+                $this->app['router']->get('captcha/{config?}', '\Mews\Captcha\CaptchaController@getCaptcha')->middleware('web','admin');
             } else {
                 $this->app['router']->get('captcha/api/{config?}', '\Mews\Captcha\CaptchaController@getCaptchaApi');
                 $this->app['router']->get('captcha/{config?}', '\Mews\Captcha\CaptchaController@getCaptcha');
