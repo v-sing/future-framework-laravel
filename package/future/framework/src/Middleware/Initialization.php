@@ -31,24 +31,12 @@ class Initialization
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        $route     = $request->route();
-        $array     = explode('@', $route->getAction()['controller']);
-        $className = get_class($this);
-        if (preg_match('/([\w]+)Controller$/', $array[0], $matches)) {
-            $controller = lcfirst($matches[1]);
-        } else {
-            $controller = $className;
-        }
-        $action = $route->getAction();
-        if (isset($action['prefix'])) {
-            if (['prefix'])
-                $module = str_replace('/', '', $route->getAction()['prefix']);
-            Admin::setAction($array[1]);
-            Admin::setController($controller);
-            Admin::setModule($module);
-            $this->config($request);
-            loadLang($controller);
-        }
+        $route = getRealRoute();
+        Admin::setAction($route['action']);
+        Admin::setController($route['controller']);
+        Admin::setModule($route['module']);
+        $this->config($request);
+        loadLang($route['controller']);
         return $next($request);
     }
 

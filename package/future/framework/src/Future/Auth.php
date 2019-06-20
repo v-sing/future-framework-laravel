@@ -27,7 +27,6 @@ class Auth
      */
     protected static $instance = null;
     protected $rules = [];
-    public $id;
     /**
      * 当前请求实例
      * @var Request
@@ -85,6 +84,7 @@ class Auth
             return true;
         }
         // 获取用户需要验证的所有有效规则列表
+
         $rulelist = $this->getRuleList($uid);
         if (in_array('*', $rulelist))
             return true;
@@ -97,10 +97,12 @@ class Auth
                 $name = [$name];
             }
         }
+//        dd($name);
         $list = []; //保存验证通过的规则名
         if ('url' == $mode) {
-            $REQUEST = unserialize(strtolower(serialize($this->request->param())));
+            $REQUEST = unserialize(strtolower(serialize(input())));
         }
+
         foreach ($rulelist as $rule) {
             $query = preg_replace('/^.+\?/U', '', $rule);
             if ('url' == $mode && $query != $rule) {
@@ -117,6 +119,7 @@ class Auth
                 }
             }
         }
+        dd($list);
         if ('or' == $relation && !empty($list)) {
             return true;
         }
@@ -152,14 +155,15 @@ class Auth
         }
 
         // 筛选条件
+        $db=DB::table($this->config['auth_rule']);
         $where = [
             'status' => 'normal'
         ];
         if ($ids[0] != "*") {
-            $where['id'] = ['in', $ids];
+            $db->whereIn('id',$ids);
         }
         //读取用户组所有权限规则
-        $this->rules = toArray(DB::table($this->config['auth_rule'])->where($where)->select('id', 'pid', 'condition', 'icon', 'name', 'title', 'ismenu')->get()->toArray());
+        $this->rules = toArray($db->where($where)->select('id', 'pid', 'condition', 'icon', 'name', 'title', 'ismenu')->get()->toArray());
         //循环规则，判断结果。
         $rulelist = []; //
         if (in_array('*', $ids)) {

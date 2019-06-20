@@ -73,12 +73,12 @@ class RuleController extends BackendController
                 if ($result === false) {
                  return   $this->error($this->model->getError());
                 }
-                Cache::pull('__menu__');
+                Cache::forget('__menu__');
                return $this->success();
             }
            return $this->error();
         }
-        return $this->fetch();
+        return $this->view();
     }
 
     /**
@@ -111,7 +111,7 @@ class RuleController extends BackendController
                 if ($result === false) {
                  return   $this->error($row->getError());
                 }
-                Cache::pull('__menu__');
+                Cache::forget('__menu__');
              return   $this->success();
             }
           return  $this->error();
@@ -134,7 +134,7 @@ class RuleController extends BackendController
             $delIds = array_unique($delIds);
             $count  = $this->model->whereIn('id', $delIds)->delete();
             if ($count) {
-                Cache::pull('__menu__');
+                Cache::forget('__menu__');
                return $this->success();
             }
         }

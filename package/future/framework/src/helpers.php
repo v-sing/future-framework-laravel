@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 if (!function_exists('lang')) {
     function lang($name, $vars = [])
     {
-        if ($name==''||!is_string($name)) {
+        if ($name == '' || !is_string($name)) {
             return $name;
         }
         $name  = trim($name);
@@ -605,9 +605,51 @@ if (!function_exists('isImage')) {
     }
 }
 
-if (!function_exists('arrays_merge')) {
-    function arrays_merge($array, $array1)
+if (!function_exists('getRealRoute')) {
+    function getRealRoute($real = '')
     {
+        if (!$real) {
+            $real = toArray(Request::route())['uri'];
+        }
+
+
+        $app    = app();
+        $routes = $app->routes->getRoutes();
+        $uri    = array_column(toArray($routes), 'uri');
+        $action = array_column(toArray($routes), 'action');
+        foreach ($action as $k => $v) {
+            if (!isset($v['prefix']) || is_null($v['prefix'])) {
+                $action[$k]['prefix'] = 'web';
+            }
+            if (!isset($v['controller'])) {
+                $action[$k]['controller'] = '';
+            }
+        }
+        $module     = array_column($action, 'prefix');
+        $controller = array_column($action, 'controller');
+
+        $array = [];
+        foreach ($controller as $key => $value) {
+            if (preg_match('/([\w]+)Controller@(.*?)$/', $value, $matches)) {
+                $array[$key] = [
+                    'uri'        => $uri[$key],
+                    'module'     => $module[$key],
+                    'controller' => strtolower($matches[1]),
+                    'action'     => strtolower($matches[2]),
+                    'realPath'   => $module[$key] . '/' . strtolower($matches[1]) . '/' . strtolower($matches[2])
+                ];
+            } else {
+                $array[$key] = [
+                    'uri'        => $uri[$key],
+                    'module'     => $module[$key],
+                    'controller' => '',
+                    'action'     => '',
+                    'realPath'   => $module[$key] . $key
+                ];
+            }
+        }
+        $index = array_search($real, $uri);
+        return $array[$index];
 
     }
 }

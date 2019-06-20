@@ -58,10 +58,6 @@ class AdminServiceProvider extends ServiceProvider
         $this->loadAdminAuthConfig();
         $this->registerRouteMiddleware();
         $this->commands($this->commands);
-        $this->registerHtmlBuilder();
-        $this->registerFormBuilder();
-        $this->app->alias('html', 'Future\Admin\Form\HtmlBuilder');
-        $this->app->alias('form', 'Future\Admin\Form\FormBuilder');
     }
 
     /**

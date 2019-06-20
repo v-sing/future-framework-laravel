@@ -111,7 +111,10 @@ class Auth extends BaseAuth
      */
     public function check($name, $uid = '', $relation = 'or', $mode = 'url')
     {
-        return parent::check($name, $this->id, $relation, $mode);
+        if(!$uid){
+            $uid=$this->id;
+        }
+        return parent::check($name,$uid, $relation, $mode);
     }
 
     /**
