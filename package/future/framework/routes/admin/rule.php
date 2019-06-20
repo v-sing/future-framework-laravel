@@ -12,3 +12,4 @@ Route::any('rule/index','RuleController@index');
 Route::any('rule/add','RuleController@add');
 Route::any('rule/edit','RuleController@edit');
 Route::any('rule/multi','RuleController@multi');
+Route::any('rule/del','RuleController@del');

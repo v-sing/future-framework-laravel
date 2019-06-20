@@ -900,12 +900,22 @@ class Validate
         $pk = isset($rule[3]) ? $rule[3] : $db->getPk();
         if (is_string($pk)) {
             if (isset($rule[2])) {
-                $map[$pk] = ['neq', $rule[2]];
+                $map[$pk] = ['!=', $rule[2]];
             } elseif (isset($data[$pk])) {
-                $map[$pk] = ['neq', $data[$pk]];
+                $map[$pk] = ['!=', $data[$pk]];
             }
         }
-        if ($db->where($map)->select($pk)->first()->toArray()) {
+        $where=$map;
+        $where = function ($query) use ($where) {
+            foreach ($where as $k => $v) {
+                if(!is_array($v)){
+                    $query->where($k,$v);
+                }else{
+                    $query->where($k,$v[0],$v[1]);
+                }
+            }
+        };
+        if ($db->where($where)->select($pk)->first()) {
             return false;
         }
         return true;

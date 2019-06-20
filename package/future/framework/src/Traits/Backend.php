@@ -421,7 +421,7 @@ trait Backend
                             $validateResult = $this->model->validateData($params, $validate);
                         }
                         if ($validateResult === false) {
-                            $this->error($this->model->validateError());
+                            $this->error($this->model->getError());
                         }
                     }
                     $result = $this->model->data($params)->save();
@@ -479,7 +479,7 @@ trait Backend
                         $validateResult = $rows->validateData($params, $validate);
                     }
                     if ($validateResult === false) {
-                        $this->error($rows->validateError());
+                        $this->error($rows->getError());
                     }
                     $result = $rows->data($params)->save();
 

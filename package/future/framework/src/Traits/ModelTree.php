@@ -8,8 +8,8 @@
  */
 
 namespace Future\Admin\Traits;
-
-
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Request;
 trait ModelTree
 {
     /**
