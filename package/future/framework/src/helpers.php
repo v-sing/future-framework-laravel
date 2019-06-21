@@ -50,6 +50,7 @@ if (!function_exists('loadLang')) {
             preg_match('/([\w]+)Controller$/', pathinfo($backtrace[1]['file'], PATHINFO_FILENAME), $ma);
             $controller = strtolower($ma[1]);
         }
+
         $add   = trans('admin_vendor' . '::' . $controller);
         $array = [];
         if (is_array($add)) {
@@ -61,6 +62,7 @@ if (!function_exists('loadLang')) {
                 $array = trans('admin' . '::' . $controller);
             }
         }
+
         $array = array_merge(trans('admin_vendor::' . config('app.locale')), $array);
         config(['admin.lang' => $array]);
 
@@ -608,7 +610,7 @@ if (!function_exists('isImage')) {
 if (!function_exists('getRealRoute')) {
     function getRealRoute($real = '')
     {
-        if (!$real) {
+        if ($real=='') {
             $real = toArray(Request::route())['uri'];
         }
 

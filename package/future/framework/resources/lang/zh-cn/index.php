@@ -60,4 +60,6 @@ return [
     'Forum'                                                      => '交流社区',
     'QQ qun'                                                     => 'QQ交流群',
     'Captcha'                                                    => '验证码',
+    'English'                                                    => '英文',
+    'SimplifiedChinese'                                          => '简体中文'
 ];

@@ -87,4 +87,12 @@ class IndexController extends BackendController
         return success(lang('Logout successful'), [], url('admin/login'));
     }
 
+    public function lang(Request $request)
+    {
+        $lang = $request->input('lang');
+        if ($lang) {
+            Session::put('change_lang', $lang);
+        }
+        return $this->success();
+    }
 }

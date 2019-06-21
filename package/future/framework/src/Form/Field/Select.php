@@ -25,9 +25,9 @@ EOF;
         $this->elementOption['class'][] = 'selectpicker';
     }
 
-    public function data($data)
+    public function data($data=[])
     {
-        $this->data = $data;
+        $this->data = !empty($data)?$data:[];
         return $this;
     }
 

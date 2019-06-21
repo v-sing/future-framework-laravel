@@ -61,4 +61,6 @@ return [
     'Forum'                                                      => 'Forum',
     'QQ qun'                                                     => 'QQ qun',
     'Captcha'                                                    => 'Captcha',
+    'English'                                                    => 'English',
+    'SimplifiedChinese'                                          => 'SimplifiedChinese'
 ];

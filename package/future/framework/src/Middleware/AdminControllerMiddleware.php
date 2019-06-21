@@ -39,6 +39,7 @@ class AdminControllerMiddleware
         foreach ($groupList as $k =>$v){
             $groupList[$k]['name']=lang($groupList[$k]['name']);
         }
+
         Tree::instance()->init($groupList);
         $groupdata = [];
         if ($auth->isSuperAdmin()) {
@@ -48,14 +49,14 @@ class AdminControllerMiddleware
             }
         } else {
             $result = [];
+
             $groups = $auth->getGroups();
             foreach ($groups as $m => $n) {
                 $childlist = Tree::instance()->getTreeList(Tree::instance()->getTreeArray($n['id']));
-                $temp      = [];
+
                 foreach ($childlist as $k => $v) {
-                    $temp[$v['id']] =$v['name'];
+                    $result[$v['id']] =lang($v['name']);
                 }
-                $result[lang($n['name'])] = $temp;
             }
             $groupdata = $result;
         }

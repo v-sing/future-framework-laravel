@@ -394,8 +394,9 @@ class Auth extends BaseAuth
             Cache::put("__MENU__", $ruleList);
         }
         foreach ($ruleList as $k => &$v) {
-            if ($userRule[0] !== '*') {
-                if (!in_array($v['name'], $userRule)) {
+
+            if (!isset($userRule[0])) {
+                if (!isset($userRule[$v['id']])) {
                     unset($ruleList[$k]);
                     continue;
                 }
@@ -412,7 +413,6 @@ class Auth extends BaseAuth
         if ($selected == $referer) {
             $referer = [];
         }
-
         $selected && $selected['url'] = url($selected['url']);
         $referer && $referer['url'] = url($referer['url']);
 

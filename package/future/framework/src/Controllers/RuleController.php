@@ -14,7 +14,7 @@ use Future\Admin\Future\Tree;
 use Illuminate\Support\Facades\Cache;
 use Future\Admin\Auth\Database\AuthRule;
 use Future\Admin\Future\Loader;
-
+use Illuminate\Support\Facades\Session;
 class RuleController extends BackendController
 {
     protected $model;
@@ -24,6 +24,9 @@ class RuleController extends BackendController
     protected function _initialize()
     {
         parent::_initialize();
+        if (Session::get('change_lang')) {
+            trans()->setLocale(Session::get('change_lang'));
+        }
         $this->model = Model('AuthRule');
         // 必须将结果集转换为数组
         $ruleList = $this->model->orderBy('weigh', 'desc')->orderBy('id', 'asc')->get()->toArray();
@@ -49,6 +52,7 @@ class RuleController extends BackendController
 
     public function index()
     {
+        dd(Session::get('change_lang'));
         if (isAjax()) {
             $list   = $this->rulelist;
             $total  = count($this->rulelist);

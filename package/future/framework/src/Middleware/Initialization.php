@@ -71,6 +71,11 @@ class Initialization
         if (!$lang) {
             $lang = 'zh-cn';
         }
+        if (Session::get('change_lang')) {
+            $lang = Session::get('change_lang');
+        }
+        config(['app.locale' => $lang]);
+        trans()->setLocale($lang);
         $config = [
             'site'           => array_intersect_key(config('site'), array_flip(['name', 'indexurl', 'cdnurl', 'version', 'timezone', 'languages'])),
             'modulename'     => $modulename,
@@ -85,7 +90,7 @@ class Initialization
             'app_debug'      => config('app.debug')
         ];
         config(['app.timezone' => $config['site']['timezone']]);
-        config(['app.locale' => $lang]);
+
         Admin::setAssign([
             'config' => $config,
             'site'   => config('site'),

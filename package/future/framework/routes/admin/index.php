@@ -12,3 +12,4 @@ Route::any('index', 'IndexController@index');
 Route::any('index/index', 'IndexController@index');
 Route::any('login','IndexController@login');
 Route::get('logout','IndexController@logout');
+Route::any('index/lang','IndexController@lang');

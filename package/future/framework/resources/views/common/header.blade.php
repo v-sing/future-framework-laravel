@@ -53,12 +53,11 @@
                 <li class="hidden-xs">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-language"></i></a>
                     <ul class="dropdown-menu">
-                        <li class="{{$config['language']=='zh-cn'?'active':''}}">
-                            <a href="?ref=addtabs&lang=zh-cn">简体中文</a>
-                        </li>
-                        <li class="{{$config['language']=='en-gb'?'active':''}}">
-                            <a href="?ref=addtabs&lang=en-gb">English</a>
-                        </li>
+                       @foreach($site['Languagetypes'] as $k=> $v)
+                            <li class="{{$config['language']==$v?'active':''}}">
+                                <a href="javascript:void(0);" class="lang" data-id="{{$v}}">{{lang($k)}}</a>
+                            </li>
+                           @endforeach
                     </ul>
                 </li>
                 @endif

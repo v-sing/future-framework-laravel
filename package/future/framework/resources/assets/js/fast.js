@@ -81,7 +81,8 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
                 //发送Ajax请求
                 ajax: function (options, success, error) {
                     options = typeof options === 'string' ? {url: options} : options;
-                    var index = Layer.load();
+                    var index = Layer.load(1, {
+                        shade: [0.1,'#fff']);
                     options = $.extend({
                         type: "POST",
                         dataType: "json",

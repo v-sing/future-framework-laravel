@@ -84,9 +84,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'jstree'], function (
                 //渲染权限节点树
                 //变更级别后需要重建节点树
                 $(document).on("change", "select[name='row[pid]']", function () {
-                    var pid = $(this).data("pid");
+                    var pid = $(this).data("pid")?$(this).data("pid"):$(this).val();
                     var id = $(this).data("id");
-                    if ($(this).val() == id) {
+                    if (pid == id) {
                         $("option[value='" + pid + "']", this).prop("selected", true).change();
                         Backend.api.toastr.error(__('Can not change the parent to self'));
                         return false;
@@ -95,7 +95,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'jstree'], function (
                         url: "group/roletree",
                         type: 'post',
                         dataType: 'json',
-                        data: {id: id, pid: $(this).val()},
+                        data: {id: id, pid:pid},
                         success: function (ret) {
                             if (ret.hasOwnProperty("code")) {
                                 var data = ret.hasOwnProperty("data") && ret.data != "" ? ret.data : "";

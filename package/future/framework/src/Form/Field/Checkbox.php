@@ -25,7 +25,7 @@ EOF;
 
     public function data($data = [])
     {
-        $this->data = $data;
+        $this->data = !empty($data)?$data:[];
         return $this;
     }
 
