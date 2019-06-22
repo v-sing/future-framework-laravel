@@ -6,25 +6,26 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
             Table.api.init({
                 extend: {
                     index_url: 'attachment/index',
-                    add_url: 'attachment/add',
-                    edit_url: 'attachment/edit',
+                    // add_url: 'attachment/add',
+                    // edit_url: 'attachment/edit',
                     del_url: 'attachment/del',
-                    multi_url: 'attachment/multi',
+                    // multi_url: 'attachment/multi',
                     table: 'attachment'
                 }
             });
 
             var table = $("#table");
-
             // 初始化表格
+            Template.helper("Moment", Moment);
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
-                sortName: 'id',
+                // sortName: 'id',
+                templateView: true,
                 columns: [
                     [
                         {field: 'state', checkbox: true,},
                         {field: 'id', title: __('Id')},
-                        {field: 'admin_id', title: __('Admin_id'), visible: false, addClass: "selectpage", extend: "data-source='auth/admin/index' data-field='nickname'"},
+                        {field: 'admin_id', title: __('Admin_id'), visible: false, addClass: "selectpage", extend: "data-source='auth/index' data-field='nickname'"},
                         {field: 'user_id', title: __('User_id'), visible: false, addClass: "selectpage", extend: "data-source='user/user/index' data-field='nickname'"},
                         {field: 'url', title: __('Preview'), formatter: Controller.api.formatter.thumb, operate: false},
                         {field: 'url', title: __('Url'), formatter: Controller.api.formatter.url},
@@ -35,8 +36,8 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
                         {field: 'filesize', title: __('Filesize'), operate: 'BETWEEN', sortable: true},
                         {field: 'mimetype', title: __('Mimetype'), formatter: Table.api.formatter.search},
                         {
-                            field: 'createtime',
-                            title: __('Createtime'),
+                            field: 'created_at',
+                            title: __('Created_at'),
                             formatter: Table.api.formatter.datetime,
                             operate: 'RANGE',
                             addclass: 'datetimerange',
@@ -55,7 +56,22 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
 
             // 为表格绑定事件
             Table.api.bindevent(table);
+            //指定搜索条件
+            $(document).on("click", ".btn-toggle-view", function () {
+                var options = table.bootstrapTable('getOptions');
+                table.bootstrapTable('refreshOptions', {templateView: !options.templateView});
+            });
 
+            //点击详情
+            $(document).on("click", ".btn-detail[data-id]", function () {
+                Backend.api.open('attachment/detail?ids=' + $(this).data('id'), __('Detail'));
+            });
+
+            //获取选中项
+            $(document).on("click", ".btn-selected", function () {
+                //在templateView的模式下不能调用table.bootstrapTable('getSelections')来获取选中的ID,只能通过下面的Table.api.selectedids来获取
+                Layer.alert(JSON.stringify(Table.api.selectedids(table)));
+            });
         },
         select: function () {
             // 初始化表格参数配置
@@ -92,7 +108,7 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
                                 'click .btn-chooseone': function (e, value, row, index) {
                                     var multiple = Backend.api.query('multiple');
                                     multiple = multiple == 'true' ? true : false;
-                                    Fast.api.close({url: row.url, multiple: false});
+                                    Fast.api.close({url: row.url,fullurl:row.fullurl, multiple: false});
                                 },
                             }, formatter: function () {
                                 return '<a href="javascript:;" class="btn btn-danger btn-chooseone btn-xs"><i class="fa fa-check"></i> ' + __('Choose') + '</a>';
@@ -105,12 +121,14 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
             // 选中多个
             $(document).on("click", ".btn-choose-multi", function () {
                 var urlArr = new Array();
+                var fullUrlArr=new Array();
                 $.each(table.bootstrapTable("getAllSelections"), function (i, j) {
                     urlArr.push(j.url);
+                    fullUrlArr.push(j.fullurl);
                 });
                 var multiple = Backend.api.query('multiple');
                 multiple = multiple == 'true' ? true : false;
-                Fast.api.close({url: urlArr.join(","), multiple: true});
+                Fast.api.close({url: urlArr.join(","), fullurl: fullUrlArr.join('|'),multiple: true});
             });
 
             // 为表格绑定事件
@@ -130,7 +148,7 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
                 thumb: function (value, row, index) {
                     if (row.mimetype.indexOf("image") > -1) {
                         var style = row.storage == 'upyun' ? '!/fwfh/120x90' : '';
-                        return '<a href="' + row.fullurl + '" target="_blank"><img src="' + row.fullurl + style + '" alt="" style="max-height:90px;max-width:120px"></a>';
+                        return '<a href="' + row.fullurl + '" target="_blank"><img src="' + row.fullurl  + '" alt="" style="max-height:90px;max-width:120px"></a>';
                     } else {
                         return '<a href="' + row.fullurl + '" target="_blank">' + __('None') + '</a>';
                     }

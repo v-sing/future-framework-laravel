@@ -50,9 +50,11 @@ class InstallCommand extends Command
         $this->call('migrate');
 
         $userModel = config('admin.database.admin_model');
+
         if ($userModel::count() == 0) {
             $this->call('db:seed', ['--class' => \Future\Admin\Auth\Database\AdminTablesSeeder::class]);
         }
+
     }
 
     /**
@@ -76,7 +78,7 @@ class InstallCommand extends Command
         $this->makeDir('Controllers');
         $this->makeDir('Routes');
         $this->makeDir('Resources/lang/en-US');
-        $this->makeDir('Resources/lang/zh-cn');
+        $this->makeDir('Resources/lang/zh-CN');
         $this->makeDir('Resources/views/demo');
         $this->createDemoController();
         $this->createResourcesFile();

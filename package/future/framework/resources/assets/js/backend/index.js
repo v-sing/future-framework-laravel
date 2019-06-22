@@ -232,7 +232,28 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                     return false;
                 });
             });
+            $(document).on('click', '.lang', function () {
+                Fast.api.ajax({
+                    url: 'index/lang',
+                    data: {lang: $(this).data('id')},
+                    success: function (ret) {
+                        if (ret.hasOwnProperty("code")) {
+                            var msg = ret.hasOwnProperty("msg") && ret.msg != "" ? ret.msg : "";
+                            if (ret.code === 1) {
+                                Toastr.success(msg);
+                                window.location.reload();
+                            } else {
+                                Toastr.error(msg);
+                            }
+                        } else {
+                            Toastr.error(__('Unknown data format'));
+                        }
+                    }, error: function () {
+                        Toastr.error(__('Network error'));
+                    }
+                })
 
+            })
             if (multiplenav) {
                 //一级菜单自适应
                 $(window).resize(function () {

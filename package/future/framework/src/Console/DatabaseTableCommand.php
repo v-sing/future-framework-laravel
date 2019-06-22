@@ -51,27 +51,39 @@ class DatabaseTableCommand extends Command
      */
     protected function CreateSchemaTable()
     {
-        $databse = config('database.connections.' . config('database.default'));
-        $table = "select table_name from information_schema.tables where table_schema='" . $databse['database'] . "'";
+        $databse    = config('database.connections.' . config('database.default'));
+        $table      = "select table_name from information_schema.tables where table_schema='" . $databse['database'] . "'";
         $tableArray = toArray(DB::select($table));
-        $str = '$connection = config(\'admin.database.connection\') ?: config(\'database.default\');' . "\r\n";
-        $downStr = $str;
+        $str        = '$connection = config(\'admin.database.connection\') ?: config(\'database.default\');' . "\r\n";
+        $downStr    = $str;
+        $array      = [];
         foreach ($tableArray as $table) {
             $table_name = str_replace($databse['prefix'], '', $table['table_name']);
-            $str .= 'Schema::connection($connection)->dropIfExists("' . $table_name . '");' . "\r\n";
+            if($table_name=='migrations'){
+                continue;
+            }
+            $data       = DB::table($table_name)->get();
+            if ($data) {
+                $data               = toArray($data);
+                $array[$table_name] = $data;
+            }
+            $str     .= 'Schema::connection($connection)->dropIfExists("' . $table_name . '");' . "\r\n";
             $downStr .= 'Schema::connection($connection)->dropIfExists("' . $table_name . '");' . "\r\n";
-            $str .= 'Schema::connection($connection)->create("' . $table_name . '", function (Blueprint $table) {' . "\r\n";
-            $sql = "SELECT column_name,column_default,is_nullable,data_type,character_maximum_length,numeric_precision,numeric_scale,column_key,column_comment,column_type FROM information_schema.columns WHERE table_schema= '{$databse['database']}' and  table_name = '{$table['table_name']}'";
-            $column = DB::select($sql);
+            $str     .= 'Schema::connection($connection)->create("' . $table_name . '", function (Blueprint $table) {' . "\r\n";
+            $sql     = "SELECT column_name,column_default,is_nullable,data_type,character_maximum_length,numeric_precision,numeric_scale,column_key,column_comment,column_type FROM information_schema.columns WHERE table_schema= '{$databse['database']}' and  table_name = '{$table['table_name']}'";
+            $column  = DB::select($sql);
             foreach ($column as $item) {
                 $str .= $this->SwitchField(toArray($item));
             }
             $str .= ' });' . "\r\n";
         }
-        $file = database_path('migrations') . '/'.date('Y_m_d_').'100000_create_admin_tables.php';
+        $file     = database_path('migrations') . '/' . date('Y_m_d_') . '100000_create_admin_tables.php';
+        $dataFile = database_path('data') . '/' . date('Y_m_d_') . '100000_create_admin_tables_data.php';
         $contents = $this->getStub('create_admin_tables');
-        $this->laravel['files']->put($file, str_replace(['<%up%>','<%down%>'], [$str,$downStr], $contents));
+        $this->laravel['files']->put($file, str_replace(['<%up%>', '<%down%>'], [$str, $downStr], $contents));
         $this->line($file);
+        $this->laravel['files']->put($dataFile,'<?php '."\r\n".' return $rows='.var_export($array,true).';');
+        $this->line($dataFile);
 
     }
 
@@ -82,15 +94,15 @@ class DatabaseTableCommand extends Command
      */
     protected function SwitchField($column)
     {
-        $column_name = $column['column_name'];
-        $column_default = $column['column_default'];
-        $is_nullable = $column['is_nullable'];
+        $column_name              = $column['column_name'];
+        $column_default           = $column['column_default'];
+        $is_nullable              = $column['is_nullable'];
         $character_maximum_length = $column['character_maximum_length'];
-        $numeric_precision = $column['numeric_precision'];
-        $numeric_scale = $column['numeric_scale'];
-        $column_key = $column['column_key'];
-        $column_comment = $column['column_comment'];
-        $column_type = $column['column_type'];
+        $numeric_precision        = $column['numeric_precision'];
+        $numeric_scale            = $column['numeric_scale'];
+        $column_key               = $column['column_key'];
+        $column_comment           = $column['column_comment'];
+        $column_type              = $column['column_type'];
         switch ($column['data_type']) {
             case 'tinyint':
                 $field = "tinyInteger('{$column_name}')";

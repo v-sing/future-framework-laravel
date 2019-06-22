@@ -7,50 +7,23 @@
  * Time: 10:41
  */
 return [
-
-    'name' => 'future-framework',
-
-    'logo' => '<b>future</b>framework',
-
-    'logo-mini' => '<b>fu</b>',
-
-    'title' => 'Admin',
-
-    'route' => [
-        'prefix' => env('ADMIN_ROUTE_PREFIX', 'admin'),
-
-        'namespace' => 'App\\Admin\\Controllers',
-
+    /**
+     * 路由规则
+     */
+    'route'     => [
+        'prefix'     => env('ADMIN_ROUTE_PREFIX', 'admin'),
+        'namespace'  => 'App\\Admin\\Controllers',
         'middleware' => ['web', 'admin'],
     ],
-
-    'auth'      => [
-
-        'controller' => App\Admin\Controllers\AuthController::class,
-
-        'guards' => [
-            'admin' => [
-                'driver'   => 'session',
-                'provider' => 'admin',
-            ],
-        ],
-
-        'providers' => [
-            'admin' => [
-                'driver' => 'eloquent',
-                'model'  => \Future\Admin\Auth\Database\Admin::class,
-            ],
-        ],
-
-        // Add "remember me" to login form
-        'remember'  => true,
-    ],
+    /**
+     * 安装路径
+     */
     'directory' => app_path('Admin'),
-
-    'https' => env('ADMIN_HTTPS', false),
-
-    'database' => [
-        'connection'              => '',
+    /**
+     * 数据库表
+     */
+    'database'  => [
+        'connection'              => [],
         'admin_table'             => 'admin',
         'admin_log_table'         => 'admin_log',
         'attachment_table'        => 'attachment',
@@ -85,23 +58,12 @@ return [
         'user_group_model'        => \Future\Admin\Auth\Database\UserGroup::class,
         'user_money_log_model'    => \Future\Admin\Auth\Database\UserMoneyLog::class,
         'user_rule_model'         => \Future\Admin\Auth\Database\UserRule::class,
-        'user_score_log_model'    => \Future\Admin\Auth\Database\UserScoreLog::class,
+        'user_score_log_model'    =>\Future\Admin\Auth\Database\UserScoreLog::class,
         'user_token_model'        => \Future\Admin\Auth\Database\UserToken::class,
         'version_model'           => \Future\Admin\Auth\Database\Version::class,
 
     ],
 
-    'upload'              => [
-
-        // Disk in `config/filesystem.php`.
-        'disk'      => 'admin',
-
-        // Image and file upload path under the disk above.
-        'directory' => [
-            'image' => 'images',
-            'file'  => 'files',
-        ],
-    ],
     //是否开启前台会员中心
     'usercenter'          => true,
     //登录验证码
@@ -122,6 +84,6 @@ return [
     'api_url'             => 'https://api.fastadmin.net',
     //
     'lang_switch_on'      => true,
-    //默认图片
-    'default_image'       => './assets/img/png.png'
+    'default_image'       => 'file',
+    'default_image_url'=>'https://tool.fastadmin.net/icon/%s.png'
 ];

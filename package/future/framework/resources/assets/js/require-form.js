@@ -86,7 +86,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator'], function ($, undefined, U
             },
             selectpicker: function (form) {
                 //绑定select元素事件
-                console.log($(".selectpicker", form));
+
                 if ($(".selectpicker", form).size() > 0) {
                     require(['bootstrap-select', 'bootstrap-select-lang'], function () {
                         $('.selectpicker', form).selectpicker();
@@ -219,20 +219,28 @@ define(['jquery', 'bootstrap', 'upload', 'validator'], function ($, undefined, U
                         var mimetype = $(this).data("mimetype") ? $(this).data("mimetype") : '';
                         var admin_id = $(this).data("admin-id") ? $(this).data("admin-id") : '';
                         var user_id = $(this).data("user-id") ? $(this).data("user-id") : '';
-                        parent.Fast.api.open("general/attachment/select?element_id=" + $(this).attr("id") + "&multiple=" + multiple + "&mimetype=" + mimetype + "&admin_id=" + admin_id + "&user_id=" + user_id, __('Choose'), {
+                        var multiple= $(this).data("multiple")?true:false;
+                        parent.Fast.api.open("attachment/select?element_id=" + $(this).attr("id") + "&multiple=" + multiple + "&mimetype=" + mimetype + "&admin_id=" + admin_id + "&user_id=" + user_id, __('Choose'), {
                             callback: function (data) {
                                 var button = $("#" + $(that).attr("id"));
                                 var maxcount = $(button).data("maxcount");
                                 var input_id = $(button).data("input-id") ? $(button).data("input-id") : "";
                                 maxcount = typeof maxcount !== "undefined" ? maxcount : 0;
-                                if (input_id && data.multiple) {
+                                if (input_id && multiple) {
                                     var urlArr = [];
+                                    var fullArr=[];
                                     var inputObj = $("#" + input_id);
                                     var value = $.trim(inputObj.val());
+                                    var fullValue=$.trim(inputObj.attr('data-base64'));
                                     if (value !== "") {
                                         urlArr.push(inputObj.val());
                                     }
+                                    if(fullValue!=''){
+                                        fullArr.push(fullValue);
+                                    }
                                     urlArr.push(data.url)
+                                    fullArr.push(data.fullurl);
+                                    var fullUrlResult=fullArr.join('|')
                                     var result = urlArr.join(",");
                                     if (maxcount > 0) {
                                         var nums = value === '' ? 0 : value.split(/\,/).length;
@@ -244,8 +252,10 @@ define(['jquery', 'bootstrap', 'upload', 'validator'], function ($, undefined, U
                                         }
                                     }
                                     inputObj.val(result).trigger("change");
+                                    inputObj.attr('data-base64',fullUrlResult).trigger("change");
                                 } else {
                                     $("#" + input_id).val(data.url).trigger("change");
+                                    $("#" + input_id).attr('data-base64',data.fullurl).trigger("change");
                                 }
                             }
                         });

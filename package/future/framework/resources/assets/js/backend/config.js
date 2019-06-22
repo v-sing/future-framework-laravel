@@ -53,15 +53,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             //不可见的元素不验证
             $("form#add-form").data("validator-options", {ignore: ':hidden'});
             Form.api.bindevent($("form#add-form"), null, function (ret) {
-                location.reload();
+                console.log(ret)
+                // location.reload();
             });
 
             //切换显示隐藏变量字典列表
             $(document).on("change", "form#add-form select[name='row[type]']", function (e) {
-                $("#add-content-container").toggleClass("hide", ['select', 'selects', 'checkbox', 'radio'].indexOf($(this).val()) > -1 ? false : true);
+                console.log($(this).val() );
+              $("#add-content-container").toggleClass("hide", ['select', 'selects', 'checkbox', 'radio'].indexOf($(this).val()) > -1 ? false : true);
             });
 
             //添加向发件人发送测试邮件按钮和方法
+
             $('input[name="row[mail_from]"]').parent().next().append('<a class="btn btn-info testmail">' + __('Send a test message') + '</a>');
             $(document).on("click", ".testmail", function () {
                 var that = this;

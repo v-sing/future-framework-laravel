@@ -69,10 +69,10 @@ class AdminServiceProvider extends ServiceProvider
             \URL::forceScheme('https');
             $this->app['request']->server->set('HTTPS', true);
         }
-
         if ($this->app->runningInConsole()) {
             $this->publishes([__DIR__ . '/../config' => config_path()], 'future-admin-config');
             $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'future-admin-migrations');
+            $this->publishes([__DIR__ . '/../database/data' => database_path('data')], 'future-admin-data');
             $this->publishes([__DIR__ . '/../resources/assets' => public_path('assets')], 'future-admin-assets');
         } else {
             $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'admin_vendor');
