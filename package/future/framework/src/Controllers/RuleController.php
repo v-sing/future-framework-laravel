@@ -17,42 +17,48 @@ use Future\Admin\Future\Loader;
 use Illuminate\Support\Facades\Session;
 class RuleController extends BackendController
 {
-    protected $model;
-    protected $multiFields = 'ismenu,status';
-    protected $rulelist = [];
+    public $model;
+    public $multiFields = 'ismenu,status';
+    public $rulelist = [];
 
     protected function _initialize()
     {
         parent::_initialize();
-        if (Session::get('change_lang')) {
-            trans()->setLocale(Session::get('change_lang'));
-        }
         $this->model = Model('AuthRule');
-        // 必须将结果集转换为数组
-        $ruleList = $this->model->orderBy('weigh', 'desc')->orderBy('id', 'asc')->get()->toArray();
-        foreach ($ruleList as $k => &$v) {
-            $v['title']  = lang($v['title']);
-            $v['remark'] = lang($v['remark']);
-        }
-        unset($v);
-        Tree::instance()->init($ruleList);
-        $this->rulelist = Tree::instance()->getTreeList(Tree::instance()->getTreeArray(0), 'title');
-        $ruledata       = [0 => lang('None')];
-        foreach ($this->rulelist as $k => &$v) {
-            if (!$v['ismenu']) {
-                continue;
+        $that=$this;
+        $this->middleware(function ($request, $next)use ($that) {
+            if (Session::get('change_lang')) {
+                trans()->setLocale(Session::get('change_lang'));
             }
-            $ruledata[$v['id']] = $v['title'];
-        }
-        unset($v);
-        Admin::setAssign([
-            'ruledata' => $ruledata
-        ]);
+            // 必须将结果集转换为数组
+            $ruleList = $that->model->orderBy('weigh', 'desc')->orderBy('id', 'asc')->get()->toArray();
+            foreach ($ruleList as $k => &$v) {
+                $v['title']  = lang($v['title']);
+                $v['remark'] = lang($v['remark']);
+            }
+            unset($v);
+            Tree::instance()->init($ruleList);
+            $that->rulelist = Tree::instance()->getTreeList(Tree::instance()->getTreeArray(0), 'title');
+            $ruledata       = [0 => lang('None')];
+            foreach ($that->rulelist as $k => &$v) {
+                if (!$v['ismenu']) {
+                    continue;
+                }
+                $ruledata[$v['id']] = $v['title'];
+            }
+            unset($v);
+            Admin::setAssign([
+                'ruledata' => $ruledata
+            ]);
+            return $next($request);
+        });
+
+
+
     }
 
     public function index()
     {
-        dd(Session::get('change_lang'));
         if (isAjax()) {
             $list   = $this->rulelist;
             $total  = count($this->rulelist);

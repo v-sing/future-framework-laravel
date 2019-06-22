@@ -31,6 +31,7 @@ class Initialization
      */
     public function handle($request, Closure $next, $guard = null)
     {
+
         $route = getRealRoute();
         Admin::setAction($route['action']);
         Admin::setController($route['controller']);
@@ -69,7 +70,7 @@ class Initialization
         $actionname     = Admin::action();
         $lang           = config('site.languages.backend');
         if (!$lang) {
-            $lang = 'zh-cn';
+            $lang = 'zh-CN';
         }
         if (Session::get('change_lang')) {
             $lang = Session::get('change_lang');

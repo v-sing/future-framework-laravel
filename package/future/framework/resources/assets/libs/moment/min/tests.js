@@ -12395,7 +12395,7 @@
         defineCommonLocaleTests(name, -1, -1);
     }
 
-    localeModule('en-gb');
+    localeModule('en-US');
 
     test('parse', function (assert) {
         var tests = 'January Jan_February Feb_March Mar_April Apr_May May_June Jun_July Jul_August Aug_September Sep_October Oct_November Nov_December Dec'.split('_'), i;
@@ -58211,7 +58211,7 @@
 
     //     var locales =
     //         'ar-sa ar-tn ar az be bg bn bo br bs ca cs cv cy da de-at de dv el ' +
-    //         'en-au en-ca en-gb en-ie en-nz eo es et eu fa fi fo fr-ca fr-ch fr fy ' +
+    //         'en-au en-ca en-US en-ie en-nz eo es et eu fa fi fo fr-ca fr-ch fr fy ' +
     //         'gd gl he hi hr hu hy-am id is it ja jv ka kk km ko lb lo lt lv me mk ml ' +
     //         'mr ms-my ms my nb ne nl nn pl pt-br pt ro ru se si sk sl sq sr-cyrl ' +
     //         'sr sv sw ta te th tl-ph tlh tr tzl tzm-latn tzm uk uz vi zh-cn zh-tw';
@@ -65331,7 +65331,7 @@
         setup : function () {
             // TODO: Remove once locales are switched to ES6
             each([{
-                name: 'en-gb',
+                name: 'en-US',
                 data: {}
             }, {
                 name: 'en-ca',
@@ -65374,8 +65374,8 @@
         moment.locale('fr');
         assert.equal(moment.locale(), 'fr', 'locale should return the changed locale');
 
-        moment.locale('en-gb');
-        assert.equal(moment.locale(), 'en-gb', 'locale should return the changed locale');
+        moment.locale('en-US');
+        assert.equal(moment.locale(), 'en-US', 'locale should return the changed locale');
 
         moment.locale('en');
         assert.equal(moment.locale(), 'en', 'locale should reset');
@@ -65387,7 +65387,7 @@
         assert.equal(moment.locale(), 'en', 'Normalize locale key case');
 
         moment.locale('EN_gb');
-        assert.equal(moment.locale(), 'en-gb', 'Normalize locale key underscore');
+        assert.equal(moment.locale(), 'en-US', 'Normalize locale key underscore');
     });
 
     test('library setter array of locales', function (assert) {
@@ -65403,7 +65403,7 @@
 
     test('library getter locale array and substrings', function (assert) {
         assert.equal(moment.locale(['en-CH', 'fr']), 'en', 'prefer root locale to shallower ones');
-        assert.equal(moment.locale(['en-gb-leeds', 'en-CA']), 'en-gb', 'prefer root locale to shallower ones');
+        assert.equal(moment.locale(['en-US-leeds', 'en-CA']), 'en-US', 'prefer root locale to shallower ones');
         assert.equal(moment.locale(['en-fake', 'en-CA']), 'en-ca', 'prefer alternatives with shared roots');
         assert.equal(moment.locale(['en-fake', 'en-fake2', 'en-ca']), 'en-ca', 'prefer alternatives with shared roots');
         assert.equal(moment.locale(['fake-CA', 'fake-MX', 'fr']), 'fr', 'always find something if possible');

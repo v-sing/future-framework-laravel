@@ -75,7 +75,7 @@ class InstallCommand extends Command
         $this->line('<info>Admin directory was created:</info> ' . str_replace(base_path(), '', $this->directory));
         $this->makeDir('Controllers');
         $this->makeDir('Routes');
-        $this->makeDir('Resources/lang/en-gb');
+        $this->makeDir('Resources/lang/en-US');
         $this->makeDir('Resources/lang/zh-cn');
         $this->makeDir('Resources/views/demo');
         $this->createDemoController();
@@ -123,8 +123,8 @@ class InstallCommand extends Command
      */
     protected function createResourcesFile()
     {
-        $file = $this->directory . '/Resources/lang/en-gb/demo.php';
-        $contents = $this->getStub('install/resources/lang/en-gb/demo');
+        $file = $this->directory . '/Resources/lang/en-US/demo.php';
+        $contents = $this->getStub('install/resources/lang/en-US/demo');
         $this->laravel['files']->put($file, str_replace('DummyNamespace', config('admin.route.namespace'), $contents));
         $this->line('<info>Resources file was created:</info> ' . str_replace(base_path(), '', $file));
         $file = $this->directory . '/Resources/lang/zh-cn/demo.php';

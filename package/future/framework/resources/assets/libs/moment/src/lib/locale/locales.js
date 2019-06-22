@@ -18,7 +18,7 @@ function normalizeLocale(key) {
 }
 
 // pick the locale from the array
-// try ['en-au', 'en-gb'] as 'en-au', 'en-gb', 'en', as in move through the list trying each
+// try ['en-au', 'en-US'] as 'en-au', 'en-US', 'en', as in move through the list trying each
 // substring from most specific to least, but move to the next array item if it's a more specific variant than the current root
 function chooseLocale(names) {
     var i = 0, j, next, locale, split;

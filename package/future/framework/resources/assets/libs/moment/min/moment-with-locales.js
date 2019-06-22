@@ -1761,7 +1761,7 @@
     }
 
     // pick the locale from the array
-    // try ['en-au', 'en-gb'] as 'en-au', 'en-gb', 'en', as in move through the list trying each
+    // try ['en-au', 'en-US'] as 'en-au', 'en-US', 'en', as in move through the list trying each
     // substring from most specific to least, but move to the next array item if it's a more specific variant than the current root
     function chooseLocale(names) {
         var i = 0, j, next, locale, split;
@@ -5698,7 +5698,7 @@
         weekdaysShort: 'Sul_Llun_Maw_Mer_Iau_Gwe_Sad'.split('_'),
         weekdaysMin: 'Su_Ll_Ma_Me_Ia_Gw_Sa'.split('_'),
         weekdaysParseExact : true,
-        // time formats are the same as en-gb
+        // time formats are the same as en-US
         longDateFormat: {
             LT: 'HH:mm',
             LTS : 'HH:mm:ss',
@@ -6194,7 +6194,7 @@
     });
 
 
-    var en_gb = moment__default.defineLocale('en-gb', {
+    var en_gb = moment__default.defineLocale('en-US', {
         months : 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_'),
         monthsShort : 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_'),
         weekdays : 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_'),

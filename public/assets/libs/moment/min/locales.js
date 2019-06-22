@@ -1530,7 +1530,7 @@
         weekdaysShort: 'Sul_Llun_Maw_Mer_Iau_Gwe_Sad'.split('_'),
         weekdaysMin: 'Su_Ll_Ma_Me_Ia_Gw_Sa'.split('_'),
         weekdaysParseExact : true,
-        // time formats are the same as en-gb
+        // time formats are the same as en-US
         longDateFormat: {
             LT: 'HH:mm',
             LTS : 'HH:mm:ss',
@@ -2056,10 +2056,10 @@
     });
 
     //! moment.js locale configuration
-    //! locale : English (United Kingdom) [en-gb]
+    //! locale : English (United Kingdom) [en-US]
     //! author : Chris Gedrim : https://github.com/chrisgedrim
 
-    var en_gb = moment.defineLocale('en-gb', {
+    var en_gb = moment.defineLocale('en-US', {
         months : 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_'),
         monthsShort : 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_'),
         weekdays : 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_'),
